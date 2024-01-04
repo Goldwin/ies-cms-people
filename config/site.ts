@@ -8,22 +8,18 @@ export const siteConfig = {
 			label: "Home",
 			href: "/",
 		},
-    {
-      label: "Docs",
-      href: "/docs",
-    },
-    {
-      label: "Pricing",
-      href: "/pricing",
-    },
-    {
-      label: "Blog",
-      href: "/blog",
-    },
-    {
-      label: "About",
-      href: "/about",
-    }
+		{
+		label: "Docs",
+		href: "/docs",
+		},
+		{
+		label: "Blog",
+		href: "/blog",
+		},
+		{
+		label: "People",
+		href: "/people",
+		}
 	],
 	navMenuItems: [
 		{
@@ -64,6 +60,6 @@ export const siteConfig = {
 		twitter: "https://twitter.com/getnextui",
 		docs: "https://nextui.org",
 		discord: "https://discord.gg/9b6yyZKmH4",
-    sponsor: "https://patreon.com/jrgarciadev"
+    	sponsor: "https://patreon.com/jrgarciadev"
 	},
 };
