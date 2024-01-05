@@ -8,13 +8,13 @@ export default function PeopleLayout({
 }) {
 	return (
 		<>
-			<Navbar className="mx-0">
+			<Navbar className="mx-0 px-0 w-full bg-gray-800" maxWidth="full">
 				<NavbarBrand>
 					<p className="font-bold text-inherit">Church Member</p>
 				</NavbarBrand>
 				<NavbarContent justify="end">
 					<NavbarItem>
-						<Button as={Link} color="primary" href="#" variant="flat">
+						<Button className="justify-self-end" as={Link} color="primary" href="#" variant="flat">
 							Add Member					
 						</Button>
 					</NavbarItem>

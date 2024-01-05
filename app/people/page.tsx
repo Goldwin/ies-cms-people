@@ -1,6 +1,10 @@
 "use client"
 import { title } from "@/components/primitives";
-import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, getKeyValue} from "@nextui-org/react";
+import { Address } from "@/entities/people/address";
+import { Person } from "@/entities/people/person";
+import peopleService from "@/services/people";
+import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, getKeyValue, Avatar} from "@nextui-org/react";
+import { useEffect, useRef, useState } from "react";
 
 const columns = [
 	{ key: "profilePictureUrl", label: "Profile Picture" },
@@ -15,32 +19,53 @@ const columns = [
 	{ key: "maritalStatus", label: "Marital Status" },
 ]
 
-const rows = [
-	{
-		id: 'c9d2848c-1f7a-4d6e-bdba-8bbeba4bea77',
-		firstName: 'Hutomo',
-		middleName: '',
-		lastName: 'Widjaja',
-		profilePictureUrl: '',
-		addresses: [],
-		phoneNumbers: [],
-		emailAddress: 'flame.rainHbow@gmail.com',
-		maritalStatus: '',
-		birthday: null
-	  }	  
-]
+const identicalMapping = (value:any)=>value
+const firstValueMapping = (value: any[])=>value[0]||""
+
+type ColumnMapping = {
+	[key:string]: (value:any) => any
+}
+const columnMapping: ColumnMapping = {
+	"profilePictureUrl": (value:string)=><Avatar src={value} />, 
+	"firstName": identicalMapping,
+	"middleName": identicalMapping,
+	"lastName": identicalMapping,
+	"gender": identicalMapping,
+	"emailAddress": identicalMapping,
+	"phoneNumbers": firstValueMapping,
+	"addresses": (addresses:Address[])=>addresses[0].toString(),
+	"birthday": identicalMapping,
+	"maritalStatus": identicalMapping
+}
 
 export default function PeoplePage() {
-	return (
+	const [isLoading, setIsLoading] = useState(true)	
+	const rows = useRef<Person[]>([])
+	useEffect(() => {
+		if(isLoading) {
+			console.log("yeah")
+			peopleService.search({limit: 10, lastID: ""}, {
+				onSuccess: function (v: Person[]): void {
+					setIsLoading(false)
+					rows.current = v
+				},
+				onError: function (err: any): void {
+					console.log(err)
+				}
+			})
+		}		
+	})
+	
+	return (		
 		<div>
 			<Table aria-label="Example table with dynamic content">
 			<TableHeader columns={columns}>
 				{(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
 			</TableHeader>
-			<TableBody items={rows}>
+			<TableBody items={rows.current}>
 				{(item) => (
 				<TableRow key={item.id}>
-					{(columnKey) => <TableCell>{getKeyValue(item, columnKey)}</TableCell>}
+					{(columnKey) => <TableCell>{columnMapping[columnKey.toString()](getKeyValue(item, columnKey))}</TableCell>}
 				</TableRow>
 				)}
 			</TableBody>

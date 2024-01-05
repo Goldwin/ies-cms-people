@@ -1,6 +1,8 @@
 'use client'
 import { useForm, SubmitHandler, SubmitErrorHandler} from "react-hook-form"
 import { Button, Card, CardBody, CardHeader, Input } from "@nextui-org/react";
+import { login } from "@/commands/auth/login";
+import { redirect } from "next/navigation";
 
 interface ILoginInput {
 	email: string
@@ -17,8 +19,18 @@ export default function LoginPage() {
 			}
 		}
 	)
-	const onSubmit: SubmitHandler<ILoginInput> = (data) => alert(data)
-	const onError: SubmitErrorHandler<ILoginInput> = (error) => alert(error)
+	const onSubmit: SubmitHandler<ILoginInput> = (data) => login(data.email, data.password, {
+		onSuccess: function (v: void):void {
+			try {
+				redirect("/")
+			} catch(error) {
+				error
+			}			
+		},
+		onError: function (err: any): void {
+			console.log(err)
+		}
+	})
 	return (
 		<div className="flex justify-center items-center h-96">
 			<Card className="flex w-full flex-wrap md:flex-nowrap w-96 px-8 py-4">
@@ -37,9 +49,7 @@ export default function LoginPage() {
 							errorMessage={errors.password && "Password is Required"}
 							{...register("password", {required:true})}
 						/>					
-						<div className="flex flex-row">
-							<Button className="w-full" type="submit" color="primary">Login</Button>					
-						</div>												
+						<Button className="w-full" type="submit" color="primary">Login</Button>												
 					</CardBody>      	
 				</form>							
 			</Card>
