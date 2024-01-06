@@ -43,7 +43,6 @@ export default function PeoplePage() {
 	const rows = useRef<Person[]>([])
 	useEffect(() => {
 		if(isLoading) {
-			console.log("yeah")
 			peopleService.search({limit: 10, lastID: ""}, {
 				onSuccess: function (v: Person[]): void {
 					setIsLoading(false)
