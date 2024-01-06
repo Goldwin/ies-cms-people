@@ -1,19 +1,23 @@
-import { Address } from "./address";
-
 export class Person {
     id: string;
 	firstName: string;
     middleName: string;
     lastName: string;
     profilePictureUrl: string;
-    addresses: Address[];
+    address: string[];
     phoneNumbers: string[];
     emailAddress: string[];
     maritalStatus: string;
     birthday: string;
     gender: string;
+    anniversary:string;
 
-    constructor(jsonString: string) {
+    constructor();
+    constructor(jsonString:string)
+    constructor(jsonString?: string) {
+        if(!jsonString) {
+            jsonString = "{}"
+        }
         const json = JSON.parse(jsonString)
 
         this.id = json.id
@@ -25,11 +29,8 @@ export class Person {
         this.emailAddress = json.email_address
         this.maritalStatus = json.marital_status
         this.birthday = json.birthday
-        this.addresses = []      
+        this.address = json.address
         this.gender = json.gender  
-
-        for(let i = 0; i < json.addresses.length; i++) {
-            this.addresses.push(new Address(json.addresses[i]))
-        }
+        this.anniversary = json.anniversary
     }
 }

@@ -7,7 +7,7 @@ const API_URL = process.env.AUTH_URL || "";
 // then we can export each command from a single conf file, using service implementation as the instance of interface
 
 class AuthService {
-  login(email: string, password: string, output: Output<string>) {
+  async login(email: string, password: string, output: Output<string>) {
     const url = API_URL + "/password/signin"
     return axios
       .post(url, {

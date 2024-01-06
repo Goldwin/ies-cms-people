@@ -9,6 +9,19 @@ interface ILoginInput {
 	password: string
 }
 
+const onSubmit: SubmitHandler<ILoginInput> = (data) => login(data.email, data.password, {
+	onSuccess: function (v: void):void {
+		try {
+			redirect("/")
+		} catch(error) {
+			error
+		}			
+	},
+	onError: function (err: any): void {
+		console.log(err)
+	}
+})
+
 export default function LoginPage() {
 	const {register, handleSubmit, formState: {errors}} = useForm<ILoginInput>(
 		{
@@ -19,18 +32,7 @@ export default function LoginPage() {
 			}
 		}
 	)
-	const onSubmit: SubmitHandler<ILoginInput> = (data) => login(data.email, data.password, {
-		onSuccess: function (v: void):void {
-			try {
-				redirect("/")
-			} catch(error) {
-				error
-			}			
-		},
-		onError: function (err: any): void {
-			console.log(err)
-		}
-	})
+	
 	return (
 		<div className="flex justify-center items-center h-96">
 			<Card className="flex w-full flex-wrap md:flex-nowrap w-96 px-8 py-4">
