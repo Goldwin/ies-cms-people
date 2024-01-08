@@ -4,9 +4,9 @@ export class Person {
     middleName: string;
     lastName: string;
     profilePictureUrl: string;
-    address: string[];
-    phoneNumbers: string[];
-    emailAddress: string[];
+    address: string;
+    phoneNumber: string;
+    emailAddress: string;
     maritalStatus: string;
     birthday: string;
     gender: string;
@@ -25,7 +25,7 @@ export class Person {
         this.middleName = json.middle_name
         this.lastName = json.last_name
         this.profilePictureUrl = json.profile_picture_url        
-        this.phoneNumbers = json.phone_numbers
+        this.phoneNumber = json.phone_numbers
         this.emailAddress = json.email_address
         this.maritalStatus = json.marital_status
         this.birthday = json.birthday

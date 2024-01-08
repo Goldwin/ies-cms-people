@@ -13,8 +13,8 @@ const columns = [
 	{ key: "lastName", label: "Last Name" },	
 	{ key: "gender", label: "Gender" },
 	{ key: "emailAddress", label: "Email Address" },
-	{ key: "phoneNumbers", label: "Phone Numbers" },
-	{ key: "addresses", label: "Addresses" },
+	{ key: "phoneNumber", label: "Phone Number" },
+	{ key: "address", label: "Address" },
 	{ key: "birthday", label: "Birthday" },
 	{ key: "maritalStatus", label: "Marital Status" },
 ]
@@ -32,8 +32,8 @@ const columnMapping: ColumnMapping = {
 	"lastName": identicalMapping,
 	"gender": identicalMapping,
 	"emailAddress": identicalMapping,
-	"phoneNumbers": firstValueMapping,
-	"addresses": (addresses:Address[])=>addresses[0].toString(),
+	"phoneNumber": identicalMapping,
+	"address": identicalMapping,
 	"birthday": identicalMapping,
 	"maritalStatus": identicalMapping
 }
