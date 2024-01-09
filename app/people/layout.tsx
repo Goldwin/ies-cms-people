@@ -2,7 +2,7 @@
 import { Navbar, NavbarBrand, NavbarContent, NavbarItem } from "@nextui-org/navbar";
 import { Button, Link, useDisclosure } from "@nextui-org/react";
 import { PersonModal } from "./personmodal";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { Person } from "@/entities/people/person";
 
 export default function PeopleLayout({
@@ -11,10 +11,11 @@ export default function PeopleLayout({
 	children: React.ReactNode;
 }) {
 	const person = useRef<Person>()
+	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const {isOpen, onOpen, onOpenChange} = useDisclosure();
 	return (
 		<>
-			<Navbar className="mx-0 px-0 w-full bg-gray-800" maxWidth="full">
+			<Navbar className="mx-0 px-0 w-full bg-gray-800" maxWidth="full" isMenuOpen={isMenuOpen} onMenuOpenChange={setIsMenuOpen}>
 				<NavbarBrand>
 					<p className="font-bold text-inherit">Church Member</p>
 				</NavbarBrand>
