@@ -33,4 +33,8 @@ export class Person {
         this.gender = json.gender  
         this.anniversary = json.anniversary
     }
+
+    getFullName():string {
+        return this.firstName + (this.middleName?` ${this.middleName}`:"") + " " + this.lastName
+    }
 }
