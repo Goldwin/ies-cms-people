@@ -1,7 +1,5 @@
 "use client";
 import { SearchIcon } from "@/components/icons";
-import { title } from "@/components/primitives";
-import { Address } from "@/entities/people/address";
 import { Person } from "@/entities/people/person";
 import peopleService from "@/services/people";
 import {
@@ -16,10 +14,11 @@ import {
   Spinner,
   Input,
   User,
+  Link,
 } from "@nextui-org/react";
 import { useInfiniteScroll } from "@nextui-org/use-infinite-scroll";
-import { filter } from "lodash";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { size } from "lodash";
+import { useState } from "react";
 import { Key } from "react-stately";
 
 const columns = [
@@ -71,7 +70,11 @@ const getMapping = (person: Person, columnKey: Key) => {
   if (columnKey.toString() == "name") {
     return (
       <User
-        description={person.emailAddress}
+        description={
+          <Link href={`/people/${person.id}`} size="sm">
+            {person.emailAddress}
+          </Link>
+        }
         name={person.getFullName()}
         avatarProps={{ src: person.profilePictureUrl }}
       />

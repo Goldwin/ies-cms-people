@@ -68,6 +68,18 @@ class PeopleService {
             output.onError(error)
         });
     }
+
+    async get(personId: string, output: Output<Person>) {
+      const url = API_URL + "/person/"+personId
+      const token = getToken()          
+
+      return axios.get(url, {headers: {"Authorization": `Bearer ${token}`}}).then(response => {
+          const result:Person = new Person(JSON.stringify(response.data.data))
+          output.onSuccess(result)
+      }).catch(error => {
+          output.onError(error)
+      });
+  }
 }
 
 const peopleService = new PeopleService();
