@@ -25,7 +25,7 @@ export class Person {
         this.middleName = json.middle_name
         this.lastName = json.last_name
         this.profilePictureUrl = json.profile_picture_url        
-        this.phoneNumber = json.phone_numbers
+        this.phoneNumber = json.phone_number
         this.emailAddress = json.email_address
         this.maritalStatus = json.marital_status
         this.birthday = json.birthday
@@ -36,5 +36,15 @@ export class Person {
 
     getFullName():string {
         return this.firstName + (this.middleName?` ${this.middleName}`:"") + " " + this.lastName
+    }
+
+    getBirthdayString():string{
+        if (!this.birthday) return "";
+        const date = new Date(this.birthday);
+        return date.toLocaleString("en-GB", {
+            day: "numeric",
+            month: "long",
+            year: "numeric",
+        });
     }
 }

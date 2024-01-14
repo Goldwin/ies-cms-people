@@ -24,14 +24,28 @@ interface SubmissionResult {
   message: string;
 }
 
+const getAddPersonSubmitHandler = (output: Output<Person>) => {
+  return (person: Person) => {
+    peopleService.add(person, output);
+  };
+};
+
+const getUpdatePersonSubmitHandler = (output: Output<Person>) => {
+  return (person: Person) => {
+    peopleService.update(person.id, person, output);
+  };
+};
+
 export const PersonModal = ({
   isOpen,
   onOpenChange,
   person,
+  callback,
 }: {
   isOpen: boolean;
   onOpenChange: () => void;
   person?: Person;
+  callback?: (person: Person) => void;
 }) => {
   const {
     register,
@@ -43,26 +57,38 @@ export const PersonModal = ({
 
   const [submissionResult, setSubmissionResult] = useState<SubmissionResult>();
 
-  const onSubmit: SubmitHandler<Person> = (data) =>
-    peopleService.add(data, {
-      onSuccess: function (v: Person): void {
-        setSubmissionResult({
-          success: true,
-          message: "Successfully added " + v.getFullName() + "'s profile",
-        });
-      },
-      onError: function (err: any): void {
-        const x = { success: false, message: "Failed to add profile" };
-        setSubmissionResult(x);
-      },
-    });
+  const isUpdate = !!person;
+  const output = {
+    onSuccess: function (v: Person): void {
+      setSubmissionResult({
+        success: true,
+        message: `Successfully ${
+          isUpdate ? "updated" : "added"
+        } ${v.getFullName()}'s profile`,
+      });
+    },
+    onError: function (err: any): void {
+      const x = {
+        success: false,
+        message: `Failed to ${
+          isUpdate ? "update" : "add"
+        } ${person?.getFullName()}'s profile`,
+      };
+      setSubmissionResult(x);
+    },
+  };
+
+  const onSubmit: SubmitHandler<Person> = isUpdate
+    ? getUpdatePersonSubmitHandler(output)
+    : getAddPersonSubmitHandler(output);
+
   return (
     <Modal isOpen={isOpen} onOpenChange={onOpenChange} size="xl">
       <ModalContent>
         {(onClose) => (
           <form onSubmit={handleSubmit(onSubmit)}>
             <ModalHeader className="flex flex-col gap-1">
-              {person ? "Update Profile" : "Add Profile"}
+              {isUpdate ? "Update Profile" : "Add Profile"}
               <div>
                 {submissionResult && (
                   <Card className="items-center">
@@ -81,6 +107,7 @@ export const PersonModal = ({
             </ModalHeader>
             <ModalBody className="gap-4">
               <div className="flex flex-row gap-4">
+                <input value={person?.id} {...register("id")} type="hidden" />
                 <Input
                   label="First Name"
                   errorMessage={errors.firstName?.message}
@@ -91,11 +118,17 @@ export const PersonModal = ({
                       message: "First Name must be at least 3 characters",
                     },
                   })}
+                  value={person?.firstName}
                 />
-                <Input label="Middle Name" {...register("middleName")} />
+                <Input
+                  label="Middle Name"
+                  {...register("middleName")}
+                  value={person?.middleName}
+                />
                 <Input
                   label="Last Name"
                   errorMessage={errors.lastName?.message}
+                  value={person?.lastName}
                   {...register("lastName", {
                     required: "Last Name is required",
                     minLength: {
@@ -109,6 +142,7 @@ export const PersonModal = ({
                 <Input
                   label="Email Address"
                   errorMessage={errors.emailAddress?.message}
+                  value={person?.emailAddress}
                   {...register("emailAddress", {
                     required: "Email Address is required",
                     pattern: {
@@ -119,10 +153,18 @@ export const PersonModal = ({
                 />
               </div>
               <div className="flex flex-col">
-                <Input label="Phone Number" {...register("phoneNumber")} />
+                <Input
+                  label="Phone Number"
+                  value={person?.phoneNumber}
+                  {...register("phoneNumber")}
+                />
               </div>
               <div className="flex flex-col">
-                <Input label="Address" {...register("address")} />
+                <Input
+                  label="Address"
+                  value={person?.address}
+                  {...register("address")}
+                />
               </div>
               <div className="flex flex-row gap-4">
                 <Input
@@ -157,7 +199,7 @@ export const PersonModal = ({
             </ModalBody>
             <ModalFooter>
               <Button color="primary" type="submit">
-                Update
+                {isUpdate ? "Update" : "Add"}
               </Button>
               <Button color="danger" onPress={onClose}>
                 Cancel

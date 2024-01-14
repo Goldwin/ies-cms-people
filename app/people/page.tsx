@@ -15,11 +15,17 @@ import {
   Input,
   User,
   Link,
+  useDisclosure,
+  Navbar,
+  NavbarBrand,
+  NavbarContent,
+  NavbarItem,
+  Button,
 } from "@nextui-org/react";
 import { useInfiniteScroll } from "@nextui-org/use-infinite-scroll";
-import { size } from "lodash";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Key } from "react-stately";
+import { PersonModal } from "../../components/person/personmodal";
 
 const columns = [
   // { key: "profilePictureUrl", label: "Profile Picture", searchable:false },
@@ -90,6 +96,9 @@ export default function PeoplePage() {
   const [cursor, setCursor] = useState<string>("");
   const [hasMore, setHasMore] = useState(true);
   const [filterValue, setFilterValue] = useState("");
+  const person = useRef<Person>();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const onSearchChange = (value: string) => {
     const v = value.toLowerCase();
     if (value) {
@@ -148,62 +157,98 @@ export default function PeoplePage() {
   });
 
   return (
-    <div className="flex flex-col gap-4 py-8 md:py-10 mx-10">
-      <div className="w-full flex flex-row justify-start">
-        <Input
-          type="text"
-          isClearable={true}
-          className="w-full sm:max-w-[100%]"
-          placeholder="Search by name..."
-          startContent={<SearchIcon />}
-          value={filterValue}
-          onClear={() => setFilterValue("")}
-          onValueChange={onSearchChange}
-        />
-      </div>
-      <div className="w-full flex flex-row justify-start">
-        {rows.length} People
-      </div>
-      <Table
-        layout="fixed"
-        isHeaderSticky={true}
-        aria-label="Church People"
-        baseRef={scrollerRef}
-        bottomContent={
-          hasMore ? (
-            <div className="flex w-full justify-center">
-              <Spinner ref={loaderRef} color="white" />
-            </div>
-          ) : null
-        }
-        classNames={{
-          base: "max-h-[800px]",
-          table: "min-h-[600px]",
-        }}
+    <>
+      <Navbar
+        className="mx-0 px-0 w-full bg-default-100"
+        maxWidth="full"
+        isMenuOpen={isMenuOpen}
+        onMenuOpenChange={setIsMenuOpen}
+        position="static"
       >
-        <TableHeader columns={columns}>
-          {(column) => (
-            <TableColumn key={column.key}>{column.label}</TableColumn>
-          )}
-        </TableHeader>
-        <TableBody
-          items={filteredRows}
-          isLoading={isLoading}
-          loadingContent={<Spinner color="white" />}
-        >
-          {(item) => (
-            <TableRow key={item.id}>
-              {(columnKey) => (
-                <TableCell>
-                  <div className="flex justify-start">
-                    {getMapping(item, columnKey)}
+        <NavbarBrand>
+          <p className="font-bold text-inherit">Church Member</p>
+        </NavbarBrand>
+        <NavbarContent justify="end">
+          <NavbarItem>
+            <Button
+              className="justify-self-end"
+              as={Link}
+              color="primary"
+              href="#"
+              variant="flat"
+              onPress={onOpen}
+            >
+              Add Member
+            </Button>
+          </NavbarItem>
+        </NavbarContent>
+      </Navbar>
+      <PersonModal
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+        person={person.current}
+      />
+      <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
+        <div className="inline-block max-w-max text-center justify-center">
+          <div className="flex flex-col gap-4 py-8 md:py-10 mx-10">
+            <div className="w-full flex flex-row justify-start">
+              <Input
+                type="text"
+                isClearable={true}
+                className="w-full sm:max-w-[100%]"
+                placeholder="Search by name..."
+                startContent={<SearchIcon />}
+                value={filterValue}
+                onClear={() => setFilterValue("")}
+                onValueChange={onSearchChange}
+              />
+            </div>
+            <div className="w-full flex flex-row justify-start">
+              {rows.length} People
+            </div>
+            <Table
+              layout="fixed"
+              isHeaderSticky={true}
+              aria-label="Church People"
+              baseRef={scrollerRef}
+              bottomContent={
+                hasMore ? (
+                  <div className="flex w-full justify-center">
+                    <Spinner ref={loaderRef} color="white" />
                   </div>
-                </TableCell>
-              )}
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
-    </div>
+                ) : null
+              }
+              classNames={{
+                base: "max-h-[800px]",
+                table: "min-h-[600px]",
+              }}
+            >
+              <TableHeader columns={columns}>
+                {(column) => (
+                  <TableColumn key={column.key}>{column.label}</TableColumn>
+                )}
+              </TableHeader>
+              <TableBody
+                items={filteredRows}
+                isLoading={isLoading}
+                loadingContent={<Spinner color="white" />}
+              >
+                {(item) => (
+                  <TableRow key={item.id}>
+                    {(columnKey) => (
+                      <TableCell>
+                        <div className="flex justify-start">
+                          {getMapping(item, columnKey)}
+                        </div>
+                      </TableCell>
+                    )}
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </div>
+        </div>
+      </section>
+    </>
   );
 }
