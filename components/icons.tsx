@@ -122,7 +122,6 @@ export const MoonFilledIcon = ({
     aria-hidden="true"
     focusable="false"
     height={size || height}
-    role="presentation"
     viewBox="0 0 24 24"
     width={size || width}
     {...props}
@@ -144,7 +143,6 @@ export const SunFilledIcon = ({
     aria-hidden="true"
     focusable="false"
     height={size || height}
-    role="presentation"
     viewBox="0 0 24 24"
     width={size || width}
     {...props}
@@ -166,7 +164,6 @@ export const HeartFilledIcon = ({
     aria-hidden="true"
     focusable="false"
     height={size || height}
-    role="presentation"
     viewBox="0 0 24 24"
     width={size || width}
     {...props}
@@ -187,7 +184,6 @@ export const SearchIcon = (props: IconSvgProps) => (
     fill="none"
     focusable="false"
     height="1em"
-    role="presentation"
     viewBox="0 0 24 24"
     width="1em"
     {...props}

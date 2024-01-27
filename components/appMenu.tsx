@@ -8,7 +8,7 @@ import {
   DropdownTrigger,
 } from "@nextui-org/react";
 
-export const AppNav = ({
+export const AppMenu = ({
   title = "Church Management System",
 }: {
   title?: string;
