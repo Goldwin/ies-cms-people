@@ -15,6 +15,7 @@ export const Logo: React.FC<{
     width={size || width}
     height={size || height}
     className={className}
+    priority={true}
   />
   // <svg
   // 	fill="none"

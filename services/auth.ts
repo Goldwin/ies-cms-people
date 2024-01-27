@@ -1,8 +1,7 @@
 import axios from "axios";
 
-const API_URL = process.env.AUTH_URL || "";
+const API_URL = process.env.AUTH_URL ?? "";
 
-//TODO refactor this
 //idea: create interface per method, call that commands
 // then we can export each command from a single conf file, using service implementation as the instance of interface
 
@@ -16,6 +15,7 @@ class AuthService {
       })
       .then(response => {
         if (response.data.data.access_token) {
+          console.log(response.data)
           output.onSuccess(JSON.stringify(response.data.data))
         }
 

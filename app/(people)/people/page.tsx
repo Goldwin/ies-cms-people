@@ -75,15 +75,17 @@ const columnMapping: ColumnMapping = {
 const getMapping = (person: Person, columnKey: Key) => {
   if (columnKey.toString() == "name") {
     return (
-      <User
-        description={
-          <Link href={`/people/${person.id}`} size="sm">
-            {person.emailAddress}
-          </Link>
-        }
-        name={person.getFullName()}
-        avatarProps={{ src: person.profilePictureUrl }}
-      />
+      <Link href={`/people/${person.id}`} color="foreground">
+        <User
+          description={
+            <Link href={`/people/${person.id}`} size="sm">
+              {person.emailAddress}
+            </Link>
+          }
+          name={person.getFullName()}
+          avatarProps={{ src: person.profilePictureUrl }}
+        />
+      </Link>
     );
   }
   return columnMapping[columnKey.toString()](getKeyValue(person, columnKey));
