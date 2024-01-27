@@ -3,6 +3,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { Button, Card, CardBody, CardHeader, Input } from "@nextui-org/react";
 import { login } from "@/commands/auth/login";
 import { redirect } from "next/navigation";
+import { Logo } from "@/components/icons";
 
 interface ILoginInput {
   email: string;
@@ -38,7 +39,10 @@ export default function LoginPage() {
   });
 
   return (
-    <div className="flex justify-center items-center h-96">
+    <div className="flex justify-center items-center h-100% gap-8 flex-col">
+      <div className="inline-block w-full text-center flex flex-row justify-center">
+        <Logo size={256} className="justify-self-start" />
+      </div>
       <Card className="flex w-full flex-wrap md:flex-nowrap w-96 px-8 py-4">
         <CardHeader className="pb-0 pt-2 flex-col items-start">
           <h1 className="text-2xl">Login</h1>

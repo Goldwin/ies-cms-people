@@ -3,13 +3,19 @@ import * as React from "react";
 import { IconSvgProps } from "@/types";
 import Image from "next/image";
 
-export const Logo: React.FC<IconSvgProps> = ({
-  size = 36,
-  width,
-  height,
-  ...props
-}) => (
-  <Image src="/IES.webp" alt={""} width={size} height={size} />
+export const Logo: React.FC<{
+  size: number;
+  width?: number;
+  height?: number;
+  className?: string;
+}> = ({ size = 36, width, height, className }) => (
+  <Image
+    src="/IES.webp"
+    alt={""}
+    width={size || width}
+    height={size || height}
+    className={className}
+  />
   // <svg
   // 	fill="none"
   // 	height={size || height}

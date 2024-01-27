@@ -24,7 +24,7 @@ export const AppMenu = ({
   return (
     <Dropdown>
       <DropdownTrigger>{trigger}</DropdownTrigger>
-      <DropdownMenu>
+      <DropdownMenu aria-label="Application Menu">
         {siteConfig.appNavItems.map((item) => (
           <DropdownItem key={item.key} href={item.href}>
             {item.label}
