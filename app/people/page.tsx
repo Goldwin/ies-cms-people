@@ -25,7 +25,7 @@ import {
 import { useInfiniteScroll } from "@nextui-org/use-infinite-scroll";
 import { useRef, useState } from "react";
 import { Key } from "react-stately";
-import { PersonModal } from "../../components/person/personmodal";
+import { PersonModal } from "@/components/people/person/personmodal";
 
 const columns = [
   // { key: "profilePictureUrl", label: "Profile Picture", searchable:false },

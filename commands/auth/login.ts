@@ -19,7 +19,7 @@ export function isLoggedIn() {
 
 export function getToken() {
     const userData = localStorage.getItem("user")
-    const data = JSON.parse(userData||"{}")
+    const data = JSON.parse(userData??"{}")
     
     return data.access_token||""
 }

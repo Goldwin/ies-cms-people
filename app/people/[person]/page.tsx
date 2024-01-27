@@ -12,7 +12,7 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { PersonHeader } from "./header";
 import { PersonMenu } from "./menu";
-import { PersonModal } from "@/components/person/personmodal";
+import { PersonModal } from "@/components/people/person/personmodal";
 
 export default function PersonPage() {
   const param = useParams();

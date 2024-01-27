@@ -3,6 +3,20 @@ export type SiteConfig = typeof siteConfig;
 export const siteConfig = {
 	name: "IES Church Management System",
 	description: "IES Church Management System",
+	appNavItems: [
+		{
+			key: "home",
+			icon: "",
+			label: "Home",
+			href: "/",
+		},
+		{
+			key: "people",
+			icon: "",
+			label: "People",
+			href: "/people",
+		},
+	],
 	navItems: [
 		{
 			label: "Home",
@@ -17,8 +31,8 @@ export const siteConfig = {
 		// href: "/blog",
 		// },
 		{
-		label: "People",
-		href: "/people",
+			label: "People",
+			href: "/people",
 		}
 	],
 	navMenuItems: [

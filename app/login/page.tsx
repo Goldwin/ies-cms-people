@@ -16,6 +16,7 @@ const onSubmit: SubmitHandler<ILoginInput> = (data) =>
         redirect("/");
       } catch (error) {
         console.log(error);
+        window.location.href = "/";
       }
     },
     onError: function (err: any): void {
