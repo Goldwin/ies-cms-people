@@ -77,11 +77,7 @@ const getMapping = (person: Person, columnKey: Key) => {
     return (
       <Link href={`/people/${person.id}`} color="foreground">
         <User
-          description={
-            <Link href={`/people/${person.id}`} size="sm">
-              {person.emailAddress}
-            </Link>
-          }
+          description={<p className="text-primary">{person.emailAddress}</p>}
           name={person.getFullName()}
           avatarProps={{ src: person.profilePictureUrl }}
         />

@@ -4,7 +4,7 @@ import { Person } from "@/entities/people/person";
 import axios from "axios";
 import { camelCase, snakeCase } from 'lodash';
 
-const API_URL = process.env.PEOPLE_URL || "";
+const API_URL = process.env.PEOPLE_URL ?? "";
 
 const camelizeKeys:any = (obj:any) => {
   if (Array.isArray(obj)) {
@@ -36,13 +36,20 @@ const snakeCaseKeys:any = (obj:any) => {
   return obj;
 };
 
+interface SearchQuery {
+  limit: number  
+  lastID: string
+  namePrefix?: string
+}
+
 class PeopleService {
-  async search(searchQuery: { limit: number; lastID: string}, output: Output<Person[]>) {        
+  async search(searchQuery: SearchQuery, output: Output<Person[]>) {        
       const url = API_URL + "/search"
       const token = getToken()
       return axios.post(url, {
           limit: searchQuery.limit,
-          last_id: searchQuery.lastID
+          last_id: searchQuery.lastID,
+          name_prefix: searchQuery.namePrefix??""
       }, {headers: {"Authorization": `Bearer ${token}`}}).then(response => {
           let persons:Person[]
           persons = []
