@@ -24,7 +24,6 @@ export default function PersonPage() {
         setPerson(person);
       },
       onError: (error) => {
-        console.log(error);
       },
     });
   }, [param.person]);

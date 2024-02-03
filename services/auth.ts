@@ -15,7 +15,6 @@ class AuthService {
       })
       .then(response => {
         if (response.data.data.access_token) {
-          console.log(response.data)
           output.onSuccess(JSON.stringify(response.data.data))
         }
 

@@ -22,7 +22,6 @@ export const UserMenu = () => {
                 try {
                   redirect("/");
                 } catch (error) {
-                  console.log(error);
                   window.location.href = "/";
                 }
               },
