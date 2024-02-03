@@ -1,6 +1,6 @@
 'use client'
 
-import { isLoggedIn } from "@/commands/auth/login"
+import { isLoggedIn } from "@/lib/commands/auth/login"
 import { redirect } from "next/navigation"
 
 export function navigationGuard(path: string) {
