@@ -4,7 +4,7 @@ import { IconSvgProps } from "@/types";
 import Image from "next/image";
 
 export const Logo: React.FC<{
-  size: number;
+  size?: number;
   width?: number;
   height?: number;
   className?: string;

@@ -1,12 +1,13 @@
 /** @type {import('next').NextConfig} */
-const webpack = require('webpack')
-const { parsed: myEnv, error: envError } = require('dotenv').config()
+const webpack = require("webpack");
+const { parsed: myEnv, error: envError } = require("dotenv").config();
 
 const nextConfig = {
-    webpack(config) {
-        config.plugins.push(new webpack.EnvironmentPlugin(myEnv))
-        return config
-    }
-}
+  webpack(config) {
+    config.plugins.push(new webpack.EnvironmentPlugin(myEnv));
+    return config;
+  },
+  output: "standalone",
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;
