@@ -1,13 +1,14 @@
 'use client'
 
+import { isLoggedIn } from "@/commands/auth/login"
 import { redirect } from "next/navigation"
 
 export function navigationGuard(path: string) {
-    const token = localStorage.getItem('user')
+    const loggedInStatus = isLoggedIn()
 
-    if(!token && path !== '/login') {
+    if(!loggedInStatus && path !== '/login') {
         redirect("/login")
-    } else if(token && path === '/login') {
-        redirect("/home")
+    } else if(loggedInStatus && path === '/login') {
+        redirect("/")
     }
 }
