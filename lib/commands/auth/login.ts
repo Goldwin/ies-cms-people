@@ -15,7 +15,6 @@ export function login(email: string, password: string, output: Output<void>): vo
 }
 
 export function isLoggedIn() {
-    const obj = getCookie(TOKEN_COOKIE_NAME)
     return getCookie(TOKEN_COOKIE_NAME)
 }
 
