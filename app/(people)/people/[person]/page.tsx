@@ -13,30 +13,44 @@ import { useEffect, useState } from "react";
 import { PersonHeader } from "./header";
 import { PersonMenu } from "./menu";
 import { PersonModal } from "@/components/people/person/personmodal";
+import { HouseholdModal } from "@/components/people/household/householdmodal";
 
 export default function PersonPage() {
   const param = useParams();
   const [person, setPerson] = useState<Person | undefined>();
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const {
+    isOpen: isPersonOpen,
+    onOpen: onPersonOpen,
+    onOpenChange: onPersonOpenChange,
+  } = useDisclosure();
+  const {
+    isOpen: isHouseholdOpen,
+    onOpen: onHouseholdOpen,
+    onOpenChange: onHouseholdChange,
+  } = useDisclosure();
   useEffect(() => {
     peopleService.get(param.person as string, {
       onSuccess: (person) => {
         setPerson(person);
       },
-      onError: (error) => {
-      },
+      onError: (error) => {},
     });
   }, [param.person]);
   return (
     <>
       <PersonModal
-        isOpen={isOpen}
-        onOpenChange={onOpenChange}
+        isOpen={isPersonOpen}
+        onOpenChange={onPersonOpenChange}
         person={person}
         callback={(person) => {
           setPerson(person);
         }}
       />
+      <HouseholdModal
+        isOpen={isHouseholdOpen}
+        onOpenChange={onHouseholdChange}
+      />
+
       <PersonHeader person={person} />
       <div className="grid grid-cols-6 items-center justify-center divide-x h-full">
         <PersonMenu id={param.person as string} focus="Profile" />
@@ -47,7 +61,7 @@ export default function PersonPage() {
                 <div className="gap-4 flex flex-col">
                   <div className="flex flex-row justify-between">
                     <h1 className="text-xl">Contact Information</h1>
-                    <Button color="primary" size="sm" onPress={onOpen}>
+                    <Button color="primary" size="sm" onPress={onPersonOpen}>
                       Edit
                     </Button>
                   </div>
@@ -92,7 +106,7 @@ export default function PersonPage() {
                 <div className="gap-4 flex flex-col">
                   <div className="flex flex-row justify-between">
                     <h1 className="text-xl">{person?.lastName} Household</h1>
-                    <Button color="primary" size="sm">
+                    <Button color="primary" size="sm" onPress={onHouseholdOpen}>
                       Edit
                     </Button>
                   </div>
