@@ -23,10 +23,6 @@ class AuthService {
         output.onError(error)
       });
   }
-
-  logout() {
-    localStorage.removeItem("user");
-  }
 }
 
 const authService = new AuthService();
