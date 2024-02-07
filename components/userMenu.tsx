@@ -11,7 +11,7 @@ import { redirect } from "next/navigation";
 export const UserMenu = () => {
   return (
     <Dropdown aria-label="">
-      <DropdownTrigger>
+      <DropdownTrigger className="cursor-pointer">
         <Avatar></Avatar>
       </DropdownTrigger>
       <DropdownMenu aria-label="User Menu">
