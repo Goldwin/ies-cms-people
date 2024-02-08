@@ -1,3 +1,4 @@
+import { EmailIcon, PhoneIcon } from "@/components/icons";
 import { Person } from "@/entities/people/person";
 import peopleService from "@/services/people";
 import {
@@ -93,7 +94,12 @@ export const UpdateHouseholdModal = ({
     setPersonList([...personList, person]);
   };
   return (
-    <Modal isOpen={isOpen} onOpenChange={onOpenChange} size="xl">
+    <Modal
+      isOpen={isOpen}
+      onOpenChange={onOpenChange}
+      size="xl"
+      isDismissable={false}
+    >
       <ModalContent>
         {(onClose) => (
           <form>
@@ -115,7 +121,17 @@ export const UpdateHouseholdModal = ({
                       )}
                       <input type="hidden" value={person.id} />
                     </CardHeader>
-                    <CardBody></CardBody>
+                    <CardBody className="grid grid-cols-11 gap-4 justify-start">
+                      <div className="col-span-1"></div>
+                      <span className="col-span-5 grid grid-cols-8 text-sm gap-4">
+                        <EmailIcon />
+                        <em className="col-span-7">{person.emailAddress}</em>
+                      </span>
+                      <span className="col-span-5 text-sm grid grid-cols-8 gap-4">
+                        <PhoneIcon />
+                        <em className="col-span-7">{person.phoneNumber}</em>
+                      </span>
+                    </CardBody>
                     <CardFooter className="gap-2">
                       <Button
                         color="danger"
@@ -157,17 +173,27 @@ export const UpdateHouseholdModal = ({
               </div>
               <div>
                 {!isOnSearch && (
-                  <Button color="primary" onClick={() => setIsOnSearch(true)} size="sm">
+                  <Button
+                    color="secondary"
+                    onClick={() => setIsOnSearch(true)}
+                    size="sm"
+                  >
                     Add
                   </Button>
                 )}
               </div>
             </ModalBody>
             <ModalFooter className="flex flex-row justify-between">
-              <Button color="danger" size="sm">Remove Household</Button>
+              <Button color="danger" size="sm">
+                Remove Household
+              </Button>
               <div className="flex gap-2">
-                <Button color="primary" size="sm">Save</Button>
-                <Button color="default" size="sm">Cancel</Button>
+                <Button color="primary" size="sm">
+                  Save
+                </Button>
+                <Button color="default" size="sm" onClick={onClose}>
+                  Cancel
+                </Button>
               </div>
             </ModalFooter>
           </form>
