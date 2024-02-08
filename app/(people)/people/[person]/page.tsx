@@ -13,7 +13,8 @@ import { useEffect, useState } from "react";
 import { PersonHeader } from "./header";
 import { PersonMenu } from "./menu";
 import { PersonModal } from "@/components/people/person/personmodal";
-import { HouseholdModal } from "@/components/people/household/householdmodal";
+import { UpdateHouseholdModal } from "@/components/people/household/updatehouseholdmodal";
+import { EmailIcon, LocationIcon, PhoneIcon } from "@/components/icons";
 
 export default function PersonPage() {
   const param = useParams();
@@ -46,7 +47,7 @@ export default function PersonPage() {
           setPerson(person);
         }}
       />
-      <HouseholdModal
+      <UpdateHouseholdModal
         isOpen={isHouseholdOpen}
         onOpenChange={onHouseholdChange}
       />
@@ -65,19 +66,27 @@ export default function PersonPage() {
                       Edit
                     </Button>
                   </div>
-                  <div className="gap-4 flex flex-col w-72">
-                    <div className="gap-4 flex flex-row justify-between">
-                      <p className="text-foreground-500">Email</p>
-                      <p>{person?.emailAddress}</p>
-                    </div>
-                    <div className="gap-4 flex flex-row justify-between">
-                      <p className="text-foreground-500">Phone</p>
-                      <p>{person?.phoneNumber ? person?.phoneNumber : "N/A"}</p>
-                    </div>
-                    <div className="gap-4 flex flex-row justify-between">
-                      <p className="text-foreground-500">Address</p>
-                      <p>{person?.address ? person?.address : "N/A"}</p>
-                    </div>
+                  <div className="gap-4 grid grid-cols-7 w-96">
+                    <p className="text-foreground-500 col-span-2 flex gap-1">
+                      <EmailIcon />
+                      Email
+                    </p>
+                    <p className="col-span-5">{person?.emailAddress}</p>
+
+                    <p className="text-foreground-500 flex gap-1 col-span-2">
+                      <PhoneIcon /> Phone
+                    </p>
+                    <p className="col-span-5">
+                      {person?.phoneNumber ? person?.phoneNumber : "N/A"}
+                    </p>
+
+                    <p className="text-foreground-500 flex gap-1 col-span-2">
+                      <LocationIcon />
+                      Address
+                    </p>
+                    <p className="words-break col-span-5">
+                      {person?.address ? person?.address : "N/A"}
+                    </p>
                   </div>
                 </div>
                 <div className="gap-4 flex flex-col">
