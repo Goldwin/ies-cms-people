@@ -123,14 +123,18 @@ export const UpdateHouseholdModal = ({
                     </CardHeader>
                     <CardBody className="grid grid-cols-11 gap-4 justify-start">
                       <div className="col-span-1"></div>
-                      <span className="col-span-5 grid grid-cols-8 text-sm gap-4">
-                        <EmailIcon />
-                        <em className="col-span-7">{person.emailAddress}</em>
-                      </span>
-                      <span className="col-span-5 text-sm grid grid-cols-8 gap-4">
-                        <PhoneIcon />
-                        <em className="col-span-7">{person.phoneNumber}</em>
-                      </span>
+                      {person.emailAddress && (
+                        <span className="col-span-5 grid grid-cols-8 text-sm gap-4">
+                          <EmailIcon size={16} />
+                          <em className="col-span-7">{person.emailAddress}</em>
+                        </span>
+                      )}
+                      {person.phoneNumber && (
+                        <span className="col-span-5 text-sm grid grid-cols-8 gap-4">
+                          <PhoneIcon size={16} />
+                          <em className="col-span-7">{person.phoneNumber}</em>
+                        </span>
+                      )}
                     </CardBody>
                     <CardFooter className="gap-2">
                       <Button

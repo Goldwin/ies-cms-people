@@ -40,7 +40,7 @@ export const PersonModal = ({
   isOpen,
   onOpenChange,
   person,
-  callback,
+  callback = () => {},
 }: {
   isOpen: boolean;
   onOpenChange: () => void;
@@ -66,6 +66,8 @@ export const PersonModal = ({
           isUpdate ? "updated" : "added"
         } ${v.getFullName()}'s profile`,
       });
+      callback(v);
+      onOpenChange();
     },
     onError: function (err: any): void {
       const x = {
@@ -83,7 +85,12 @@ export const PersonModal = ({
     : getAddPersonSubmitHandler(output);
 
   return (
-    <Modal isOpen={isOpen} onOpenChange={onOpenChange} size="xl">
+    <Modal
+      isOpen={isOpen}
+      onOpenChange={onOpenChange}
+      size="xl"
+      isDismissable={false}
+    >
       <ModalContent>
         {(onClose) => (
           <form onSubmit={handleSubmit(onSubmit)}>
@@ -118,12 +125,12 @@ export const PersonModal = ({
                       message: "First Name must be at least 3 characters",
                     },
                   })}
-                  value={person?.firstName}
+                  defaultValue={person?.firstName}
                 />
                 <Input
                   label="Middle Name"
                   {...register("middleName")}
-                  value={person?.middleName}
+                  defaultValue={person?.middleName}
                 />
                 <Input
                   label="Last Name"
@@ -142,7 +149,7 @@ export const PersonModal = ({
                 <Input
                   label="Email Address"
                   errorMessage={errors.emailAddress?.message}
-                  value={person?.emailAddress}
+                  defaultValue={person?.emailAddress}
                   {...register("emailAddress", {
                     pattern: {
                       value: /$|^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
@@ -154,14 +161,14 @@ export const PersonModal = ({
               <div className="flex flex-col">
                 <Input
                   label="Phone Number"
-                  value={person?.phoneNumber}
+                  defaultValue={person?.phoneNumber}
                   {...register("phoneNumber")}
                 />
               </div>
               <div className="flex flex-col">
                 <Input
                   label="Address"
-                  value={person?.address}
+                  defaultValue={person?.address}
                   {...register("address")}
                 />
               </div>
@@ -180,14 +187,22 @@ export const PersonModal = ({
                 />
               </div>
               <div className="flex flex-row gap-4">
-                <Select label="Gender" {...register("gender")}>
+                <Select
+                  label="Gender"
+                  {...register("gender")}
+                  defaultSelectedKeys={person?.gender}
+                >
                   {genders.map((gender) => (
                     <SelectItem key={gender} value={gender.toUpperCase()}>
                       {gender}
                     </SelectItem>
                   ))}
                 </Select>
-                <Select label="Marital Status" {...register("maritalStatus")}>
+                <Select
+                  label="Marital Status"
+                  {...register("maritalStatus")}
+                  defaultSelectedKeys={person?.maritalStatus}
+                >
                   {maritalStatus.map((status) => (
                     <SelectItem key={status} value={status.toUpperCase()}>
                       {status}
