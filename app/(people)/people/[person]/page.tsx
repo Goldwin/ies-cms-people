@@ -66,54 +66,6 @@ export default function PersonPage() {
                       Edit
                     </Button>
                   </div>
-                  {/* <div className="gap-4 flex flex-row w-72 justify-between">
-                    <div className="gap-4 flex flex-col">
-                      <p className="text-foreground-500 flex gap-1">
-                        <EmailIcon />
-                        Email
-                      </p>
-                      <p className="text-foreground-500 flex gap-1">
-                        <PhoneIcon /> Phone
-                      </p>
-                      <p className="text-foreground-500 flex gap-1">
-                        <LocationIcon />
-                        Address
-                      </p>
-                    </div>
-                    <div className="gap-4 flex flex-col">
-                      <p>
-                        {person?.emailAddress ? person.emailAddress : "N/A"}
-                      </p>
-                      <p>{person?.phoneNumber ? person?.phoneNumber : "N/A"}</p>
-                      <p className="">
-                        {person?.address ? person?.address : "N/A"}
-                      </p>
-                    </div>
-                  </div> */}
-                  {/* <div className="gap-4 flex flex-col w-72 justify-between">
-                    <div className="gap-4 flex flex-row justify-between">
-                      <p className="text-foreground-500 flex gap-1">
-                        <EmailIcon />
-                        Email
-                      </p>
-                      <p>{person?.emailAddress}</p>
-                    </div>
-                    <div className="gap-4 flex flex-row justify-between">
-                      <p className="text-foreground-500 flex gap-1">
-                        <PhoneIcon /> Phone
-                      </p>
-                      <p>{person?.phoneNumber ? person?.phoneNumber : "N/A"}</p>
-                    </div>
-                    <div className="gap-4 flex flex-row justify-between">
-                      <p className="text-foreground-500 flex gap-1">
-                        <LocationIcon />
-                        Address
-                      </p>
-                      <p className="words-break">
-                        {person?.address ? person?.address : "N/A"}
-                      </p>
-                    </div>
-                  </div> */}
                   <div className="gap-4 grid grid-cols-7 w-96">
                     <p className="text-foreground-500 col-span-2 flex gap-1">
                       <EmailIcon />
