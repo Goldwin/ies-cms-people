@@ -13,7 +13,7 @@ import { useEffect, useState } from "react";
 import { PersonHeader } from "./header";
 import { PersonMenu } from "./menu";
 import { PersonModal } from "@/components/people/person/personmodal";
-import { HouseholdModal } from "@/components/people/household/householdmodal";
+import { UpdateHouseholdModal } from "@/components/people/household/updatehouseholdmodal";
 
 export default function PersonPage() {
   const param = useParams();
@@ -46,7 +46,7 @@ export default function PersonPage() {
           setPerson(person);
         }}
       />
-      <HouseholdModal
+      <UpdateHouseholdModal
         isOpen={isHouseholdOpen}
         onOpenChange={onHouseholdChange}
       />
