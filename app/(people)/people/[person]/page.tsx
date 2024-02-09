@@ -71,7 +71,7 @@ export default function PersonPage() {
                       <EmailIcon />
                       Email
                     </p>
-                    <p className="col-span-5">{person?.emailAddress}</p>
+                    <p className="col-span-5">{person?.emailAddress ? person.emailAddress: "N/A"}</p>
 
                     <p className="text-foreground-500 flex gap-1 col-span-2">
                       <PhoneIcon /> Phone
