@@ -1,4 +1,5 @@
 import { EmailIcon, PhoneIcon } from "@/components/icons";
+import { Household } from "@/entities/people/household";
 import { Person } from "@/entities/people/person";
 import peopleService from "@/services/people";
 import {
@@ -79,9 +80,11 @@ export const PersonCombo = ({
 
 export const UpdateHouseholdModal = ({
   isOpen,
+  household,
   onOpenChange,
 }: {
   isOpen: boolean;
+  household: Household;
   onOpenChange: () => void;
 }) => {
   const [isOnSearch, setIsOnSearch] = useState<boolean>(false);
@@ -90,6 +93,11 @@ export const UpdateHouseholdModal = ({
   const addPerson = (person: Person) => {
     setPersonList([...personList, person]);
   };
+
+  useEffect(() => {
+    setPersonList([household.householdHead, ...household.members]);
+    setPrimaryPersonId(household.householdHead.id);
+  }, [household]);
   return (
     <Modal
       isOpen={isOpen}
@@ -103,7 +111,11 @@ export const UpdateHouseholdModal = ({
             <ModalHeader>Household</ModalHeader>
             <ModalBody>
               <div>
-                <Input label="Household Name" labelPlacement="inside" />
+                <Input
+                  label="Household Name"
+                  labelPlacement="inside"
+                  defaultValue={household.name}
+                />
               </div>
               {/* <div>Profpic Dropzone Here</div> */}
               <div>

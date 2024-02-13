@@ -5,7 +5,9 @@ import {
   Button,
   Card,
   CardBody,
+  Link,
   Skeleton,
+  User,
   useDisclosure,
 } from "@nextui-org/react";
 import { useParams } from "next/navigation";
@@ -42,7 +44,6 @@ export default function PersonPage() {
       .getHousehold(param.person as string)
       .then((household) => {
         setHousehold(household);
-        console.log(household);
       })
       .catch((error) => {
         console.log("error when getting household", error);
@@ -58,10 +59,13 @@ export default function PersonPage() {
           setPerson(person);
         }}
       />
-      <UpdateHouseholdModal
-        isOpen={isHouseholdOpen}
-        onOpenChange={onHouseholdChange}
-      />
+      {household && (
+        <UpdateHouseholdModal
+          isOpen={isHouseholdOpen}
+          onOpenChange={onHouseholdChange}
+          household={household}
+        />
+      )}
 
       <PersonHeader person={person} />
       <div className="grid grid-cols-6 items-center justify-center divide-x h-full">
@@ -122,7 +126,7 @@ export default function PersonPage() {
               </CardBody>
             </Card>
           </Skeleton>
-          <Skeleton isLoaded={!!person} className="w-[30%]">
+          <Skeleton isLoaded={!!household} className="w-[30%]">
             <Card className="w-full">
               <CardBody className="gap-8">
                 <div className="gap-4 flex flex-col">
@@ -133,8 +137,40 @@ export default function PersonPage() {
                     </Button>
                   </div>
                   <div>
-                    <p className="text-lg">{person?.getFullName()}</p>
+                    <Link
+                      href={`/people/${household?.householdHead.id}`}
+                      color="foreground"
+                    >
+                      <User
+                        name={household?.householdHead.getFullName()}
+                        avatarProps={{
+                          src: household?.householdHead.profilePictureUrl,
+                        }}
+                        description={
+                          <p className="text-foreground-500">
+                            {household?.householdHead.gender}
+                          </p>
+                        }
+                      />
+                    </Link>
                   </div>
+                  {household?.members.length &&
+                    household.members.length > 0 &&
+                    household?.members.map((member) => (
+                      <div key={member.id}>
+                        <Link href={`/people/${member.id}`} color="foreground">
+                          <User
+                            name={member.getFullName()}
+                            avatarProps={{ src: member.profilePictureUrl }}
+                            description={
+                              <p className="text-foreground-500">
+                                {member.gender}
+                              </p>
+                            }
+                          />
+                        </Link>
+                      </div>
+                    ))}
                 </div>
               </CardBody>
             </Card>
