@@ -82,10 +82,12 @@ export const UpdateHouseholdModal = ({
   isOpen,
   household,
   onOpenChange,
+  onSuccess,
 }: {
   isOpen: boolean;
   household: Household;
   onOpenChange: () => void;
+  onSuccess?: (household: Household) => void;
 }) => {
   const [isOnSearch, setIsOnSearch] = useState<boolean>(false);
   const [personList, setPersonList] = useState<Person[]>([]);

@@ -25,6 +25,7 @@ import {
   PhoneIcon,
 } from "@/components/icons";
 import { Household } from "@/entities/people/household";
+import { CreateHouseholdModal } from "@/components/people/household/createhouseholdmodal";
 
 const HouseholdCard = ({
   household,
@@ -87,17 +88,29 @@ const HouseholdCard = ({
   );
 };
 
-const NoHouseholdCard = () => (
+const NoHouseholdCard = ({
+  person,
+  onHouseholdOpen,
+}: {
+  person?: Person;
+  onHouseholdOpen: () => void;
+}) => (
   <Card className="w-full">
-    <CardBody className="gap-8">
-      <div className="gap-4 flex flex-col">
-        <div className="flex flex-row justify-between">
-          <h1 className="text-xl">Household</h1>
-          <Button color="primary" size="sm">
-            Edit
-          </Button>
-        </div>
-        <div></div>
+    <CardHeader className="flex flex-row justify-between">
+      <h1 className="text-xl">Household</h1>
+    </CardHeader>
+    <CardBody className="gap-8 flex flex-col justify-center items-center">
+      <div className="gap-4 flex flex-col w-10/12 items-center">
+        <p className="text-center">
+          {person?.getFullName()} has not been added to a household yet
+        </p>
+        <Link
+          className="text-center text-small"
+          href="#"
+          onPress={onHouseholdOpen}
+        >
+          Create One
+        </Link>
       </div>
     </CardBody>
   </Card>
@@ -114,10 +127,17 @@ export default function PersonPage() {
     onOpenChange: onPersonOpenChange,
   } = useDisclosure();
   const {
-    isOpen: isHouseholdOpen,
-    onOpen: onHouseholdOpen,
-    onOpenChange: onHouseholdChange,
+    isOpen: isHouseholdUpdateModalOpen,
+    onOpen: onHouseholdUpdateModalOpen,
+    onOpenChange: onHouseholdUpdateModalChange,
   } = useDisclosure();
+
+  const {
+    isOpen: isHouseholdCreationModalOpen,
+    onOpen: onHouseholdCreationModalOpen,
+    onOpenChange: onHouseholdCreationModalChange,
+  } = useDisclosure();
+
   useEffect(() => {
     peopleService.get(param.person as string, {
       onSuccess: (person) => {
@@ -147,9 +167,20 @@ export default function PersonPage() {
       />
       {household && (
         <UpdateHouseholdModal
-          isOpen={isHouseholdOpen}
-          onOpenChange={onHouseholdChange}
+          isOpen={isHouseholdUpdateModalOpen}
+          onOpenChange={onHouseholdUpdateModalChange}
           household={household}
+        />
+      )}
+
+      {!household && (
+        <CreateHouseholdModal
+          householdHead={person}
+          isOpen={isHouseholdCreationModalOpen}
+          onOpenChange={onHouseholdCreationModalChange}
+          onSuccess={(household: Household) => {
+            setHousehold(household);
+          }}
         />
       )}
 
@@ -218,10 +249,15 @@ export default function PersonPage() {
             {household && (
               <HouseholdCard
                 household={household}
-                onHouseholdOpen={onHouseholdOpen}
+                onHouseholdOpen={onHouseholdUpdateModalOpen}
               />
             )}
-            {!household && <NoHouseholdCard />}
+            {!household && (
+              <NoHouseholdCard
+                person={person}
+                onHouseholdOpen={onHouseholdCreationModalOpen}
+              />
+            )}
           </Skeleton>
         </section>
       </div>

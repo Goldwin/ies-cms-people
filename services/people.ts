@@ -43,6 +43,12 @@ interface SearchQuery {
   namePrefix?: string;
 }
 
+interface HouseholdCreationRequest {
+  name: string;
+  memberPersonIds: string[];
+  headPersonId: string;
+}
+
 class PeopleService {
   async searchPerson(searchQuery: SearchQuery): Promise<Person[]> {
     const url = API_URL + "/search";
@@ -99,7 +105,7 @@ class PeopleService {
       });
   }
 
-  async getHousehold(personId: string): Promise<Household|null|undefined> {
+  async getHousehold(personId: string): Promise<Household | null | undefined> {
     const url = API_URL + "/person/" + personId + "/household";
     return axios
       .get(url, { headers: { Authorization: `Bearer ${getToken()}` } })
@@ -108,11 +114,29 @@ class PeopleService {
           JSON.stringify(response.data.data)
         );
         return result;
-      }).catch((error) => {
-        if(error.response?.status === 404) {
-          return null
+      })
+      .catch((error) => {
+        if (error.response?.status === 404) {
+          return null;
         }
-        throw error
+        throw error;
+      });
+  }
+
+  async createHousehold(
+    request: HouseholdCreationRequest
+  ): Promise<Household | null | undefined> {
+    const url = API_URL + "/household";
+    const payload = snakeCaseKeys(request);
+    return axios
+      .post(url, payload, {
+        headers: { Authorization: `Bearer ${getToken()}` },
+      })
+      .then((response) => {
+        const result: Household = new Household(
+          JSON.stringify(response.data.data)
+        );
+        return result;
       });
   }
 
