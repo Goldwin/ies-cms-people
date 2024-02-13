@@ -15,10 +15,12 @@ import { PersonMenu } from "./menu";
 import { PersonModal } from "@/components/people/person/personmodal";
 import { UpdateHouseholdModal } from "@/components/people/household/updatehouseholdmodal";
 import { EmailIcon, LocationIcon, PhoneIcon } from "@/components/icons";
+import { Household } from "@/entities/people/household";
 
 export default function PersonPage() {
   const param = useParams();
   const [person, setPerson] = useState<Person | undefined>();
+  const [household, setHousehold] = useState<Household | undefined>();
   const {
     isOpen: isPersonOpen,
     onOpen: onPersonOpen,
@@ -36,6 +38,15 @@ export default function PersonPage() {
       },
       onError: (error) => {},
     });
+    peopleService
+      .getHousehold(param.person as string)
+      .then((household) => {
+        setHousehold(household);
+        console.log(household);
+      })
+      .catch((error) => {
+        console.log("error when getting household", error);
+      });
   }, [param.person]);
   return (
     <>
@@ -71,7 +82,9 @@ export default function PersonPage() {
                       <EmailIcon />
                       Email
                     </p>
-                    <p className="col-span-5">{person?.emailAddress ? person.emailAddress: "N/A"}</p>
+                    <p className="col-span-5">
+                      {person?.emailAddress ? person.emailAddress : "N/A"}
+                    </p>
 
                     <p className="text-foreground-500 flex gap-1 col-span-2">
                       <PhoneIcon /> Phone
@@ -114,7 +127,7 @@ export default function PersonPage() {
               <CardBody className="gap-8">
                 <div className="gap-4 flex flex-col">
                   <div className="flex flex-row justify-between">
-                    <h1 className="text-xl">{person?.lastName} Household</h1>
+                    <h1 className="text-xl">{household?.name} Household</h1>
                     <Button color="primary" size="sm" onPress={onHouseholdOpen}>
                       Edit
                     </Button>

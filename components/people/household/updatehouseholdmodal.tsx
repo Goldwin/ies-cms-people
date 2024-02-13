@@ -38,19 +38,16 @@ export const PersonCombo = ({
 
   useEffect(() => {
     if (prefixKeyword.length >= 3) {
-      peopleService.search(
-        { limit: 100, lastID: "", namePrefix: prefixKeyword },
-        {
-          onSuccess: function (persons: Person[]): void {
-            setPersonList(persons);
-            setIsLoading(false);
-          },
-          onError: function (err: any): void {
-            console.log(err);
-            setIsLoading(false);
-          },
-        }
-      );
+      peopleService
+        .searchPerson({ limit: 100, lastID: "", namePrefix: prefixKeyword })
+        .then((persons) => {
+          setPersonList(persons);
+          setIsLoading(false);
+        })
+        .catch((error) => {
+          console.log(error);
+          setIsLoading(false);
+        });
     }
   }, [prefixKeyword]);
 

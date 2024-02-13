@@ -115,35 +115,35 @@ export default function PeoplePage() {
   };
 
   const search = () => {
-    peopleService.search(
-      { limit: 100, lastID: cursor },
-      {
-        onSuccess: function (v: Person[]): void {
-          setRows(rows.concat(v));
-          if (v.length > 0) {
-            setHasMore(true);
-            setCursor(v[v.length - 1].id);
-            const newRows = rows.concat(v);
-            setRows(newRows);
-            setFilteredRows(
-              newRows.filter((row) => {
-                return (
-                  !filterValue ||
-                  row.firstName.includes(filterValue) ||
-                  row.lastName.includes(filterValue)
-                );
-              })
-            );
-          } else {
-            setHasMore(false);
-          }
-          setIsLoading(false);
-        },
-        onError: function (err: any): void {
-          console.log(err);
-        },
-      }
-    );
+    peopleService
+      .searchPerson({
+        limit: 100,
+        lastID: cursor,
+      })
+      .then((v) => {
+        setRows(rows.concat(v));
+        if (v.length > 0) {
+          setHasMore(true);
+          setCursor(v[v.length - 1].id);
+          const newRows = rows.concat(v);
+          setRows(newRows);
+          setFilteredRows(
+            newRows.filter((row) => {
+              return (
+                !filterValue ||
+                row.firstName.includes(filterValue) ||
+                row.lastName.includes(filterValue)
+              );
+            })
+          );
+        } else {
+          setHasMore(false);
+        }
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const [loaderRef, scrollerRef] = useInfiniteScroll({
