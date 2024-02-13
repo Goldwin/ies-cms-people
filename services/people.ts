@@ -99,7 +99,7 @@ class PeopleService {
       });
   }
 
-  async getHousehold(personId: string): Promise<Household> {
+  async getHousehold(personId: string): Promise<Household|null|undefined> {
     const url = API_URL + "/person/" + personId + "/household";
     return axios
       .get(url, { headers: { Authorization: `Bearer ${getToken()}` } })
@@ -108,6 +108,11 @@ class PeopleService {
           JSON.stringify(response.data.data)
         );
         return result;
+      }).catch((error) => {
+        if(error.response?.status === 404) {
+          return null
+        }
+        throw error
       });
   }
 

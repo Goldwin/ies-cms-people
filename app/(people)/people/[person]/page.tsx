@@ -5,6 +5,7 @@ import {
   Button,
   Card,
   CardBody,
+  CardHeader,
   Link,
   Skeleton,
   User,
@@ -25,10 +26,88 @@ import {
 } from "@/components/icons";
 import { Household } from "@/entities/people/household";
 
+const HouseholdCard = ({
+  household,
+  onHouseholdOpen,
+}: {
+  household?: Household;
+  onHouseholdOpen: () => void;
+}) => {
+  return (
+    <Card className="w-full">
+      <CardHeader className="flex flex-row justify-between">
+        <h1 className="text-xl">{household?.name} Household</h1>
+        <Button color="primary" size="sm" onPress={onHouseholdOpen}>
+          Edit
+        </Button>
+      </CardHeader>
+      <CardBody className="gap-8">
+        <div className="gap-4 flex flex-col">
+          <div>
+            <Link
+              href={`/people/${household?.householdHead.id}`}
+              color="foreground"
+              className="hover:text-primary"
+            >
+              <User
+                name={household?.householdHead.getFullName()}
+                avatarProps={{
+                  src: household?.householdHead.profilePictureUrl,
+                }}
+                description={
+                  <p className="text-foreground-500">
+                    {household?.householdHead.gender}
+                  </p>
+                }
+              />
+            </Link>
+          </div>
+          {household &&
+            household.members.length > 0 &&
+            household?.members.map((member) => (
+              <div key={member.id}>
+                <Link
+                  href={`/people/${member.id}`}
+                  color="foreground"
+                  className="hover:text-primary"
+                >
+                  <User
+                    name={member.getFullName()}
+                    avatarProps={{ src: member.profilePictureUrl }}
+                    description={
+                      <p className="text-foreground-500">{member.gender}</p>
+                    }
+                  />
+                </Link>
+              </div>
+            ))}
+        </div>
+      </CardBody>
+    </Card>
+  );
+};
+
+const NoHouseholdCard = () => (
+  <Card className="w-full">
+    <CardBody className="gap-8">
+      <div className="gap-4 flex flex-col">
+        <div className="flex flex-row justify-between">
+          <h1 className="text-xl">Household</h1>
+          <Button color="primary" size="sm">
+            Edit
+          </Button>
+        </div>
+        <div></div>
+      </div>
+    </CardBody>
+  </Card>
+);
+
 export default function PersonPage() {
   const param = useParams();
   const [person, setPerson] = useState<Person | undefined>();
   const [household, setHousehold] = useState<Household | undefined>();
+  const [isHouseholdLoading, setIsHouseholdLoading] = useState<boolean>(true);
   const {
     isOpen: isPersonOpen,
     onOpen: onPersonOpen,
@@ -49,7 +128,8 @@ export default function PersonPage() {
     peopleService
       .getHousehold(param.person as string)
       .then((household) => {
-        setHousehold(household);
+        if (household) setHousehold(household);
+        setIsHouseholdLoading(false);
       })
       .catch((error) => {
         console.log("error when getting household", error);
@@ -116,75 +196,32 @@ export default function PersonPage() {
                   <div className="flex flex-row justify-between">
                     <h1 className="text-xl">Personal Information</h1>
                   </div>
-                  <div className="gap-4 grid grid-cols-7 w-96">                    
-                      <p className="text-foreground-500 flex gap-1 col-span-2">
-                        <GenderIcon /> Gender
-                      </p>
-                      <p className="col-span-5">{person?.gender ? person?.gender : "N/A"}</p>
-                      <p className="text-foreground-500 flex gap-1 col-span-2">
-                        <BirthdayIcon /> Birthday
-                      </p>
-                      <p className="col-span-5">
-                        {person?.birthday ? person?.getBirthdayString() : "N/A"}
-                      </p>
+                  <div className="gap-4 grid grid-cols-7 w-96">
+                    <p className="text-foreground-500 flex gap-1 col-span-2">
+                      <GenderIcon /> Gender
+                    </p>
+                    <p className="col-span-5">
+                      {person?.gender ? person?.gender : "N/A"}
+                    </p>
+                    <p className="text-foreground-500 flex gap-1 col-span-2">
+                      <BirthdayIcon /> Birthday
+                    </p>
+                    <p className="col-span-5">
+                      {person?.birthday ? person?.getBirthdayString() : "N/A"}
+                    </p>
                   </div>
                 </div>
               </CardBody>
             </Card>
           </Skeleton>
-          <Skeleton isLoaded={!!household} className="w-[30%]">
-            <Card className="w-full">
-              <CardBody className="gap-8">
-                <div className="gap-4 flex flex-col">
-                  <div className="flex flex-row justify-between">
-                    <h1 className="text-xl">{household?.name} Household</h1>
-                    <Button color="primary" size="sm" onPress={onHouseholdOpen}>
-                      Edit
-                    </Button>
-                  </div>
-                  <div>
-                    <Link
-                      href={`/people/${household?.householdHead.id}`}
-                      color="foreground"
-                      className="hover:text-primary"
-                    >
-                      <User
-                        name={household?.householdHead.getFullName()}
-                        avatarProps={{
-                          src: household?.householdHead.profilePictureUrl,
-                        }}
-                        description={
-                          <p className="text-foreground-500">
-                            {household?.householdHead.gender}
-                          </p>
-                        }
-                      />
-                    </Link>
-                  </div>
-                  {household?.members.length &&
-                    household.members.length > 0 &&
-                    household?.members.map((member) => (
-                      <div key={member.id}>
-                        <Link
-                          href={`/people/${member.id}`}
-                          color="foreground"
-                          className="hover:text-primary"
-                        >
-                          <User
-                            name={member.getFullName()}
-                            avatarProps={{ src: member.profilePictureUrl }}
-                            description={
-                              <p className="text-foreground-500">
-                                {member.gender}
-                              </p>
-                            }
-                          />
-                        </Link>
-                      </div>
-                    ))}
-                </div>
-              </CardBody>
-            </Card>
+          <Skeleton isLoaded={!isHouseholdLoading} className="w-[30%]">
+            {household && (
+              <HouseholdCard
+                household={household}
+                onHouseholdOpen={onHouseholdOpen}
+              />
+            )}
+            {!household && <NoHouseholdCard />}
           </Skeleton>
         </section>
       </div>
