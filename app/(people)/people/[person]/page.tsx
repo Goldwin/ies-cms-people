@@ -16,7 +16,13 @@ import { PersonHeader } from "./header";
 import { PersonMenu } from "./menu";
 import { PersonModal } from "@/components/people/person/personmodal";
 import { UpdateHouseholdModal } from "@/components/people/household/updatehouseholdmodal";
-import { EmailIcon, LocationIcon, PhoneIcon } from "@/components/icons";
+import {
+  BirthdayIcon,
+  EmailIcon,
+  GenderIcon,
+  LocationIcon,
+  PhoneIcon,
+} from "@/components/icons";
 import { Household } from "@/entities/people/household";
 
 export default function PersonPage() {
@@ -110,17 +116,17 @@ export default function PersonPage() {
                   <div className="flex flex-row justify-between">
                     <h1 className="text-xl">Personal Information</h1>
                   </div>
-                  <div className="gap-4 flex flex-col w-72">
-                    <div className="gap-4 flex flex-row justify-between">
-                      <p className="text-foreground-500">Gender</p>
-                      <p>{person?.gender ? person?.gender : "N/A"}</p>
-                    </div>
-                    <div className="gap-4 flex flex-row justify-between">
-                      <p className="text-foreground-500">Birthday</p>
-                      <p>
+                  <div className="gap-4 grid grid-cols-7 w-96">                    
+                      <p className="text-foreground-500 flex gap-1 col-span-2">
+                        <GenderIcon /> Gender
+                      </p>
+                      <p className="col-span-5">{person?.gender ? person?.gender : "N/A"}</p>
+                      <p className="text-foreground-500 flex gap-1 col-span-2">
+                        <BirthdayIcon /> Birthday
+                      </p>
+                      <p className="col-span-5">
                         {person?.birthday ? person?.getBirthdayString() : "N/A"}
                       </p>
-                    </div>
                   </div>
                 </div>
               </CardBody>
@@ -140,6 +146,7 @@ export default function PersonPage() {
                     <Link
                       href={`/people/${household?.householdHead.id}`}
                       color="foreground"
+                      className="hover:text-primary"
                     >
                       <User
                         name={household?.householdHead.getFullName()}
@@ -158,7 +165,11 @@ export default function PersonPage() {
                     household.members.length > 0 &&
                     household?.members.map((member) => (
                       <div key={member.id}>
-                        <Link href={`/people/${member.id}`} color="foreground">
+                        <Link
+                          href={`/people/${member.id}`}
+                          color="foreground"
+                          className="hover:text-primary"
+                        >
                           <User
                             name={member.getFullName()}
                             avatarProps={{ src: member.profilePictureUrl }}
