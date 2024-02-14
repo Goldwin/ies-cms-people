@@ -21,6 +21,14 @@ import {
 } from "@nextui-org/react";
 import { debounce } from "lodash";
 import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+
+interface HouseholdUpdateRequest {
+  id: string;
+  name: string;
+  memberPersonIds: string[];
+  headPersonId: string;
+}
 
 export const PersonCombo = ({
   onPersonSelected,
@@ -82,7 +90,7 @@ export const UpdateHouseholdModal = ({
   isOpen,
   household,
   onOpenChange,
-  onSuccess,
+  onSuccess = () => {},
 }: {
   isOpen: boolean;
   household: Household;
@@ -100,6 +108,34 @@ export const UpdateHouseholdModal = ({
     setPersonList([household.householdHead, ...household.members]);
     setPrimaryPersonId(household.householdHead.id);
   }, [household]);
+
+  const { register, unregister, handleSubmit } =
+    useForm<HouseholdUpdateRequest>({
+      mode: "onSubmit",
+    });
+
+  const updateHousehold = (request: HouseholdUpdateRequest) => {
+    let members = request.memberPersonIds ? request.memberPersonIds : [];
+    console.log(members);
+    members = members.filter((id) => id !== "");
+    console.log(members);
+
+    peopleService
+      .updateHousehold({
+        id: request.id,
+        name: request.name,
+        memberPersonIds: members,
+        headPersonId: request.headPersonId,
+      })
+      .then((updatedHousehold) => {
+        if (updatedHousehold) onSuccess(updatedHousehold);
+        onOpenChange();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   return (
     <Modal
       isOpen={isOpen}
@@ -109,7 +145,7 @@ export const UpdateHouseholdModal = ({
     >
       <ModalContent>
         {(onClose) => (
-          <form>
+          <form onSubmit={handleSubmit(updateHousehold)}>
             <ModalHeader>Household</ModalHeader>
             <ModalBody>
               <div>
@@ -117,7 +153,9 @@ export const UpdateHouseholdModal = ({
                   label="Household Name"
                   labelPlacement="inside"
                   defaultValue={household.name}
+                  {...register("name")}
                 />
+                <input type="hidden" value={household.id} {...register("id")} />
               </div>
               {/* <div>Profpic Dropzone Here</div> */}
               <div>
@@ -126,11 +164,26 @@ export const UpdateHouseholdModal = ({
                     <CardHeader className="flex flex-row justify-between w-full">
                       <User name={person.getFullName()} />
                       {primaryPersonId == person.id && (
-                        <Chip color="success" className="text-white">
-                          Primary
-                        </Chip>
+                        <>
+                          <input
+                            type="hidden"
+                            defaultValue={person.id}
+                            key={person.id}
+                            {...register("headPersonId")}
+                          />
+                          <Chip color="success" className="text-white">
+                            Primary
+                          </Chip>
+                        </>
                       )}
-                      <input type="hidden" value={person.id} />
+                      {primaryPersonId != person.id && (
+                        <input
+                          type="hidden"
+                          defaultValue={person.id}
+                          key={person.id}
+                          {...register(`memberPersonIds.${idx}`)}
+                        />
+                      )}
                     </CardHeader>
                     <CardBody className="grid grid-cols-11 gap-4 justify-start">
                       <div className="col-span-1"></div>
@@ -152,6 +205,8 @@ export const UpdateHouseholdModal = ({
                         color="danger"
                         size="sm"
                         onClick={() => {
+                          unregister("headPersonId");
+                          unregister(`memberPersonIds.${idx}`);
                           setPersonList(
                             personList.filter((p) => p.id !== person.id)
                           );
@@ -163,7 +218,11 @@ export const UpdateHouseholdModal = ({
                         <Button
                           size="sm"
                           color="success"
-                          onClick={() => setPrimaryPersonId(person.id)}
+                          onClick={() => {
+                            unregister("headPersonId");
+                            unregister(`memberPersonIds.${idx}`);
+                            setPrimaryPersonId(person.id);
+                          }}
                           className="text-white"
                         >
                           Make Primary
@@ -203,7 +262,7 @@ export const UpdateHouseholdModal = ({
                 Remove Household
               </Button>
               <div className="flex gap-2">
-                <Button color="primary" size="sm">
+                <Button color="primary" size="sm" type="submit">
                   Save
                 </Button>
                 <Button color="default" size="sm" onClick={onClose}>

@@ -42,19 +42,19 @@ export const CreateHouseholdModal = ({
     <Modal isOpen={isOpen} onOpenChange={onOpenChange} isDismissable={false}>
       <ModalContent>
         {(onClose) => (
-          <form>
+          <form onSubmit={handleSubmit(createHousehold)}>
             <ModalHeader>Household</ModalHeader>
             <ModalBody>
               <Input type="text" label="Household Name" {...register("name")} />
               <input
-                hidden
+                type="hidden"
                 {...register("headPersonId")}
-                value={householdHead?.id}
+                defaultValue={householdHead?.id}
               />
             </ModalBody>
             <ModalFooter>
-              <Button color="primary" onClick={handleSubmit(createHousehold)}>
-                Submit
+              <Button color="primary" type="submit">
+                Create
               </Button>
               <Button onClick={onClose}>Cancel</Button>
             </ModalFooter>

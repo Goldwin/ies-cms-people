@@ -49,6 +49,13 @@ interface HouseholdCreationRequest {
   headPersonId: string;
 }
 
+interface HouseholdUpdateRequest {
+  id: string;
+  name: string;
+  memberPersonIds: string[];
+  headPersonId: string;
+}
+
 class PeopleService {
   async searchPerson(searchQuery: SearchQuery): Promise<Person[]> {
     const url = API_URL + "/search";
@@ -138,6 +145,22 @@ class PeopleService {
         );
         return result;
       });
+  }
+
+  async updateHousehold(request: HouseholdUpdateRequest): Promise<Household> {
+    const url = API_URL + "/household/" + request.id;
+    const payload = snakeCaseKeys(request);
+    return axios
+      .put(url, payload, {
+        headers: { Authorization: `Bearer ${getToken()}` },
+      })
+      .then((response) => {
+        const result: Household = new Household(
+          JSON.stringify(response.data.data)
+        );
+        return result;
+      });
+    
   }
 
   async update(personId: string, person: Person, output: Output<Person>) {
