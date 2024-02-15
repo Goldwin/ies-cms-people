@@ -33,10 +33,8 @@ interface HouseholdUpdateRequest {
 
 const PersonCombo = ({
   onPersonSelected,
-  onCancel,
 }: {
   onPersonSelected?: (person: Person) => void;
-  onCancel?: () => void;
 }) => {
   const [prefixKeyword, setPrefixKeyword] = useState<string>("");
   const [personList, setPersonList] = useState<Person[]>([]);
@@ -185,10 +183,17 @@ export const UpdateHouseholdModal = ({
       mode: "onSubmit",
     });
 
+  useEffect(() => {
+    personList.forEach((_, idx) => {
+      unregister(`memberPersonIds.${idx}`);
+    });
+    unregister("headPersonId");
+  }, [personList, unregister, primaryPersonId]);
+
   const updateHousehold = (request: HouseholdUpdateRequest) => {
     let members = request.memberPersonIds ? request.memberPersonIds : [];
     console.log(members);
-    members = members.filter((id) => id !== "");
+    members = members.filter((id) => id !== request.headPersonId);
     console.log(members);
 
     peopleService
@@ -253,14 +258,13 @@ export const UpdateHouseholdModal = ({
                           </Chip>
                         </>
                       )}
-                      {primaryPersonId != person.id && (
-                        <input
-                          type="hidden"
-                          defaultValue={person.id}
-                          key={person.id}
-                          {...register(`memberPersonIds.${idx}`)}
-                        />
-                      )}
+
+                      <input
+                        type="hidden"
+                        defaultValue={person.id}
+                        key={person.id}
+                        {...register(`memberPersonIds.${idx}`)}
+                      />
                     </CardHeader>
                     <CardBody className="grid grid-cols-11 gap-4 justify-start">
                       <div className="col-span-1"></div>
@@ -282,8 +286,6 @@ export const UpdateHouseholdModal = ({
                         color="danger"
                         size="sm"
                         onClick={() => {
-                          unregister("headPersonId");
-                          unregister(`memberPersonIds.${idx}`);
                           setPersonList(
                             personList.filter((p) => p.id !== person.id)
                           );
@@ -296,8 +298,6 @@ export const UpdateHouseholdModal = ({
                           size="sm"
                           color="success"
                           onClick={() => {
-                            unregister("headPersonId");
-                            unregister(`memberPersonIds.${idx}`);
                             setPrimaryPersonId(person.id);
                           }}
                           className="text-white"
@@ -314,9 +314,6 @@ export const UpdateHouseholdModal = ({
                   <PersonCombo
                     onPersonSelected={(person: Person) => {
                       addPerson(person);
-                      setIsOnSearch(false);
-                    }}
-                    onCancel={() => {
                       setIsOnSearch(false);
                     }}
                   />
