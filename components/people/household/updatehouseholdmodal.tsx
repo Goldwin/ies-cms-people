@@ -1,4 +1,5 @@
-import { EmailIcon, PhoneIcon } from "@/components/icons";
+import { DangerIcon, EmailIcon, PhoneIcon } from "@/components/icons";
+import { Household } from "@/entities/people/household";
 import { Person } from "@/entities/people/person";
 import peopleService from "@/services/people";
 import {
@@ -17,16 +18,23 @@ import {
   ModalFooter,
   ModalHeader,
   User,
+  useDisclosure,
 } from "@nextui-org/react";
 import { debounce } from "lodash";
 import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 
-export const PersonCombo = ({
+interface HouseholdUpdateRequest {
+  id: string;
+  name: string;
+  memberPersonIds: string[];
+  headPersonId: string;
+}
+
+const PersonCombo = ({
   onPersonSelected,
-  onCancel,
 }: {
   onPersonSelected?: (person: Person) => void;
-  onCancel?: () => void;
 }) => {
   const [prefixKeyword, setPrefixKeyword] = useState<string>("");
   const [personList, setPersonList] = useState<Person[]>([]);
@@ -38,19 +46,16 @@ export const PersonCombo = ({
 
   useEffect(() => {
     if (prefixKeyword.length >= 3) {
-      peopleService.search(
-        { limit: 100, lastID: "", namePrefix: prefixKeyword },
-        {
-          onSuccess: function (persons: Person[]): void {
-            setPersonList(persons);
-            setIsLoading(false);
-          },
-          onError: function (err: any): void {
-            console.log(err);
-            setIsLoading(false);
-          },
-        }
-      );
+      peopleService
+        .searchPerson({ limit: 100, lastID: "", namePrefix: prefixKeyword })
+        .then((persons) => {
+          setPersonList(persons);
+          setIsLoading(false);
+        })
+        .catch((error) => {
+          console.log(error);
+          setIsLoading(false);
+        });
     }
   }, [prefixKeyword]);
 
@@ -80,19 +85,133 @@ export const PersonCombo = ({
   );
 };
 
-export const UpdateHouseholdModal = ({
+const HouseholdDeletionModal = ({
   isOpen,
+  household,
   onOpenChange,
+  onSuccess = () => {},
 }: {
   isOpen: boolean;
+  household: Household;
   onOpenChange: () => void;
+  onSuccess?: (household: Household | undefined | null) => void;
+}) => {
+  const { register, handleSubmit } = useForm<HouseholdUpdateRequest>({
+    mode: "onSubmit",
+  });
+  const deleteHousehold = (request: HouseholdUpdateRequest) => {
+    peopleService
+      .deleteHousehold(request.id)
+      .then((result) => {
+        if (result) onSuccess(undefined);
+        onOpenChange();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  return (
+    <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+      <ModalContent>
+        {(onClose) => (
+          <form onSubmit={handleSubmit(deleteHousehold)}>
+            <ModalHeader className="flex flex-col justify-center items-center">
+              <div>
+                <DangerIcon size={64} />
+              </div>
+              <div className="text-2xl">Delete Household</div>
+              <input type="hidden" {...register("id")} value={household.id} />
+            </ModalHeader>
+            <ModalBody>
+              <p className="text-center">
+                Are you sure you want to delete the <em>{household.name}</em>{" "}
+                Household?
+              </p>
+              <p className="text-center">This is not reversible.</p>
+            </ModalBody>
+            <ModalFooter className="items-center flex flex-row">
+              <Button
+                onPress={() => {
+                  onClose();
+                }}
+              >
+                No, Keep it
+              </Button>
+              <Button type="submit" color="danger">
+                Yes, Delete it!
+              </Button>
+            </ModalFooter>
+          </form>
+        )}
+      </ModalContent>
+    </Modal>
+  );
+};
+
+export const UpdateHouseholdModal = ({
+  isOpen,
+  household,
+  onOpenChange,
+  onSuccess = () => {},
+}: {
+  isOpen: boolean;
+  household: Household;
+  onOpenChange: () => void;
+  onSuccess?: (household: Household | undefined | null) => void;
 }) => {
   const [isOnSearch, setIsOnSearch] = useState<boolean>(false);
   const [personList, setPersonList] = useState<Person[]>([]);
   const [primaryPersonId, setPrimaryPersonId] = useState<string>("");
+
+  const {
+    isOpen: isDeletionOpen,
+    onOpen: onDeletionOpen,
+    onOpenChange: onDeletionOpenChange,
+  } = useDisclosure();
+
   const addPerson = (person: Person) => {
     setPersonList([...personList, person]);
   };
+
+  useEffect(() => {
+    setPersonList([household.householdHead, ...household.members]);
+    setPrimaryPersonId(household.householdHead.id);
+  }, [household]);
+
+  const { register, unregister, handleSubmit } =
+    useForm<HouseholdUpdateRequest>({
+      mode: "onSubmit",
+    });
+
+  useEffect(() => {
+    personList.forEach((_, idx) => {
+      unregister(`memberPersonIds.${idx}`);
+    });
+    unregister("headPersonId");
+  }, [personList, unregister, primaryPersonId]);
+
+  const updateHousehold = (request: HouseholdUpdateRequest) => {
+    let members = request.memberPersonIds ? request.memberPersonIds : [];
+    console.log(members);
+    members = members.filter((id) => id !== request.headPersonId);
+    console.log(members);
+
+    peopleService
+      .updateHousehold({
+        id: request.id,
+        name: request.name,
+        memberPersonIds: members,
+        headPersonId: request.headPersonId,
+      })
+      .then((updatedHousehold) => {
+        if (updatedHousehold) onSuccess(updatedHousehold);
+        onOpenChange();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   return (
     <Modal
       isOpen={isOpen}
@@ -102,11 +221,23 @@ export const UpdateHouseholdModal = ({
     >
       <ModalContent>
         {(onClose) => (
-          <form>
+          <form onSubmit={handleSubmit(updateHousehold)}>
             <ModalHeader>Household</ModalHeader>
             <ModalBody>
+              <HouseholdDeletionModal
+                isOpen={isDeletionOpen}
+                onOpenChange={onDeletionOpenChange}
+                household={household}
+                onSuccess={onSuccess}
+              />
               <div>
-                <Input label="Household Name" labelPlacement="inside" />
+                <Input
+                  label="Household Name"
+                  labelPlacement="inside"
+                  defaultValue={household.name}
+                  {...register("name")}
+                />
+                <input type="hidden" value={household.id} {...register("id")} />
               </div>
               {/* <div>Profpic Dropzone Here</div> */}
               <div>
@@ -115,11 +246,25 @@ export const UpdateHouseholdModal = ({
                     <CardHeader className="flex flex-row justify-between w-full">
                       <User name={person.getFullName()} />
                       {primaryPersonId == person.id && (
-                        <Chip color="success" className="text-white">
-                          Primary
-                        </Chip>
+                        <>
+                          <input
+                            type="hidden"
+                            defaultValue={person.id}
+                            key={person.id}
+                            {...register("headPersonId")}
+                          />
+                          <Chip color="success" className="text-white">
+                            Primary
+                          </Chip>
+                        </>
                       )}
-                      <input type="hidden" value={person.id} />
+
+                      <input
+                        type="hidden"
+                        defaultValue={person.id}
+                        key={person.id}
+                        {...register(`memberPersonIds.${idx}`)}
+                      />
                     </CardHeader>
                     <CardBody className="grid grid-cols-11 gap-4 justify-start">
                       <div className="col-span-1"></div>
@@ -152,7 +297,9 @@ export const UpdateHouseholdModal = ({
                         <Button
                           size="sm"
                           color="success"
-                          onClick={() => setPrimaryPersonId(person.id)}
+                          onClick={() => {
+                            setPrimaryPersonId(person.id);
+                          }}
                           className="text-white"
                         >
                           Make Primary
@@ -167,9 +314,6 @@ export const UpdateHouseholdModal = ({
                   <PersonCombo
                     onPersonSelected={(person: Person) => {
                       addPerson(person);
-                      setIsOnSearch(false);
-                    }}
-                    onCancel={() => {
                       setIsOnSearch(false);
                     }}
                   />
@@ -188,11 +332,11 @@ export const UpdateHouseholdModal = ({
               </div>
             </ModalBody>
             <ModalFooter className="flex flex-row justify-between">
-              <Button color="danger" size="sm">
+              <Button color="danger" size="sm" onClick={onDeletionOpen}>
                 Remove Household
               </Button>
               <div className="flex gap-2">
-                <Button color="primary" size="sm">
+                <Button color="primary" size="sm" type="submit">
                   Save
                 </Button>
                 <Button color="default" size="sm" onClick={onClose}>
