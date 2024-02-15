@@ -1,4 +1,4 @@
-import { EmailIcon, PhoneIcon } from "@/components/icons";
+import { DangerIcon, EmailIcon, PhoneIcon } from "@/components/icons";
 import { Household } from "@/entities/people/household";
 import { Person } from "@/entities/people/person";
 import peopleService from "@/services/people";
@@ -18,6 +18,7 @@ import {
   ModalFooter,
   ModalHeader,
   User,
+  useDisclosure,
 } from "@nextui-org/react";
 import { debounce } from "lodash";
 import { useEffect, useState } from "react";
@@ -30,7 +31,7 @@ interface HouseholdUpdateRequest {
   headPersonId: string;
 }
 
-export const PersonCombo = ({
+const PersonCombo = ({
   onPersonSelected,
   onCancel,
 }: {
@@ -86,6 +87,69 @@ export const PersonCombo = ({
   );
 };
 
+const HouseholdDeletionModal = ({
+  isOpen,
+  household,
+  onOpenChange,
+  onSuccess = () => {},
+}: {
+  isOpen: boolean;
+  household: Household;
+  onOpenChange: () => void;
+  onSuccess?: (household: Household | undefined | null) => void;
+}) => {
+  const { register, handleSubmit } = useForm<HouseholdUpdateRequest>({
+    mode: "onSubmit",
+  });
+  const deleteHousehold = (request: HouseholdUpdateRequest) => {
+    peopleService
+      .deleteHousehold(request.id)
+      .then((result) => {
+        if (result) onSuccess(undefined);
+        onOpenChange();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  return (
+    <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+      <ModalContent>
+        {(onClose) => (
+          <form onSubmit={handleSubmit(deleteHousehold)}>
+            <ModalHeader className="flex flex-col justify-center items-center">
+              <div>
+                <DangerIcon size={64} />
+              </div>
+              <div className="text-2xl">Delete Household</div>
+              <input type="hidden" {...register("id")} value={household.id} />
+            </ModalHeader>
+            <ModalBody>
+              <p className="text-center">
+                Are you sure you want to delete the <em>{household.name}</em>{" "}
+                Household?
+              </p>
+              <p className="text-center">This is not reversible.</p>
+            </ModalBody>
+            <ModalFooter className="items-center flex flex-row">
+              <Button
+                onPress={() => {
+                  onClose();
+                }}
+              >
+                No, Keep it
+              </Button>
+              <Button type="submit" color="danger">
+                Yes, Delete it!
+              </Button>
+            </ModalFooter>
+          </form>
+        )}
+      </ModalContent>
+    </Modal>
+  );
+};
+
 export const UpdateHouseholdModal = ({
   isOpen,
   household,
@@ -95,11 +159,18 @@ export const UpdateHouseholdModal = ({
   isOpen: boolean;
   household: Household;
   onOpenChange: () => void;
-  onSuccess?: (household: Household) => void;
+  onSuccess?: (household: Household | undefined | null) => void;
 }) => {
   const [isOnSearch, setIsOnSearch] = useState<boolean>(false);
   const [personList, setPersonList] = useState<Person[]>([]);
   const [primaryPersonId, setPrimaryPersonId] = useState<string>("");
+
+  const {
+    isOpen: isDeletionOpen,
+    onOpen: onDeletionOpen,
+    onOpenChange: onDeletionOpenChange,
+  } = useDisclosure();
+
   const addPerson = (person: Person) => {
     setPersonList([...personList, person]);
   };
@@ -148,6 +219,12 @@ export const UpdateHouseholdModal = ({
           <form onSubmit={handleSubmit(updateHousehold)}>
             <ModalHeader>Household</ModalHeader>
             <ModalBody>
+              <HouseholdDeletionModal
+                isOpen={isDeletionOpen}
+                onOpenChange={onDeletionOpenChange}
+                household={household}
+                onSuccess={onSuccess}
+              />
               <div>
                 <Input
                   label="Household Name"
@@ -258,7 +335,7 @@ export const UpdateHouseholdModal = ({
               </div>
             </ModalBody>
             <ModalFooter className="flex flex-row justify-between">
-              <Button color="danger" size="sm">
+              <Button color="danger" size="sm" onClick={onDeletionOpen}>
                 Remove Household
               </Button>
               <div className="flex gap-2">

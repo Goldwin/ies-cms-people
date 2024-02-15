@@ -170,8 +170,9 @@ export default function PersonPage() {
           isOpen={isHouseholdUpdateModalOpen}
           onOpenChange={onHouseholdUpdateModalChange}
           household={household}
-          onSuccess={(household: Household) => {
-            setHousehold(household);
+          onSuccess={(household: Household | undefined | null) => {
+            if (household) setHousehold(household);
+            else setHousehold(undefined);
           }}
         />
       )}

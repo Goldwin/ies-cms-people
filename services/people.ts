@@ -160,7 +160,15 @@ class PeopleService {
         );
         return result;
       });
-    
+  }
+
+  async deleteHousehold(householdId: string): Promise<boolean> {
+    const url = API_URL + "/household/" + householdId;
+    return axios
+      .delete(url, { headers: { Authorization: `Bearer ${getToken()}` } })
+      .then((response) => {
+        return true;
+      });
   }
 
   async update(personId: string, person: Person, output: Output<Person>) {
