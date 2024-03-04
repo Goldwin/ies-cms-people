@@ -1,16 +1,24 @@
 'use client'
-import auth from "@/services/auth";
+import app from "@/services/app";
 
 const TOKEN_COOKIE_NAME = "user-token"
+const TOKEN_PROFILE_NAME = "user-profile"
 export function login(email: string, password: string, output: Output<void>): void {
-    auth.login(email, password, {
-        onSuccess: function (token: string): void {
-            setCookie(TOKEN_COOKIE_NAME, token)
-            output.onSuccess()
-        },
-        onError: function (err: any): void {
-            output.onError(err)
-        }
+    // auth.login(email, password, {
+    //     onSuccess: function (token: string): void {
+    //         setCookie(TOKEN_COOKIE_NAME, token)
+    //         output.onSuccess()
+    //     },
+    //     onError: function (err: any): void {
+    //         output.onError(err)
+    //     }
+    // })
+    app.login(email, password).then((data) => {
+        setCookie(TOKEN_COOKIE_NAME, data.token)
+        setCookie(TOKEN_PROFILE_NAME, JSON.stringify(data.profile))
+        output.onSuccess()
+    }).catch((err) => {
+        output.onError(err)
     })
 }
 
@@ -18,11 +26,18 @@ export function isLoggedIn() {
     return getCookie(TOKEN_COOKIE_NAME)
 }
 
-export function getToken() {
+export function getToken():string {
     const userData = getCookie(TOKEN_COOKIE_NAME)
+    //const data = JSON.parse(userData??"{}")
+    
+    return userData ?? ""
+}
+
+export function getProfile():any {
+    const userData = getCookie(TOKEN_PROFILE_NAME)
     const data = JSON.parse(userData??"{}")
     
-    return data.access_token||""
+    return data
 }
 
 export function logout(output: Output<void>) {

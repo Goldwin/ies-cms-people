@@ -1,7 +1,7 @@
 "use client";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { Button, Card, CardBody, CardHeader, Input } from "@nextui-org/react";
-import { login } from "@/lib/commands/auth/login";
+import { login } from "@/lib/commands/login";
 import { redirect } from "next/navigation";
 import { Logo } from "@/components/icons";
 
@@ -19,8 +19,7 @@ const onSubmit: SubmitHandler<ILoginInput> = (data) =>
         window.location.href = "/";
       }
     },
-    onError: function (err: any): void {
-    },
+    onError: function (err: any): void {},
   });
 
 export default function LoginPage() {
