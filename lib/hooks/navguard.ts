@@ -10,7 +10,8 @@ export function navigationGuard(path: string) {
         redirect("/login")
     } else if(loggedInStatus && path === '/login') {
         redirect("/")
-    } else if(loggedInStatus && !userProfile) {
-        console.log("Redirect to update profile page")
-    }
+    } 
+    // else if(loggedInStatus && !userProfile && path !== '/profile') {
+    //     redirect("/profile")
+    // }
 }

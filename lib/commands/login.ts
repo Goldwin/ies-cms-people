@@ -1,5 +1,5 @@
 'use client'
-import app from "@/services/app";
+import app from "@/services/cms";
 
 const TOKEN_COOKIE_NAME = "user-token"
 const TOKEN_PROFILE_NAME = "user-profile"
