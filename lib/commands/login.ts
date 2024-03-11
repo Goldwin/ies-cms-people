@@ -3,23 +3,16 @@ import app from "@/services/cms";
 
 const TOKEN_COOKIE_NAME = "user-token"
 const TOKEN_PROFILE_NAME = "user-profile"
-export function login(email: string, password: string, output: Output<void>): void {
-    // auth.login(email, password, {
-    //     onSuccess: function (token: string): void {
-    //         setCookie(TOKEN_COOKIE_NAME, token)
-    //         output.onSuccess()
-    //     },
-    //     onError: function (err: any): void {
-    //         output.onError(err)
-    //     }
-    // })
-    app.login(email, password).then((data) => {
+export function login(email: string, password: string): Promise<void> {
+    return app.login(email, password).then((data) => {
         setCookie(TOKEN_COOKIE_NAME, data.token)
         setCookie(TOKEN_PROFILE_NAME, JSON.stringify(data.profile))
-        output.onSuccess()
-    }).catch((err) => {
-        output.onError(err)
     })
+}
+
+export async function resetPassword(email: string): Promise<string> {
+    console.log(email)
+    return Promise.resolve("token")
 }
 
 export function isLoggedIn() {

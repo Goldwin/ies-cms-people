@@ -1,12 +1,11 @@
 'use client'
 
-import { isLoggedIn, getProfile} from "@/lib/commands/login"
+import { isLoggedIn } from "@/lib/commands/login"
 import { redirect } from "next/navigation"
 
 export function navigationGuard(path: string) {
     const loggedInStatus = isLoggedIn()
-    const userProfile = getProfile()
-    if(!loggedInStatus && path !== '/login') {
+    if(!loggedInStatus && (path !== '/login' && path !== '/reset')) {
         redirect("/login")
     } else if(loggedInStatus && path === '/login') {
         redirect("/")
