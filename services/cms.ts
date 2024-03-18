@@ -15,6 +15,14 @@ class AppService {
         return response.data.data
       });
   }
+
+  async forgotPassword(email: string):Promise<any> {
+    const url = API_URL + "/password/reset/token"
+    return axios
+      .post(url, {
+        email
+      });
+  }
 }
 
 const authService = new AppService();

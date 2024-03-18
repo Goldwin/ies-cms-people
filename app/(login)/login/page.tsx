@@ -1,6 +1,13 @@
 "use client";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { Button, Card, CardBody, CardHeader, Input, Link } from "@nextui-org/react";
+import {
+  Button,
+  Card,
+  CardBody,
+  CardHeader,
+  Input,
+  Link,
+} from "@nextui-org/react";
 import { login } from "@/lib/commands/login";
 import { redirect } from "next/navigation";
 
@@ -10,12 +17,12 @@ interface ILoginInput {
 }
 
 const onSubmit: SubmitHandler<ILoginInput> = (data) =>
-  login(data.email, data.password).then((data) => {    
-      try {
-        redirect("/");
-      } catch (error) {
-        window.location.href = "/";
-      }
+  login(data.email, data.password).then((data) => {
+    try {
+      redirect("/");
+    } catch (error) {
+      window.location.href = "/";
+    }
   });
 
 export default function LoginPage() {
@@ -60,7 +67,7 @@ export default function LoginPage() {
               type="button"
               as={Link}
             >
-              Reset Password
+              Forgot Password
             </Button>
             <Button className="w-full" type="submit" color="primary">
               Login

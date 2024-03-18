@@ -10,9 +10,8 @@ export function login(email: string, password: string): Promise<void> {
     })
 }
 
-export async function resetPassword(email: string): Promise<string> {
-    console.log(email)
-    return Promise.resolve("token")
+export async function resetPassword(email: string): Promise<void> {
+    return app.forgotPassword(email)
 }
 
 export function isLoggedIn() {
