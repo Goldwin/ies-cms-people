@@ -1,5 +1,5 @@
 "use client";
-import { getToken } from "@/lib/commands/auth/login";
+import { getToken } from "@/lib/commands/login";
 import { Person } from "@/entities/people/person";
 import axios from "axios";
 import { camelCase, snakeCase } from "lodash";

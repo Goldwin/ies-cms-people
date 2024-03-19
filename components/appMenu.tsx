@@ -8,11 +8,7 @@ import {
   DropdownTrigger,
 } from "@nextui-org/react";
 
-export const AppMenu = ({
-  title = "Church Management System",
-}: {
-  title?: string;
-}) => {
+export const AppMenu = ({ title = "Home" }: { title?: string }) => {
   const trigger = (
     <span className="flex justify-start items-center gap-1 cursor-pointer">
       <Logo />

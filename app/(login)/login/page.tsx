@@ -1,9 +1,15 @@
 "use client";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { Button, Card, CardBody, CardHeader, Input } from "@nextui-org/react";
-import { login } from "@/lib/commands/auth/login";
+import {
+  Button,
+  Card,
+  CardBody,
+  CardHeader,
+  Input,
+  Link,
+} from "@nextui-org/react";
+import { login } from "@/lib/commands/login";
 import { redirect } from "next/navigation";
-import { Logo } from "@/components/icons";
 
 interface ILoginInput {
   email: string;
@@ -11,16 +17,12 @@ interface ILoginInput {
 }
 
 const onSubmit: SubmitHandler<ILoginInput> = (data) =>
-  login(data.email, data.password, {
-    onSuccess: function (v: void): void {
-      try {
-        redirect("/");
-      } catch (error) {
-        window.location.href = "/";
-      }
-    },
-    onError: function (err: any): void {
-    },
+  login(data.email, data.password).then((data) => {
+    try {
+      redirect("/");
+    } catch (error) {
+      window.location.href = "/";
+    }
   });
 
 export default function LoginPage() {
@@ -37,36 +39,42 @@ export default function LoginPage() {
   });
 
   return (
-    <div className="flex justify-center items-center h-100% gap-8 flex-col">
-      <div className="inline-block w-full text-center flex flex-row justify-center">
-        <Logo size={256} className="justify-self-start" />
-      </div>
-      <Card className="flex w-full flex-wrap md:flex-nowrap w-96 px-8 py-4">
-        <CardHeader className="pb-0 pt-2 flex-col items-start">
-          <h1 className="text-2xl">Login</h1>
-        </CardHeader>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <CardBody className="gap-4">
-            <Input
-              type="email"
-              label="Email"
-              placeholder="Enter your email"
-              errorMessage={errors.email && "Email is Required"}
-              {...register("email", { required: true })}
-            />
-            <Input
-              type="password"
-              label="Password"
-              placeholder="Enter your password"
-              errorMessage={errors.password && "Password is Required"}
-              {...register("password", { required: true })}
-            />
+    <Card className="flex w-full flex-wrap md:flex-nowrap w-96 px-8 py-4">
+      <CardHeader className="pb-0 pt-2 flex-col items-start">
+        <h1 className="text-2xl">Login</h1>
+      </CardHeader>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <CardBody className="gap-4">
+          <Input
+            type="email"
+            label="Email"
+            placeholder="Enter your email"
+            errorMessage={errors.email && "Email is Required"}
+            {...register("email", { required: true })}
+          />
+          <Input
+            type="password"
+            label="Password"
+            placeholder="Enter your password"
+            errorMessage={errors.password && "Password is Required"}
+            {...register("password", { required: true })}
+          />
+          <div className="flex-row flex gap-4 justify-between">
+            <Button
+              className="w-full"
+              color="secondary"
+              href="/reset"
+              type="button"
+              as={Link}
+            >
+              Forgot Password
+            </Button>
             <Button className="w-full" type="submit" color="primary">
               Login
             </Button>
-          </CardBody>
-        </form>
-      </Card>
-    </div>
+          </div>
+        </CardBody>
+      </form>
+    </Card>
   );
 }

@@ -8,7 +8,7 @@ import {
 import { AppMenu } from "@/components/appMenu";
 import { UserMenu } from "../userMenu";
 
-const appName = "Church Management System";
+const appName = "Home";
 
 export const Navbar = () => {
   return (

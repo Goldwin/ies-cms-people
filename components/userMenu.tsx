@@ -1,4 +1,4 @@
-import { logout } from "@/lib/commands/auth/login";
+import { logout } from "@/lib/commands/login";
 import {
   Avatar,
   Dropdown,

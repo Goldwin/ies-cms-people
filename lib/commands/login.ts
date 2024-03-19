@@ -1,28 +1,39 @@
 'use client'
-import auth from "@/services/auth";
+import app from "@/services/cms";
 
 const TOKEN_COOKIE_NAME = "user-token"
-export function login(email: string, password: string, output: Output<void>): void {
-    auth.login(email, password, {
-        onSuccess: function (token: string): void {
-            setCookie(TOKEN_COOKIE_NAME, token)
-            output.onSuccess()
-        },
-        onError: function (err: any): void {
-            output.onError(err)
-        }
+const TOKEN_PROFILE_NAME = "user-profile"
+export function login(email: string, password: string): Promise<void> {
+    return app.login(email, password).then((data) => {
+        setCookie(TOKEN_COOKIE_NAME, data.token)
+        setCookie(TOKEN_PROFILE_NAME, JSON.stringify(data.profile))
     })
+}
+
+export async function forgotPassword(email: string): Promise<void> {
+    return app.forgotPassword(email)
+}
+
+export async function resetPassword(email: string, code: string, password: string): Promise<void> {
+    return app.resetPassword(email, code, password)
 }
 
 export function isLoggedIn() {
     return getCookie(TOKEN_COOKIE_NAME)
 }
 
-export function getToken() {
+export function getToken():string {
     const userData = getCookie(TOKEN_COOKIE_NAME)
+    //const data = JSON.parse(userData??"{}")
+    
+    return userData ?? ""
+}
+
+export function getProfile():any {
+    const userData = getCookie(TOKEN_PROFILE_NAME)
     const data = JSON.parse(userData??"{}")
     
-    return data.access_token||""
+    return data
 }
 
 export function logout(output: Output<void>) {
