@@ -10,8 +10,12 @@ export function login(email: string, password: string): Promise<void> {
     })
 }
 
-export async function resetPassword(email: string): Promise<void> {
+export async function forgotPassword(email: string): Promise<void> {
     return app.forgotPassword(email)
+}
+
+export async function resetPassword(email: string, code: string, password: string): Promise<void> {
+    return app.resetPassword(email, code, password)
 }
 
 export function isLoggedIn() {

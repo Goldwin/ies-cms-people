@@ -1,7 +1,7 @@
 "use client";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { Button, Card, CardBody, CardHeader, Input } from "@nextui-org/react";
-import { resetPassword } from "@/lib/commands/login";
+import { forgotPassword } from "@/lib/commands/login";
 import { useState } from "react";
 
 interface IForgotPasswordInput {
@@ -23,7 +23,7 @@ export default function ForgotPasswordPage() {
   });
 
   const onSubmit: SubmitHandler<IForgotPasswordInput> = (data) => {
-    resetPassword(data.email).then(() => setResetPasswordStage(1));
+    forgotPassword(data.email).then(() => setResetPasswordStage(1));
   };
   if (resetPasswordStage > 0) {
     return (

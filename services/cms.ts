@@ -17,10 +17,20 @@ class AppService {
   }
 
   async forgotPassword(email: string):Promise<any> {
-    const url = API_URL + "/password/reset/token"
+    const url = API_URL + "/password/forgot"
     return axios
       .post(url, {
         email
+      });
+  }
+
+  async resetPassword(email: string, code: string, password: string):Promise<any> {
+    const url = API_URL + "/password/reset"
+    return axios
+      .post(url, {
+        email,
+        code,
+        password
       });
   }
 }
