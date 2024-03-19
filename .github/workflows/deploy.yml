@@ -15,6 +15,7 @@ jobs:
         run: |
           sed -i 's|<AUTH_URL>|${{ secrets.AUTH_URL }}|g' $GITHUB_WORKSPACE/.env 
           sed -i 's|<PEOPLE_URL>|${{ secrets.PEOPLE_URL }}|g' $GITHUB_WORKSPACE/.env
+          sed -i 's|<APP_URL>|${{ secrets.APP_URL }}|g' $GITHUB_WORKSPACE/.env
 
       - name: Update SHA
         run: echo $GITHUB_SHA > $GITHUB_WORKSPACE/_meta
