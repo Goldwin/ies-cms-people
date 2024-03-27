@@ -33,7 +33,15 @@ class AppService {
         password
       });
   }
+
+  async requestRegistrationOTP(email: string):Promise<any> {
+    const url = API_URL + "/register/otp"
+    return axios
+      .post(url, {
+        email
+      });
+  }
 }
 
-const authService = new AppService();
-export default authService;
+const appService = new AppService();
+export default appService;
