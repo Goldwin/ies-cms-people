@@ -9,7 +9,8 @@ import {
   Input,
   Progress,
 } from "@nextui-org/react";
-import { useState } from "react";
+import { redirect } from "next/navigation";
+import { useEffect, useState } from "react";
 import { SubmitHandler, useForm, UseFormRegister } from "react-hook-form";
 
 interface IRegistrationInput {
@@ -99,7 +100,18 @@ const RegistrationStage = (
 ): any => {
   console.log("registering");
   const onSubmit: SubmitHandler<IRegistrationInput> = (data) => {
-    console.log(data);
+    appService
+      .register({
+        email: data.email,
+        otp: data.otp,
+        first_name: data.firstName,
+        last_name: data.lastName,
+        middle_name: data.middleName,
+        password: data.password,
+      })
+      .then(() => {
+        nextStage();
+      });
   };
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
@@ -141,6 +153,10 @@ const RegistrationStage = (
         errorMessage={errors.password?.message}
         {...register("password", {
           required: "Password is Required",
+          minLength: {
+            value: 8,
+            message: "Password must be at least 8 characters",
+          },
         })}
       />
 
@@ -164,10 +180,28 @@ const RegistrationStage = (
   );
 };
 
-const CompletionStage = () => {};
+const CompletionStage = (
+  nextStage: () => void,
+  handleSubmit: any,
+  register: any,
+  errors: any
+) => {
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      window.location.href = "/login";
+    }, 5000);
+    return () => clearTimeout(timeoutId);
+  }, []);
+  return (
+    <div>
+      <p>Registration Successful</p>
+      <p>You will be redirected to the login page in 5 seconds</p>
+    </div>
+  );
+};
 
 export default function RegisterPage() {
-  const [stage, setStage] = useState(1);
+  const [stage, setStage] = useState(0);
   const stagesComponent = [
     EmailConfirmationStage,
     OTPConfirmationStage,

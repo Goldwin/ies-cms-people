@@ -41,6 +41,19 @@ class AppService {
         email
       });
   }
+
+  async register(accountInfo: {
+    email: string;
+    otp: string;
+    password: string;
+    first_name: string;
+    last_name: string;
+    middle_name:string;
+  }):Promise<any> {
+    const url = API_URL + "/register"
+    return axios
+      .post(url, accountInfo);
+  }
 }
 
 const appService = new AppService();
