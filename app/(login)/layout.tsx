@@ -46,9 +46,9 @@ export default function RootLayout({
           <div className="relative flex flex-col h-screen">
             <main className="mx-0 flex-grow">
               <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
-                <div className="inline-block max-w-lg text-center justify-center">
+                <div className="inline-block max-w-lg text-center justify-center flex flex-col">
                   <div className="inline-block w-full text-center flex flex-row justify-center">
-                    <Logo size={256} className="justify-self-start" />
+                    <Logo size={256} />
                   </div>
                   {children}
                 </div>

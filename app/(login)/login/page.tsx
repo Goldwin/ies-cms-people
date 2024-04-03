@@ -4,7 +4,9 @@ import {
   Button,
   Card,
   CardBody,
+  CardFooter,
   CardHeader,
+  Divider,
   Input,
   Link,
 } from "@nextui-org/react";
@@ -63,7 +65,7 @@ export default function LoginPage() {
             <Button
               className="w-full"
               color="secondary"
-              href="/reset"
+              href="/password/forgot"
               type="button"
               as={Link}
             >
@@ -74,6 +76,19 @@ export default function LoginPage() {
             </Button>
           </div>
         </CardBody>
+        <Divider />
+        <CardFooter className="justify-center">
+          <p className="text-small">
+            Don&apos;t Have an account yet?{" "}
+            <Link
+              href="/register"
+              color="primary"
+              className="hover:text-primary text-small"
+            >
+              Sign Up
+            </Link>
+          </p>
+        </CardFooter>
       </form>
     </Card>
   );
