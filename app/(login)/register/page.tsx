@@ -7,9 +7,7 @@ import {
   CardFooter,
   CardHeader,
   Input,
-  Progress,
 } from "@nextui-org/react";
-import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
 import { SubmitHandler, useForm, UseFormRegister } from "react-hook-form";
 
@@ -73,7 +71,9 @@ const OTPConfirmationStage = (
   };
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
-      <p className="text-sm">Step 2, Enter your OTP</p>
+      <p className="text-sm">
+        Step 2, Enter your OTP sent to your email address
+      </p>
       <Input
         type="otp"
         label="OTP"
