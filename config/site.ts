@@ -16,6 +16,12 @@ export const siteConfig = {
 			label: "People",
 			href: "/people",
 		},
+		{
+			key: "attendance",
+			icon: "",
+			label: "Attendance",
+			href: "/attendance",
+		},
 	],
 	navItems: [
 		{

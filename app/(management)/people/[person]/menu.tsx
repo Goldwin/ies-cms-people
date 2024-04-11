@@ -10,16 +10,12 @@ const menuList: Menu[] = [
     name: "Profile",
     link: "",
   },
-  {
-    name: "Activity",
-    link: "/activity",
-  },
 ];
 
 export const PersonMenu = ({ id, focus }: { id: string; focus?: string }) => {
   return (
     <section className="col-start-1 col-end-2 items-center justify-center gap-4 py-4 md:py-10 px-4 h-full">
-      <div className="gap-4 flex flex-col">
+      <div className="gap-4 flex flex-col mx-5">
         {menuList.map((menu) => (
           <Link
             key={menu.name}
