@@ -7,6 +7,8 @@ import { Link } from "@nextui-org/link";
 import clsx from "clsx";
 import { title } from "@/components/primitives";
 import { Logo } from "@/components/icons";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export const metadata: Metadata = {
   title: {
@@ -42,6 +44,7 @@ export default function RootLayout({
           fontSans.variable
         )}
       >
+        <ToastContainer theme="dark" />
         <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
           <div className="relative flex flex-col h-screen">
             <main className="mx-0 flex-grow">
