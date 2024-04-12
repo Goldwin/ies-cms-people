@@ -1,8 +1,10 @@
 export class ChurchEvent {
+    id: string
     name: string | undefined 
     time: string | undefined
 
-    constructor(obj: {name: string | undefined}) {
+    constructor(obj: {id: string, name: string | undefined}) {
+        this.id = obj.id
         this.name = obj.name
     }
 }

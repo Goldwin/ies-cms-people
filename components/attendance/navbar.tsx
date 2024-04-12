@@ -10,7 +10,7 @@ import { UserMenu } from "@/components/userMenu";
 
 export const Navbar = ({ title }: { title: string }) => {
   return (
-    <NextUINavbar maxWidth="full" position="sticky" className="bg-default-50">
+    <NextUINavbar maxWidth="full" position="static" className="bg-default-50">
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
         <NavbarBrand as="li" className="gap-3 max-w-fit">
           <AppMenu title={title} />

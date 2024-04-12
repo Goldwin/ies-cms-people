@@ -156,7 +156,7 @@ export default function PersonPage() {
       });
   }, [param.person]);
   return (
-    <>
+    <div className="h-full flex flex-col">
       <PersonModal
         isOpen={isPersonOpen}
         onOpenChange={onPersonOpenChange}
@@ -189,8 +189,11 @@ export default function PersonPage() {
       )}
 
       <PersonHeader person={person} />
-      <div className="grid grid-cols-6 items-center justify-center divide-x h-full">
-        <PersonMenu id={param.person as string} focus="Profile" />
+      <div className="grid grid-cols-6 items-center justify-start divide-x divide-default-100 h-full">
+        <section className="col-start-1 col-end-2 items-start justify-start gap-4 py-4 md:py-10 px-4 h-full">
+          <PersonMenu id={param.person as string} focus="Profile" />
+        </section>
+
         <section className="col-start-2 col-end-7 items-start justify-start gap-4 py-8 md:py-10 px-4 h-full w-full flex flex-row">
           <Skeleton isLoaded={!!person} className="w-[70%]">
             <Card className="w-full">
@@ -265,6 +268,6 @@ export default function PersonPage() {
           </Skeleton>
         </section>
       </div>
-    </>
+    </div>
   );
 }

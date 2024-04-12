@@ -42,10 +42,10 @@ export default function RootLayout({
         )}
       >
         <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
+          <Navbar title="Attendance" />
           <div className="relative flex flex-col h-screen">
-            <Navbar title="Attendance" />
             <main className="mx-0 flex-grow">{children}</main>
-            <footer className="w-full flex items-center justify-center py-3">
+            <footer className="w-full flex items-center justify-center py-3 border-t border-default-100 border-solid">
               <Link
                 isExternal
                 className="flex items-center gap-1 text-current"
