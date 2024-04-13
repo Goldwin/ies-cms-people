@@ -33,7 +33,10 @@ export default function AttendancePage() {
   useEffect(() => {
     if (focusedEvent) {
       attendanceQuery
-        .getChurchEventStats(focusedEvent.id)
+        .getChurchEventStats(focusedEvent.id, {
+          startDate: "",
+          endDate: "",
+        })
         .then(setFocusedEventStats);
     }
   }, [focusedEvent]);

@@ -7,7 +7,7 @@ import {
 
 export interface AttendanceQueries {
   listChurchEvents(lastId: string, limit: number): Promise<ChurchEvent[]>;
-  getChurchEventStats(id: string): Promise<ChurchEventStats>;
+  getChurchEventStats(id: string, dateRange:{startDate: string, endDate: string}): Promise<ChurchEventStats>;
 }
 
 class MockAttendanceQuery implements AttendanceQueries {
