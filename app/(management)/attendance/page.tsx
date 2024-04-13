@@ -1,7 +1,7 @@
 "use client";
 
 import { ChurchEventList } from "@/components/attendance/events/eventlist";
-import { ChurchEvent } from "@/entities/attendance/events";
+import { ChurchEvent, ChurchEventStats } from "@/entities/attendance/events";
 import { attendanceQuery } from "@/lib/queries/attendance";
 import { Button } from "@nextui-org/button";
 import { Link } from "@nextui-org/link";
@@ -11,15 +11,19 @@ import {
   NavbarContent,
   NavbarItem,
 } from "@nextui-org/navbar";
+import _ from "lodash";
 import { useEffect, useState } from "react";
+import Chart from "react-apexcharts";
 
 export default function AttendancePage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [churchEvents, setChurchEvents] = useState<ChurchEvent[]>([]);
   const [focusedEvent, setFocusedEvent] = useState<ChurchEvent>();
+  const [focusedEventStats, setFocusedEventStats] =
+    useState<ChurchEventStats>();
 
   useEffect(() => {
-    attendanceQuery.ListChurchEvents("", 10).then(setChurchEvents);
+    attendanceQuery.listChurchEvents("", 10).then(setChurchEvents);
   }, []);
 
   useEffect(() => {
@@ -27,7 +31,11 @@ export default function AttendancePage() {
   }, [churchEvents]);
 
   useEffect(() => {
-    //get focused event detail
+    if (focusedEvent) {
+      attendanceQuery
+        .getChurchEventStats(focusedEvent.id)
+        .then(setFocusedEventStats);
+    }
   }, [focusedEvent]);
 
   return (
@@ -63,9 +71,34 @@ export default function AttendancePage() {
           focusedEventId={focusedEvent?.id ?? ""}
           onSelectionChange={setFocusedEvent}
         />
-        <div className="col-start-2 col-end-9 h-full flex-row">
-          <div>{focusedEvent?.name} detail and edit icon</div>
-          <div>{focusedEvent?.name} summary chart</div>
+        <div className="col-start-2 col-end-9 flex-row">
+          <div>
+            {focusedEventStats && (
+              <Chart
+                series={[
+                  {
+                    data: focusedEventStats.attendanceCount,
+                    name: "Attendance",
+                  },
+                ]}
+                type="bar"
+                options={{
+                  xaxis: { categories: focusedEventStats.dateLabels },
+                  chart: { id: "attendance", background: "transparent" },
+                  title: {
+                    text: _.capitalize(focusedEvent?.name) + " Attendance",
+                    align: "center",
+                    style: {
+                      fontSize: "18px",
+                      fontWeight: "bold",
+                    },
+                  },
+                  theme: { mode: "dark" },
+                }}
+              />
+            )}
+          </div>
+          <div></div>
         </div>
       </div>
     </div>
