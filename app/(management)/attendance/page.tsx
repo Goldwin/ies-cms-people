@@ -34,8 +34,8 @@ export default function AttendancePage() {
     if (focusedEvent) {
       attendanceQuery
         .getChurchEventStats(focusedEvent.id, {
-          startDate: "",
-          endDate: "",
+          startDate: new Date(),
+          endDate: new Date(),
         })
         .then(setFocusedEventStats);
     }
