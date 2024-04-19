@@ -1,5 +1,18 @@
+import { PencilIcon } from "@/components/icons";
 import { ChurchEvent } from "@/entities/attendance/events";
-import { Listbox, ListboxItem } from "@nextui-org/react";
+import { Link, Listbox, ListboxItem } from "@nextui-org/react";
+
+export const ChurchEventAction = ({
+  churchEvent,
+}: {
+  churchEvent: ChurchEvent;
+}) => {
+  return (
+    <Link size="sm" href={"/attendance/events/" + churchEvent.id} className="hover:text-secondary">
+      <PencilIcon />
+    </Link>
+  );
+};
 
 export const ChurchEventList = ({
   churchEvents,
@@ -12,11 +25,11 @@ export const ChurchEventList = ({
 }) => {
   console.log(churchEvents);
   return (
-    <div className="h-full p-5">      
+    <div className="h-full p-5">
       <Listbox
         aria-label="church event list"
         selectedKeys={focusedEventId}
-        selectionMode="single"
+        selectionMode="none"
       >
         {churchEvents.map((churchEvent) => (
           <ListboxItem
@@ -25,7 +38,8 @@ export const ChurchEventList = ({
             onPress={() => {
               onSelectionChange(churchEvent);
             }}
-            className="capitalize"
+            className={"capitalize " + (churchEvent.id === focusedEventId ? "bg-default-200" : "")}
+            endContent={<ChurchEventAction churchEvent={churchEvent} />}
           >
             {churchEvent.name}
           </ListboxItem>
