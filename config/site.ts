@@ -20,7 +20,7 @@ export const siteConfig = {
 			key: "attendance",
 			icon: "",
 			label: "Attendance",
-			href: "/attendance",
+			href: "/attendance/events",
 		},
 	],
 	navItems: [

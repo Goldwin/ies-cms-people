@@ -11,6 +11,10 @@ export class ChurchEvent {
     }
 }
 
+export class ChurchEventSession {
+    
+}
+
 export class ChurchEventSessionStats {
     id: string
     date: string

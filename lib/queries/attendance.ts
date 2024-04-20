@@ -8,9 +8,17 @@ import {
 export interface AttendanceQueries {
   listChurchEvents(lastId: string, limit: number): Promise<ChurchEvent[]>;
   getChurchEventStats(id: string, dateRange:{startDate: Date, endDate: Date}): Promise<ChurchEventStats>;
+  getChurchEventDetail(id: string): Promise<ChurchEvent>;
 }
 
 class MockAttendanceQuery implements AttendanceQueries {
+  getChurchEventDetail(id: string): Promise<ChurchEvent> {
+    if(id !== "1"){
+        return Promise.resolve(new ChurchEvent({id: "1", name: "test", eventType: EventType.ONE_TIME, time: "test"}));
+    }
+    return Promise.resolve(new ChurchEvent({id: "1", name: "test", eventType: EventType.WEEKLY, time: "test"}));
+  }
+
   getChurchEventStats(id: string): Promise<ChurchEventStats> {
     if(id !== "1"){
         return Promise.resolve(new ChurchEventStats({id: "1", name: "test", sessions: [
