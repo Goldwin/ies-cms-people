@@ -1,6 +1,7 @@
 "use client";
 
 import { ChurchEventList } from "@/components/attendance/events/eventlist";
+import { ChurchEventCreationModal } from "@/components/attendance/events/eventmodal";
 import { ChurchEvent, ChurchEventStats } from "@/entities/attendance/events";
 import { attendanceQuery } from "@/lib/queries/attendance";
 import { Button } from "@nextui-org/button";
@@ -11,6 +12,7 @@ import {
   NavbarContent,
   NavbarItem,
 } from "@nextui-org/navbar";
+import { Skeleton, useDisclosure } from "@nextui-org/react";
 import _ from "lodash";
 import { useEffect, useState } from "react";
 import Chart from "react-apexcharts";
@@ -41,8 +43,11 @@ export default function AttendancePage() {
     }
   }, [focusedEvent]);
 
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
   return (
     <div className="flex flex-col items-center justify-start h-full w-full">
+      <ChurchEventCreationModal isOpen={isOpen} onOpenChange={onOpenChange} />
       <Navbar
         className="mx-0 px-0 w-full bg-default-100"
         maxWidth="full"
@@ -61,7 +66,7 @@ export default function AttendancePage() {
               color="primary"
               href="#"
               variant="flat"
-              onPress={() => {}}
+              onPress={onOpen}
             >
               Add Event
             </Button>
@@ -75,7 +80,7 @@ export default function AttendancePage() {
           onSelectionChange={setFocusedEvent}
         />
         <div className="col-start-2 col-end-9 flex-row">
-          <div>
+          <Skeleton isLoaded={!!focusedEventStats}>
             {focusedEventStats && (
               <Chart
                 series={[
@@ -100,7 +105,7 @@ export default function AttendancePage() {
                 }}
               />
             )}
-          </div>
+          </Skeleton>
           <div></div>
         </div>
       </div>

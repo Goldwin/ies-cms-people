@@ -23,12 +23,11 @@ export const ChurchEventList = ({
   focusedEventId: string;
   onSelectionChange: (churchEvent: ChurchEvent) => void;
 }) => {
-  console.log(churchEvents);
   return (
     <div className="h-full p-5">
       <Listbox
         aria-label="church event list"
-        selectedKeys={focusedEventId}
+        defaultSelectedKeys={focusedEventId}
         selectionMode="none"
       >
         {churchEvents.map((churchEvent) => (
