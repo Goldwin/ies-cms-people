@@ -1,6 +1,6 @@
 "use client";
 import { ChurchEventHeader } from "@/components/attendance/events/eventheader";
-import { ChurchEvent } from "@/entities/attendance/events";
+import { ChurchEvent, ChurchEventSession } from "@/entities/attendance/events";
 import { attendanceQuery } from "@/lib/queries/attendance";
 import { Tab, Tabs } from "@nextui-org/react";
 import { useParams } from "next/navigation";
@@ -9,15 +9,30 @@ import { useEffect, useState } from "react";
 export default function EventPage() {
   const param = useParams();
   const [churchEvent, setChurchEvent] = useState<ChurchEvent>();
+  const [churchEventSessions, setChurchEventSessions] = useState<
+    ChurchEventSession[]
+  >([]);
   useEffect(() => {
     attendanceQuery
       .getChurchEventDetail(param.event as string)
       .then(setChurchEvent);
   }, [param]);
+
+  useEffect(() => {
+    if (churchEvent) {
+      attendanceQuery
+        .getChurchEventSessionList(churchEvent.id)
+        .then(setChurchEventSessions);
+    }
+  }, [churchEvent]);
+
   return (
     <div className="flex flex-col items-center justify-start h-full w-full">
       <section className="flex w-full">
-        <ChurchEventHeader churchEvent={churchEvent} />
+        <ChurchEventHeader
+          churchEvent={churchEvent}
+          churchEventSessions={churchEventSessions}
+        />
       </section>
       <section className="flex w-full h-full ">
         <Tabs

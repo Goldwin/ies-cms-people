@@ -12,7 +12,15 @@ export class ChurchEvent {
 }
 
 export class ChurchEventSession {
-    
+    eventId: string
+    sessionNumber: number
+    date: Date
+
+    constructor({eventId, date, sessionNumber}: {eventId: string, date: Date, sessionNumber: number}) {
+        this.eventId = eventId
+        this.date = date
+        this.sessionNumber = sessionNumber
+    }
 }
 
 export class ChurchEventSessionStats {

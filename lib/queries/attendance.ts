@@ -1,5 +1,6 @@
 import {
   ChurchEvent,
+  ChurchEventSession,
   ChurchEventSessionStats,
   ChurchEventStats,
   EventType,
@@ -9,9 +10,13 @@ export interface AttendanceQueries {
   listChurchEvents(lastId: string, limit: number): Promise<ChurchEvent[]>;
   getChurchEventStats(id: string, dateRange:{startDate: Date, endDate: Date}): Promise<ChurchEventStats>;
   getChurchEventDetail(id: string): Promise<ChurchEvent>;
+  getChurchEventSessionList(id: string): Promise<ChurchEventSession[]>;
 }
 
 class MockAttendanceQuery implements AttendanceQueries {
+  getChurchEventSessionList(id: string): Promise<ChurchEventSession[]> {
+    return Promise.resolve([new ChurchEventSession({eventId: "1", date: new Date(), sessionNumber: 1})]);
+  }
   getChurchEventDetail(id: string): Promise<ChurchEvent> {
     if(id !== "1"){
         return Promise.resolve(new ChurchEvent({id: "1", name: "test", eventType: EventType.ONE_TIME, time: "test"}));

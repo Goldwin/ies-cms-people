@@ -1,13 +1,26 @@
-import { ChurchEvent } from "@/entities/attendance/events";
+import { ChurchEvent, ChurchEventSession } from "@/entities/attendance/events";
+import { parseAbsoluteToLocal } from "@internationalized/date";
 import { Button, ButtonGroup } from "@nextui-org/button";
+import { DateValue } from "@nextui-org/calendar";
 import { DatePicker } from "@nextui-org/date-picker";
 import { Skeleton } from "@nextui-org/skeleton";
 
 export const ChurchEventHeader = ({
   churchEvent,
+  churchEventSessions,
 }: {
   churchEvent: ChurchEvent | undefined;
+  churchEventSessions: ChurchEventSession[] | undefined;
 }) => {
+  const availableDates: string[] =
+    churchEventSessions?.map((session) =>
+      session.date.toLocaleDateString("sv-SE")
+    ) || [];
+
+  const isDateUnavailable = (s: DateValue) => {
+    return !availableDates.includes(s.toString().split("T")[0]);
+  };
+
   return (
     <div className="flex flex-row mx-0 px-0 w-full bg-default-100">
       <div className="min-h-32 h-32 px-8 py-4">
@@ -24,7 +37,17 @@ export const ChurchEventHeader = ({
                     &#8250;
                   </Button>
                 </ButtonGroup>
-                <DatePicker variant="faded" />
+                <DatePicker
+                  variant="faded"
+                  aria-label="Session Date"
+                  granularity="day"
+                  isDateUnavailable={isDateUnavailable}
+                  defaultValue={parseAbsoluteToLocal(
+                    churchEventSessions
+                      ?.map((session) => session.date.toISOString())
+                      .find(() => true) ?? new Date().toISOString()
+                  )}
+                />
               </div>
             </div>
           </div>
