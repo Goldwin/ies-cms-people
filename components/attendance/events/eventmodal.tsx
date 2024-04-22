@@ -36,9 +36,7 @@ export const ChurchEventCreationModal = ({
             </ModalBody>
             <ModalFooter>
               <Button
-                onClick={() => {
-                  onOpenChange();
-                }}
+                onClick={onClose}
               >
                 Cancel
               </Button>

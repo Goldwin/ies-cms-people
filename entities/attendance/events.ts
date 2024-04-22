@@ -1,10 +1,9 @@
 export class ChurchEvent {
     id: string
-    name: string | undefined 
+    name: string
     eventType: EventType
-    time: string | undefined
 
-    constructor({id, name, eventType, time}: {id: string, name: string | undefined, eventType: EventType, time: string | undefined}) {
+    constructor({id, name, eventType}: {id: string, name: string, eventType: EventType}) {
         this.id = id
         this.name = name
         this.eventType = eventType
