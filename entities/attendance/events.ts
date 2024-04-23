@@ -44,6 +44,8 @@ export class ChurchEventLocation {
 
 
 export class ChurchEventSessionCheckIn {
+  id:string;
+
   personId: string;
   firstName: string;
   middleName: string;
@@ -56,6 +58,7 @@ export class ChurchEventSessionCheckIn {
   checkinLocation: ChurchEventLocation;
 
   constructor({
+    id,
     securityCode,
     securityNumber,
     checkinTime,
@@ -66,6 +69,7 @@ export class ChurchEventSessionCheckIn {
     lastName,
     profilePictureUrl,
   }: {
+    id: string
     securityCode: string;
     securityNumber: number;
     checkinTime: Date;
@@ -76,6 +80,7 @@ export class ChurchEventSessionCheckIn {
     lastName: string;
     profilePictureUrl: string;
   }) {
+    this.id = id;
     this.securityCode = securityCode;
     this.securityNumber = securityNumber;
     this.checkinTime = checkinTime;
@@ -85,6 +90,10 @@ export class ChurchEventSessionCheckIn {
     this.middleName = middleName;
     this.lastName = lastName;
     this.profilePictureUrl = profilePictureUrl;
+  }
+
+  getFullName(): string {
+    return `${this.firstName} ${this.middleName} ${this.lastName}`;
   }
 }
 

@@ -1,6 +1,8 @@
 import {
   ChurchEvent,
+  ChurchEventLocation,
   ChurchEventSession,
+  ChurchEventSessionCheckIn,
   ChurchEventSessionStats,
   ChurchEventStats,
   ChurchEventTimeConfig,
@@ -15,9 +17,27 @@ export interface AttendanceQueries {
   ): Promise<ChurchEventStats>;
   getChurchEventDetail(id: string): Promise<ChurchEvent>;
   getChurchEventSessionList(id: string): Promise<ChurchEventSession[]>;
+  getChurchEventSessionCheckInList(id: string, sessionNo: number): Promise<ChurchEventSessionCheckIn[]>;
 }
 
 class MockAttendanceQuery implements AttendanceQueries {
+  getChurchEventSessionCheckInList(): Promise<ChurchEventSessionCheckIn[]> {
+    return Promise.resolve([
+      new ChurchEventSessionCheckIn({
+        id: "1",
+        personId: "1",
+        firstName: "test",
+        middleName: "test",
+        lastName: "test",
+        profilePictureUrl: "test",
+        securityCode: "test",
+        securityNumber: 1,
+        checkinTime: new Date(),      
+        checkinLocation: new ChurchEventLocation()  
+      })
+    ]);
+  }
+
   getChurchEventSessionList(id: string): Promise<ChurchEventSession[]> {
     return Promise.resolve([
       new ChurchEventSession({

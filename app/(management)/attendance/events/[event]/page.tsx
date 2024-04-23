@@ -1,5 +1,6 @@
 "use client";
 import { ChurchEventHeader } from "@/components/attendance/events/eventheader";
+import { SessionCheckIn } from "@/components/attendance/session/sessioncheckin";
 import { ChurchEvent, ChurchEventSession } from "@/entities/attendance/events";
 import { attendanceQuery } from "@/lib/queries/attendance";
 import { Tab, Tabs } from "@nextui-org/react";
@@ -12,6 +13,8 @@ export default function EventPage() {
   const [churchEventSessions, setChurchEventSessions] = useState<
     ChurchEventSession[]
   >([]);
+  const [selectedChurchEventSession, setSelectedChurchEventSession] =
+    useState<ChurchEventSession>();
   useEffect(() => {
     attendanceQuery
       .getChurchEventDetail(param.event as string)
@@ -32,6 +35,7 @@ export default function EventPage() {
         <ChurchEventHeader
           churchEvent={churchEvent}
           churchEventSessions={churchEventSessions}
+          onChurchSessionSelectionChange={setSelectedChurchEventSession}
         />
       </section>
       <section className="flex w-full h-full ">
@@ -52,7 +56,7 @@ export default function EventPage() {
             <h1>Overview</h1>
           </Tab>
           <Tab key="check-in" title="Check-in">
-            Checkin
+            <SessionCheckIn churchEventSession={selectedChurchEventSession} />
           </Tab>
           <Tab key="report" title="Report">
             Generate Report

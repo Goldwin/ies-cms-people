@@ -4,18 +4,31 @@ import { Button, ButtonGroup } from "@nextui-org/button";
 import { DateValue } from "@nextui-org/calendar";
 import { DatePicker } from "@nextui-org/date-picker";
 import { Skeleton } from "@nextui-org/skeleton";
+import { useEffect, useState } from "react";
 
 export const ChurchEventHeader = ({
   churchEvent,
   churchEventSessions,
+  onChurchSessionSelectionChange,
 }: {
   churchEvent: ChurchEvent | undefined;
   churchEventSessions: ChurchEventSession[] | undefined;
+  onChurchSessionSelectionChange: (s: ChurchEventSession) => void;
 }) => {
-  const availableDates: string[] =
-    churchEventSessions?.map((session) =>
-      session.date.toLocaleDateString("sv-SE")
-    ) || [];
+  const [availableDates, setAvailableDates] = useState<string[]>([]);
+
+  useEffect(() => {
+    setAvailableDates(
+      churchEventSessions?.map((session) =>
+        session.date.toLocaleDateString("sv-SE")
+      ) || []
+    );
+  }, [churchEventSessions]);
+
+  useEffect(() => {
+    if (churchEventSessions)
+      onChurchSessionSelectionChange(churchEventSessions?.[0]);
+  });
 
   const isDateUnavailable = (s: DateValue) => {
     return !availableDates.includes(s.toString().split("T")[0]);
