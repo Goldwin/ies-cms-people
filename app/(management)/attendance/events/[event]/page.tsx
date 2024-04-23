@@ -40,8 +40,7 @@ export default function EventPage() {
           radius="none"
           size="lg"
           classNames={{
-            wrapper:
-              "w-full h-full flex flex-col divide-x divide-default-100",
+            wrapper: "w-full h-full flex flex-row divide-x divide-default-100",
             base: "flex w-[20%] h-full px-4 py-4",
             tabList: "w-full bg-transparent",
             tab: "w-full justify-start items-start px-4 data-[disabled=true]:opacity-100 data-[disabled=true]:cursor-default",
