@@ -1,20 +1,40 @@
+export class ChurchEventTimeConfig {
+  startTime: number;
+  endTime: number;
+  timezoneOffset: number;
+
+  constructor({
+    startTime,
+    endTime,
+    timezoneOffset,
+  }: {startTime: number; endTime: number; timezoneOffset: number}) {
+    this.startTime = startTime;
+    this.endTime = endTime;
+    this.timezoneOffset = timezoneOffset;
+  }
+}
+
 export class ChurchEvent {
   id: string;
   name: string;
   eventType: EventType;
+  timeConfig: ChurchEventTimeConfig;
 
   constructor({
     id,
     name,
     eventType,
+    timeConfig,
   }: {
     id: string;
     name: string;
     eventType: EventType;
+    timeConfig: ChurchEventTimeConfig;
   }) {
     this.id = id;
     this.name = name;
     this.eventType = eventType;
+    this.timeConfig = timeConfig;
   }
 }
 
