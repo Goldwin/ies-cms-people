@@ -41,12 +41,12 @@ export default function EventPage() {
           size="lg"
           classNames={{
             wrapper:
-              "w-full h-full grid grid-cols-8 divide-x divide-default-100",
-            base: "col-start-1 col-end-2 h-full px-4 py-4",
+              "w-full h-full flex flex-col divide-x divide-default-100",
+            base: "flex w-[20%] h-full px-4 py-4",
             tabList: "w-full bg-transparent",
             tab: "w-full justify-start items-start px-4 data-[disabled=true]:opacity-100 data-[disabled=true]:cursor-default",
             tabContent: "justify-center items-center",
-            panel: "w-full h-full col-start-2 col-end-9",
+            panel: "w-full h-full col-start-3 flex h-[80%]",
           }}
         >
           <Tab key="overview" title="Overview">

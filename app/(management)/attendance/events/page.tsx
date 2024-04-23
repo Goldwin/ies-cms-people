@@ -73,14 +73,16 @@ export default function AttendancePage() {
           </NavbarItem>
         </NavbarContent>
       </Navbar>
-      <div className="grid grid-cols-8 items-center justify-start divide-x divide-default-100 h-full w-full">
-        <ChurchEventList
-          churchEvents={churchEvents}
-          focusedEventId={focusedEvent?.id ?? ""}
-          onSelectionChange={setFocusedEvent}
-        />
-        <div className="col-start-2 col-end-9 flex-row">
-          <Skeleton isLoaded={!!focusedEventStats}>
+      <div className="flex flex-row items-center justify-start divide-x divide-default-100 h-full w-full">
+        <div className="flex flex-col h-full w-[20%]">
+          <ChurchEventList
+            churchEvents={churchEvents}
+            focusedEventId={focusedEvent?.id ?? ""}
+            onSelectionChange={setFocusedEvent}
+          />
+        </div>
+        <div className="flex flex-row h-full w-full">
+          <Skeleton isLoaded={!!focusedEventStats} className="w-full h-full">
             {focusedEventStats && (
               <Chart
                 series={[
