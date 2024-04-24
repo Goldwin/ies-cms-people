@@ -93,7 +93,7 @@ export default function AttendancePage() {
             wrapper: "w-full h-full flex flex-row divide-x divide-default-100",
             base: "flex w-[20%] h-full px-4 py-4",
             tabList: "w-full bg-transparent",
-            tab: "w-full justify-start items-start px-4 data-[disabled=true]:opacity-100 data-[disabled=true]:cursor-default",
+            tab: "w-full justify-start items-start px-4 data-[hover-unselected=true]:opacity-70",
             tabContent: "justify-center items-center capitalize w-full",
             panel: "w-full h-full col-start-3 flex w-[80%]",
           }}
