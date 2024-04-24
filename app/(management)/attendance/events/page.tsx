@@ -1,7 +1,7 @@
 "use client";
 
-import { ChurchEventList } from "@/components/attendance/events/eventlist";
 import { ChurchEventCreationModal } from "@/components/attendance/events/eventmodal";
+import { PencilIcon } from "@/components/icons";
 import { ChurchEvent, ChurchEventStats } from "@/entities/attendance/events";
 import { attendanceQuery } from "@/lib/queries/attendance";
 import { Button } from "@nextui-org/button";
@@ -12,15 +12,27 @@ import {
   NavbarContent,
   NavbarItem,
 } from "@nextui-org/navbar";
-import { Skeleton, useDisclosure } from "@nextui-org/react";
+import { Skeleton, Tab, Tabs, useDisclosure } from "@nextui-org/react";
 import _ from "lodash";
 import { useEffect, useState } from "react";
 import Chart from "react-apexcharts";
 
+const ChurchEventAction = ({ churchEvent }: { churchEvent: ChurchEvent }) => {
+  return (
+    <Link
+      size="sm"
+      href={"/attendance/events/" + churchEvent.id}
+      className="hover:text-secondary"
+    >
+      <PencilIcon />
+    </Link>
+  );
+};
+
 export default function AttendancePage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [churchEvents, setChurchEvents] = useState<ChurchEvent[]>([]);
-  const [focusedEvent, setFocusedEvent] = useState<ChurchEvent>();
+  const [focusedEventId, setFocusedEventId] = useState<string>();
   const [focusedEventStats, setFocusedEventStats] =
     useState<ChurchEventStats>();
 
@@ -29,19 +41,19 @@ export default function AttendancePage() {
   }, []);
 
   useEffect(() => {
-    setFocusedEvent(churchEvents?.[0]);
+    setFocusedEventId(churchEvents?.[0]?.id);
   }, [churchEvents]);
 
   useEffect(() => {
-    if (focusedEvent) {
+    if (focusedEventId) {
       attendanceQuery
-        .getChurchEventStats(focusedEvent.id, {
+        .getChurchEventStats(focusedEventId, {
           startDate: new Date(),
           endDate: new Date(),
         })
         .then(setFocusedEventStats);
     }
-  }, [focusedEvent]);
+  }, [focusedEventId]);
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
@@ -74,42 +86,61 @@ export default function AttendancePage() {
         </NavbarContent>
       </Navbar>
       <div className="flex flex-row items-center justify-start divide-x divide-default-100 h-full w-full">
-        <div className="flex flex-col h-full w-[20%]">
-          <ChurchEventList
-            churchEvents={churchEvents}
-            focusedEventId={focusedEvent?.id ?? ""}
-            onSelectionChange={setFocusedEvent}
-          />
-        </div>
-        <div className="flex flex-row h-full w-full">
-          <Skeleton isLoaded={!!focusedEventStats} className="w-full h-full">
-            {focusedEventStats && (
-              <Chart
-                series={[
-                  {
-                    data: focusedEventStats.attendanceCount,
-                    name: "Attendance",
-                  },
-                ]}
-                type="bar"
-                options={{
-                  xaxis: { categories: focusedEventStats.dateLabels },
-                  chart: { id: "attendance", background: "transparent" },
-                  title: {
-                    text: _.capitalize(focusedEvent?.name) + " Attendance",
-                    align: "center",
-                    style: {
-                      fontSize: "18px",
-                      fontWeight: "bold",
-                    },
-                  },
-                  theme: { mode: "dark" },
-                }}
-              />
-            )}
-          </Skeleton>
-          <div></div>
-        </div>
+        <Tabs
+          isVertical
+          size="lg"
+          classNames={{
+            wrapper: "w-full h-full flex flex-row divide-x divide-default-100",
+            base: "flex w-[20%] h-full px-4 py-4",
+            tabList: "w-full bg-transparent",
+            tab: "w-full justify-start items-start px-4 data-[disabled=true]:opacity-100 data-[disabled=true]:cursor-default",
+            tabContent: "justify-center items-center capitalize w-full",
+            panel: "w-full h-full col-start-3 flex w-[80%]",
+          }}
+          onSelectionChange={(id) => setFocusedEventId(id as string)}
+        >
+          {churchEvents.map((churchEvent) => (
+            <Tab
+              key={churchEvent.id}
+              title={
+                <div className="flex flex-row justify-between w-full">
+                  <p className="flex">{churchEvent.name}</p>{" "}
+                  <ChurchEventAction churchEvent={churchEvent} />
+                </div>
+              }
+            >
+              <Skeleton
+                isLoaded={!!focusedEventStats}
+                className="w-full h-full"
+              >
+                {focusedEventStats && (
+                  <Chart
+                    series={[
+                      {
+                        data: focusedEventStats.attendanceCount,
+                        name: "Attendance",
+                      },
+                    ]}
+                    type="bar"
+                    options={{
+                      xaxis: { categories: focusedEventStats.dateLabels },
+                      chart: { id: "attendance", background: "transparent" },
+                      title: {
+                        text: _.capitalize(churchEvent?.name) + " Attendance",
+                        align: "center",
+                        style: {
+                          fontSize: "18px",
+                          fontWeight: "bold",
+                        },
+                      },
+                      theme: { mode: "dark" },
+                    }}
+                  />
+                )}
+              </Skeleton>
+            </Tab>
+          ))}
+        </Tabs>
       </div>
     </div>
   );
