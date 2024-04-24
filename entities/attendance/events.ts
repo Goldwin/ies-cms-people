@@ -7,7 +7,11 @@ export class ChurchEventTimeConfig {
     startTime,
     endTime,
     timezoneOffset,
-  }: {startTime: number; endTime: number; timezoneOffset: number}) {
+  }: {
+    startTime: number;
+    endTime: number;
+    timezoneOffset: number;
+  }) {
     this.startTime = startTime;
     this.endTime = endTime;
     this.timezoneOffset = timezoneOffset;
@@ -39,12 +43,21 @@ export class ChurchEvent {
 }
 
 export class ChurchEventLocation {
-    
+  id: string;
+  name: string;
+  day: number;
+  time: number;
+
+  constructor({ id, name, day = 0, time = 0}: { id: string; name: string , day?: number, time?: number}) {
+    this.id = id;
+    this.name = name;
+    this.day = day;
+    this.time = time;
+  }
 }
 
-
 export class ChurchEventSessionCheckIn {
-  id:string;
+  id: string;
 
   personId: string;
   firstName: string;
@@ -69,7 +82,7 @@ export class ChurchEventSessionCheckIn {
     lastName,
     profilePictureUrl,
   }: {
-    id: string
+    id: string;
     securityCode: string;
     securityNumber: number;
     checkinTime: Date;
@@ -94,6 +107,10 @@ export class ChurchEventSessionCheckIn {
 
   getFullName(): string {
     return `${this.firstName} ${this.middleName} ${this.lastName}`;
+  }
+
+  getCheckInTime(): string {
+    return `${this.checkinTime.toLocaleTimeString()}`;
   }
 }
 

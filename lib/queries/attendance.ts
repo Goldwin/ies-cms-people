@@ -17,25 +17,30 @@ export interface AttendanceQueries {
   ): Promise<ChurchEventStats>;
   getChurchEventDetail(id: string): Promise<ChurchEvent>;
   getChurchEventSessionList(id: string): Promise<ChurchEventSession[]>;
-  getChurchEventSessionCheckInList(id: string, sessionNo: number): Promise<ChurchEventSessionCheckIn[]>;
+  getChurchEventSessionCheckInList(id: string, sessionNo: number, limit: number, lastId: string): Promise<ChurchEventSessionCheckIn[]>;
 }
 
 class MockAttendanceQuery implements AttendanceQueries {
-  getChurchEventSessionCheckInList(): Promise<ChurchEventSessionCheckIn[]> {
-    return Promise.resolve([
-      new ChurchEventSessionCheckIn({
-        id: "1",
-        personId: "1",
-        firstName: "test",
-        middleName: "test",
-        lastName: "test",
-        profilePictureUrl: "test",
-        securityCode: "test",
-        securityNumber: 1,
-        checkinTime: new Date(),      
-        checkinLocation: new ChurchEventLocation()  
-      })
-    ]);
+  getChurchEventSessionCheckInList(id: string, sessionNo: number, limit: number, lastId: string): Promise<ChurchEventSessionCheckIn[]> {
+
+    const ret = []
+    for(let i = 0; i < limit; i++) {
+      ret.push(
+        new ChurchEventSessionCheckIn({
+          id: i + lastId,
+          personId: i + lastId,
+          firstName: "test",
+          middleName: "",
+          lastName: i + lastId,
+          profilePictureUrl: "test",
+          securityCode: "test",
+          securityNumber: 1,
+          checkinTime: new Date(),      
+          checkinLocation: new ChurchEventLocation({id: i + "", name: "Adult Service"})  
+        })
+      )
+    }
+    return Promise.resolve(ret);
   }
 
   getChurchEventSessionList(id: string): Promise<ChurchEventSession[]> {

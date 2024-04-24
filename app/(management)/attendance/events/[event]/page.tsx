@@ -1,6 +1,6 @@
 "use client";
 import { ChurchEventHeader } from "@/components/attendance/events/eventheader";
-import { SessionCheckIn } from "@/components/attendance/session/sessioncheckin";
+import { SessionCheckInList } from "@/components/attendance/session/sessioncheckinlist";
 import { ChurchEvent, ChurchEventSession } from "@/entities/attendance/events";
 import { attendanceQuery } from "@/lib/queries/attendance";
 import { Tab, Tabs } from "@nextui-org/react";
@@ -49,14 +49,17 @@ export default function EventPage() {
             tabList: "w-full bg-transparent",
             tab: "w-full justify-start items-start px-4 data-[disabled=true]:opacity-100 data-[disabled=true]:cursor-default",
             tabContent: "justify-center items-center",
-            panel: "w-full h-full col-start-3 flex h-[80%]",
+            panel: "w-full h-full col-start-3 flex w-[80%]",
           }}
         >
           <Tab key="overview" title="Overview">
             <h1>Overview</h1>
           </Tab>
           <Tab key="check-in" title="Check-in">
-            <SessionCheckIn churchEventSession={selectedChurchEventSession} />
+            <SessionCheckInList
+              churchEventSession={selectedChurchEventSession}
+              className="flex flex-col h-full w-full justify-start"
+            />
           </Tab>
           <Tab key="report" title="Report">
             Generate Report
