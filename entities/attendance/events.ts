@@ -48,7 +48,17 @@ export class ChurchEventLocation {
   day: number;
   time: number;
 
-  constructor({ id, name, day = 0, time = 0}: { id: string; name: string , day?: number, time?: number}) {
+  constructor({
+    id,
+    name,
+    day = 0,
+    time = 0,
+  }: {
+    id: string;
+    name: string;
+    day?: number;
+    time?: number;
+  }) {
     this.id = id;
     this.name = name;
     this.day = day;

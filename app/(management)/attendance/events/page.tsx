@@ -2,8 +2,13 @@
 
 import { ChurchEventCreationModal } from "@/components/attendance/events/eventmodal";
 import { PencilIcon } from "@/components/icons";
-import { ChurchEvent, ChurchEventStats } from "@/entities/attendance/events";
-import { attendanceQuery } from "@/lib/queries/attendance";
+import { ChurchEventStats } from "@/entities/attendance/events";
+import { EventSchedule } from "@/entities/attendance/schedules";
+import { EventScheduleSummary } from "@/entities/attendance/stats";
+import {
+  attendanceQuery,
+  attendanceStatsQuery,
+} from "@/lib/queries/attendance";
 import { Button } from "@nextui-org/button";
 import { Link } from "@nextui-org/link";
 import {
@@ -17,7 +22,7 @@ import _ from "lodash";
 import { useEffect, useState } from "react";
 import Chart from "react-apexcharts";
 
-const ChurchEventAction = ({ churchEvent }: { churchEvent: ChurchEvent }) => {
+const ChurchEventAction = ({ churchEvent }: { churchEvent: EventSchedule }) => {
   return (
     <Link
       size="sm"
@@ -31,13 +36,13 @@ const ChurchEventAction = ({ churchEvent }: { churchEvent: ChurchEvent }) => {
 
 export default function AttendancePage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [churchEvents, setChurchEvents] = useState<ChurchEvent[]>([]);
+  const [churchEvents, setChurchEvents] = useState<EventSchedule[]>([]);
   const [focusedEventId, setFocusedEventId] = useState<string>();
   const [focusedEventStats, setFocusedEventStats] =
-    useState<ChurchEventStats>();
+    useState<EventScheduleSummary>();
 
   useEffect(() => {
-    attendanceQuery.listChurchEvents("", 10).then(setChurchEvents);
+    attendanceStatsQuery.listEventSchedules("", 10).then(setChurchEvents);
   }, []);
 
   useEffect(() => {
@@ -46,11 +51,8 @@ export default function AttendancePage() {
 
   useEffect(() => {
     if (focusedEventId) {
-      attendanceQuery
-        .getChurchEventStats(focusedEventId, {
-          startDate: new Date(),
-          endDate: new Date(),
-        })
+      attendanceStatsQuery
+        .getEventStats(focusedEventId)
         .then(setFocusedEventStats);
     }
   }, [focusedEventId]);
@@ -115,12 +117,7 @@ export default function AttendancePage() {
               >
                 {focusedEventStats && (
                   <Chart
-                    series={[
-                      {
-                        data: focusedEventStats.attendanceCount,
-                        name: "Attendance",
-                      },
-                    ]}
+                    series={focusedEventStats.attendanceSeries}
                     type="bar"
                     options={{
                       xaxis: { categories: focusedEventStats.dateLabels },
