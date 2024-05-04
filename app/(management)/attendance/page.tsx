@@ -4,7 +4,10 @@ import { ChurchEventCreationModal } from "@/components/attendance/events/eventmo
 import { PencilIcon } from "@/components/icons";
 import { EventSchedule } from "@/entities/attendance/schedules";
 import { EventScheduleSummary } from "@/entities/attendance/stats";
-import { attendanceStatsQuery } from "@/lib/queries/attendance";
+import {
+  attendanceStatsQuery,
+  eventSchedulesQuery,
+} from "@/lib/queries/attendance";
 import { Button } from "@nextui-org/button";
 import { Link } from "@nextui-org/link";
 import {
@@ -22,7 +25,7 @@ const ChurchEventAction = ({ churchEvent }: { churchEvent: EventSchedule }) => {
   return (
     <Link
       size="sm"
-      href={"/attendance/events/" + churchEvent.id}
+      href={"/attendance/schedules/" + churchEvent.id}
       className="hover:text-secondary"
     >
       <PencilIcon />
@@ -38,7 +41,7 @@ export default function AttendancePage() {
     useState<EventScheduleSummary>();
 
   useEffect(() => {
-    attendanceStatsQuery.listEventSchedules("", 10).then(setChurchEvents);
+    eventSchedulesQuery.listEventSchedules("", 10).then(setChurchEvents);
   }, []);
 
   useEffect(() => {

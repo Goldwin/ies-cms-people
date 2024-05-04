@@ -22,23 +22,23 @@ export class ChurchEvent {
   id: string;
   name: string;
   eventType: EventType;
-  timeConfig: ChurchEventTimeConfig;
+  date: Date;
 
   constructor({
     id,
     name,
     eventType,
-    timeConfig,
+    date,
   }: {
     id: string;
     name: string;
     eventType: EventType;
-    timeConfig: ChurchEventTimeConfig;
+    date: Date;
   }) {
     this.id = id;
     this.name = name;
     this.eventType = eventType;
-    this.timeConfig = timeConfig;
+    this.date = date;
   }
 }
 

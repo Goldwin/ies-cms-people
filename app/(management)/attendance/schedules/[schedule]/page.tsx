@@ -2,38 +2,32 @@
 import { ChurchEventHeader } from "@/components/attendance/events/eventheader";
 import { SessionCheckInList } from "@/components/attendance/session/sessioncheckinlist";
 import { ChurchEvent, ChurchEventSession } from "@/entities/attendance/events";
-import { attendanceQuery } from "@/lib/queries/attendance";
+import { EventSchedule } from "@/entities/attendance/schedules";
+import { eventSchedulesQuery } from "@/lib/queries/attendance";
 import { Tab, Tabs } from "@nextui-org/react";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function EventPage() {
   const param = useParams();
-  const [churchEvent, setChurchEvent] = useState<ChurchEvent>();
+  const [churchEvent, setChurchEvent] = useState<EventSchedule>();
   const [churchEventSessions, setChurchEventSessions] = useState<
     ChurchEventSession[]
   >([]);
   const [selectedChurchEventSession, setSelectedChurchEventSession] =
     useState<ChurchEventSession>();
   useEffect(() => {
-    attendanceQuery
-      .getChurchEventDetail(param.event as string)
+    console.log(param.schedule);
+    eventSchedulesQuery
+      .getEventSchedule(param.schedule as string)
       .then(setChurchEvent);
   }, [param]);
-
-  useEffect(() => {
-    if (churchEvent) {
-      attendanceQuery
-        .getChurchEventSessionList(churchEvent.id)
-        .then(setChurchEventSessions);
-    }
-  }, [churchEvent]);
 
   return (
     <div className="flex flex-col items-center justify-start h-full w-full">
       <section className="flex w-full">
         <ChurchEventHeader
-          churchEvent={churchEvent}
+          eventSchedule={churchEvent}
           churchEventSessions={churchEventSessions}
           onChurchSessionSelectionChange={setSelectedChurchEventSession}
         />
