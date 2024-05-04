@@ -2,13 +2,9 @@
 
 import { ChurchEventCreationModal } from "@/components/attendance/events/eventmodal";
 import { PencilIcon } from "@/components/icons";
-import { ChurchEventStats } from "@/entities/attendance/events";
 import { EventSchedule } from "@/entities/attendance/schedules";
 import { EventScheduleSummary } from "@/entities/attendance/stats";
-import {
-  attendanceQuery,
-  attendanceStatsQuery,
-} from "@/lib/queries/attendance";
+import { attendanceStatsQuery } from "@/lib/queries/attendance";
 import { Button } from "@nextui-org/button";
 import { Link } from "@nextui-org/link";
 import {
