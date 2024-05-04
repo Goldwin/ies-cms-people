@@ -1,3 +1,5 @@
+import { ZonedDateTime } from "@internationalized/date";
+
 export class ChurchEventTimeConfig {
   startTime: number;
   endTime: number;
@@ -20,23 +22,23 @@ export class ChurchEventTimeConfig {
 
 export class ChurchEvent {
   id: string;
-  name: string;
+  scheduleId: string;
   eventType: EventType;
-  date: Date;
+  date: ZonedDateTime;
 
   constructor({
     id,
-    name,
+    scheduleId,
     eventType,
     date,
   }: {
     id: string;
-    name: string;
+    scheduleId: string;
     eventType: EventType;
-    date: Date;
+    date: ZonedDateTime;
   }) {
     this.id = id;
-    this.name = name;
+    this.scheduleId = scheduleId;
     this.eventType = eventType;
     this.date = date;
   }

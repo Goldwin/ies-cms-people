@@ -1,9 +1,8 @@
 "use client";
-import { ChurchEventHeader } from "@/components/attendance/events/eventheader";
-import { SessionCheckInList } from "@/components/attendance/session/sessioncheckinlist";
-import { ChurchEvent, ChurchEventSession } from "@/entities/attendance/events";
+import { ChurchEventHeader } from "@/components/attendance/events/event_schedule_header";
+import { ChurchEvent } from "@/entities/attendance/events";
 import { EventSchedule } from "@/entities/attendance/schedules";
-import { eventSchedulesQuery } from "@/lib/queries/attendance";
+import { eventSchedulesQuery } from "@/lib/queries/attendance/event_schedules";
 import { Tab, Tabs } from "@nextui-org/react";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -11,11 +10,8 @@ import { useEffect, useState } from "react";
 export default function EventPage() {
   const param = useParams();
   const [churchEvent, setChurchEvent] = useState<EventSchedule>();
-  const [churchEventSessions, setChurchEventSessions] = useState<
-    ChurchEventSession[]
-  >([]);
-  const [selectedChurchEventSession, setSelectedChurchEventSession] =
-    useState<ChurchEventSession>();
+  const [churchEventList, setChurchEventList] = useState<ChurchEvent[]>([]);
+  const [selectedChurchEvent, setSelectedChurchEvent] = useState<ChurchEvent>();
   useEffect(() => {
     console.log(param.schedule);
     eventSchedulesQuery
@@ -28,8 +24,8 @@ export default function EventPage() {
       <section className="flex w-full">
         <ChurchEventHeader
           eventSchedule={churchEvent}
-          churchEventSessions={churchEventSessions}
-          onChurchSessionSelectionChange={setSelectedChurchEventSession}
+          eventList={churchEventList}
+          onEventSelectionChange={setSelectedChurchEvent}
         />
       </section>
       <section className="flex w-full h-full ">
@@ -50,10 +46,10 @@ export default function EventPage() {
             <h1>Overview</h1>
           </Tab>
           <Tab key="check-in" title="Check-in">
-            <SessionCheckInList
-              churchEventSession={selectedChurchEventSession}
+            {/* <SessionCheckInList
+              churchEventSession={selectedChurchEvent}
               className="flex flex-col h-full w-full justify-start"
-            />
+            /> */}
           </Tab>
           <Tab key="report" title="Report">
             Generate Report

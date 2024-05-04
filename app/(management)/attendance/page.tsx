@@ -1,13 +1,11 @@
 "use client";
 
-import { ChurchEventCreationModal } from "@/components/attendance/events/eventmodal";
+import { ChurchEventCreationModal } from "@/components/attendance/events/event_modal";
 import { PencilIcon } from "@/components/icons";
 import { EventSchedule } from "@/entities/attendance/schedules";
 import { EventScheduleSummary } from "@/entities/attendance/stats";
-import {
-  attendanceStatsQuery,
-  eventSchedulesQuery,
-} from "@/lib/queries/attendance";
+import { eventSchedulesQuery } from "@/lib/queries/attendance/event_schedules";
+import { attendanceStatsQuery } from "@/lib/queries/attendance/event_stats";
 import { Button } from "@nextui-org/button";
 import { Link } from "@nextui-org/link";
 import {

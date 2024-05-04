@@ -1,18 +1,18 @@
 import {
   ChurchEvent,
-  ChurchEventSession,
   ChurchEventSessionCheckIn,
 } from "@/entities/attendance/events";
-import { attendanceQuery } from "@/lib/queries/attendance";
+import { eventCheckinQuery } from "@/lib/queries/attendance/event_checkin";
+import {} from "@/lib/queries/attendance/event_schedules";
 import { Button, Card, CardBody, Chip, User } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 
 export const SessionCheckInList = ({
+  churchEvent,
   className,
-  churchEventSession,
 }: {
+  churchEvent?: ChurchEvent;
   className?: string;
-  churchEventSession?: ChurchEventSession;
 }) => {
   const [checkInList, setCheckInList] = useState<ChurchEventSessionCheckIn[]>(
     []
@@ -22,11 +22,10 @@ export const SessionCheckInList = ({
 
   const loadMoreCheckInList = () => {
     const lastCheckInId = checkInList[checkInList.length - 1].id;
-    if (churchEventSession) {
-      attendanceQuery
-        .getChurchEventSessionCheckInList(
-          churchEventSession?.eventId,
-          churchEventSession?.sessionNumber,
+    if (churchEvent) {
+      eventCheckinQuery
+        .getEventCheckInList(
+          churchEvent.id,
           limit,
           lastCheckInId
         )
@@ -35,11 +34,10 @@ export const SessionCheckInList = ({
   };
 
   useEffect(() => {
-    if (churchEventSession) {
-      attendanceQuery
-        .getChurchEventSessionCheckInList(
-          churchEventSession.eventId,
-          churchEventSession.sessionNumber,
+    if (churchEvent) {
+      eventCheckinQuery
+        .getEventCheckInList(
+          churchEvent.id,          
           limit,
           ""
         )
@@ -49,7 +47,7 @@ export const SessionCheckInList = ({
         })
         .then(setCheckInList);
     }
-  }, [churchEventSession]);
+  }, [churchEvent]);
 
   return (
     <div className={className}>

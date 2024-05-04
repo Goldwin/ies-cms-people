@@ -1,6 +1,5 @@
-import { ChurchEvent, ChurchEventSession } from "@/entities/attendance/events";
+import { ChurchEvent } from "@/entities/attendance/events";
 import { EventSchedule } from "@/entities/attendance/schedules";
-import { parseAbsoluteToLocal } from "@internationalized/date";
 import { Button, ButtonGroup } from "@nextui-org/button";
 import { DateValue } from "@nextui-org/calendar";
 import { DatePicker } from "@nextui-org/date-picker";
@@ -9,27 +8,28 @@ import { useEffect, useState } from "react";
 
 export const ChurchEventHeader = ({
   eventSchedule,
-  churchEventSessions,
-  onChurchSessionSelectionChange,
+  eventList,
+  onEventSelectionChange,
 }: {
   eventSchedule: EventSchedule | undefined;
-  churchEventSessions: ChurchEventSession[] | undefined;
-  onChurchSessionSelectionChange: (s: ChurchEventSession) => void;
+  eventList: ChurchEvent[] | undefined;
+  onEventSelectionChange: (s: ChurchEvent) => void;
 }) => {
   const [availableDates, setAvailableDates] = useState<string[]>([]);
+  const [focusedEvent, setFocusedEvent] = useState<ChurchEvent>();
 
   useEffect(() => {
     setAvailableDates(
-      churchEventSessions?.map((session) =>
-        session.date.toLocaleDateString("sv-SE")
-      ) || []
+      eventList?.map((event) => event.date.toString().split("T")[0]) || []
     );
-  }, [churchEventSessions]);
+  }, [eventList]);
 
   useEffect(() => {
-    if (churchEventSessions)
-      onChurchSessionSelectionChange(churchEventSessions?.[0]);
-  });
+    if (eventList) {
+      setFocusedEvent(eventList?.[0]);
+      onEventSelectionChange(eventList?.[0]);
+    }
+  }, [onEventSelectionChange, eventList]);
 
   const isDateUnavailable = (s: DateValue) => {
     return !availableDates.includes(s.toString().split("T")[0]);
@@ -56,11 +56,7 @@ export const ChurchEventHeader = ({
                   aria-label="Session Date"
                   granularity="day"
                   isDateUnavailable={isDateUnavailable}
-                  defaultValue={parseAbsoluteToLocal(
-                    churchEventSessions
-                      ?.map((session) => session.date.toISOString())
-                      .find(() => true) ?? new Date().toISOString()
-                  )}
+                  defaultValue={focusedEvent?.date}
                 />
               </div>
             </div>
