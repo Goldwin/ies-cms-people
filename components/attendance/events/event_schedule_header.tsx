@@ -1,5 +1,6 @@
 import { ChurchEvent } from "@/entities/attendance/events";
 import { EventSchedule } from "@/entities/attendance/schedules";
+import { fromAbsolute } from "@internationalized/date";
 import { Button, ButtonGroup } from "@nextui-org/button";
 import { DateValue } from "@nextui-org/calendar";
 import { DatePicker } from "@nextui-org/date-picker";
@@ -15,6 +16,9 @@ export const ChurchEventHeader = ({
   eventList: ChurchEvent[] | undefined;
   onEventSelectionChange: (s: ChurchEvent) => void;
 }) => {
+  const [dateValue, setDateValue] = useState<DateValue>(
+    fromAbsolute(Date.now(), "UTC")
+  );
   const [availableDates, setAvailableDates] = useState<string[]>([]);
   const [focusedEvent, setFocusedEvent] = useState<ChurchEvent>();
 
@@ -26,13 +30,23 @@ export const ChurchEventHeader = ({
 
   useEffect(() => {
     if (eventList) {
+      const availableDateString = eventList.map(
+        (event) => event.date.toAbsoluteString().split("T")[0]
+      );
+      setAvailableDates(availableDateString);
       setFocusedEvent(eventList?.[0]);
-      onEventSelectionChange(eventList?.[0]);
     }
-  }, [onEventSelectionChange, eventList]);
+  }, [eventList]);
 
-  const isDateUnavailable = (s: DateValue) => {
-    return !availableDates.includes(s.toString().split("T")[0]);
+  useEffect(() => {
+    if (focusedEvent) {
+      onEventSelectionChange(focusedEvent);
+      setDateValue(focusedEvent.date);
+    }
+  }, [focusedEvent, onEventSelectionChange]);
+
+  const isDateUnavailable = (date: DateValue): boolean => {
+    return !availableDates.includes(date.toString().split("T")[0]);
   };
 
   return (
@@ -55,8 +69,9 @@ export const ChurchEventHeader = ({
                   variant="faded"
                   aria-label="Session Date"
                   granularity="day"
+                  value={dateValue}
+                  onChange={setDateValue}
                   isDateUnavailable={isDateUnavailable}
-                  defaultValue={focusedEvent?.date}
                 />
               </div>
             </div>

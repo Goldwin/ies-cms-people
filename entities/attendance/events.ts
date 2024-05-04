@@ -22,24 +22,20 @@ export class ChurchEventTimeConfig {
 
 export class ChurchEvent {
   id: string;
-  scheduleId: string;
-  eventType: EventType;
+  eventScheduleId: string;
   date: ZonedDateTime;
 
   constructor({
     id,
-    scheduleId,
-    eventType,
+    eventScheduleId,
     date,
   }: {
     id: string;
-    scheduleId: string;
-    eventType: EventType;
+    eventScheduleId: string;
     date: ZonedDateTime;
   }) {
     this.id = id;
-    this.scheduleId = scheduleId;
-    this.eventType = eventType;
+    this.eventScheduleId = eventScheduleId;
     this.date = date;
   }
 }

@@ -2,6 +2,7 @@
 import { ChurchEventHeader } from "@/components/attendance/events/event_schedule_header";
 import { ChurchEvent } from "@/entities/attendance/events";
 import { EventSchedule } from "@/entities/attendance/schedules";
+import { eventQuery } from "@/lib/queries/attendance/event";
 import { eventSchedulesQuery } from "@/lib/queries/attendance/event_schedules";
 import { Tab, Tabs } from "@nextui-org/react";
 import { useParams } from "next/navigation";
@@ -9,21 +10,26 @@ import { useEffect, useState } from "react";
 
 export default function EventPage() {
   const param = useParams();
-  const [churchEvent, setChurchEvent] = useState<EventSchedule>();
+  const [eventSchedule, setEventSchedule] = useState<EventSchedule>();
   const [churchEventList, setChurchEventList] = useState<ChurchEvent[]>([]);
   const [selectedChurchEvent, setSelectedChurchEvent] = useState<ChurchEvent>();
   useEffect(() => {
-    console.log(param.schedule);
     eventSchedulesQuery
       .getEventSchedule(param.schedule as string)
-      .then(setChurchEvent);
+      .then(setEventSchedule);
   }, [param]);
+
+  useEffect(() => {
+    if (eventSchedule) {
+      eventQuery.listEvents(eventSchedule.id, "", 10).then(setChurchEventList);
+    }
+  }, [eventSchedule]);
 
   return (
     <div className="flex flex-col items-center justify-start h-full w-full">
       <section className="flex w-full">
         <ChurchEventHeader
-          eventSchedule={churchEvent}
+          eventSchedule={eventSchedule}
           eventList={churchEventList}
           onEventSelectionChange={setSelectedChurchEvent}
         />
