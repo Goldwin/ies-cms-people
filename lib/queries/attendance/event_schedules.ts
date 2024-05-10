@@ -1,10 +1,4 @@
 import {
-  ChurchEvent,
-  ChurchEventSession,
-  ChurchEventSessionCheckIn,
-  ChurchEventStats,
-} from "@/entities/attendance/events";
-import {
   EventSchedule,
   EventScheduleType,
 } from "@/entities/attendance/schedules";
@@ -24,6 +18,7 @@ export class MockEventScheduleQuery implements EventScheduleQuery {
         id: "1",
         name: "test",
         type: EventScheduleType.Weekly,
+        activities: [],
       })
     );
   }
@@ -33,31 +28,16 @@ export class MockEventScheduleQuery implements EventScheduleQuery {
         id: "1",
         name: "test",
         type: EventScheduleType.OneTime,
+        activities: [],
       }),
       new EventSchedule({
         id: "2",
         name: "test2",
         type: EventScheduleType.Daily,
+        activities: [],
       }),
     ]);
   }
-}
-
-/** @deprecated */
-export interface AttendanceQueries {
-  listChurchEvents(lastId: string, limit: number): Promise<ChurchEvent[]>;
-  getChurchEventStats(
-    id: string,
-    dateRange: { startDate: Date; endDate: Date }
-  ): Promise<ChurchEventStats>;
-  getChurchEventDetail(id: string): Promise<ChurchEvent>;
-  getChurchEventSessionList(id: string): Promise<ChurchEventSession[]>;
-  getChurchEventSessionCheckInList(
-    id: string,
-    sessionNo: number,
-    limit: number,
-    lastId: string
-  ): Promise<ChurchEventSessionCheckIn[]>;
 }
 
 export const eventSchedulesQuery: EventScheduleQuery =

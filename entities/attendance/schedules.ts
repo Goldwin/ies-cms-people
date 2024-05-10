@@ -1,3 +1,5 @@
+import { Activity } from "./activity";
+
 export enum EventScheduleType {
   OneTime = "OneTime",
   Daily = "Daily",
@@ -5,42 +7,42 @@ export enum EventScheduleType {
 }
 
 export class EventSchedule {
-  private _id: string;
-  private _name: string;
-  private _type: EventScheduleType;
+  private readonly _id: string;
+  private readonly _name: string;
+  private readonly _type: EventScheduleType;
+  private readonly _activities: Activity[];
+
   public get id(): string {
     return this._id;
-  }
-  public set id(value: string) {
-    this._id = value;
   }
 
   public get name(): string {
     return this._name;
   }
-  public set name(value: string) {
-    this._name = value;
-  }
 
   public get type(): EventScheduleType {
     return this._type;
   }
-  public set type(value: EventScheduleType) {
-    this._type = value;
+
+  public get activities(): Activity[] {
+    return this._activities;
   }
 
   constructor({
     id,
     name,
     type = EventScheduleType.OneTime,
+    activities,
   }: {
     id: string;
     name: string;
     type?: EventScheduleType;
+    activities: Activity[];
   }) {
     this._id = id;
     this._name = name;
     this._type = type;
+    this._activities = activities;
   }
 }
 
@@ -53,8 +55,23 @@ export class OneTimeEventSchedule extends EventSchedule {
     this._date = value;
   }
 
-  constructor({ id, date, name }: { id: string; date: Date; name: string }) {
-    super({ id: id, type: EventScheduleType.OneTime, name: name });
+  constructor({
+    id,
+    date,
+    name,
+    activities,
+  }: {
+    id: string;
+    date: Date;
+    name: string;
+    activities: Activity[];
+  }) {
+    super({
+      id: id,
+      type: EventScheduleType.OneTime,
+      name: name,
+      activities: activities,
+    });
     this._date = date;
   }
 }
@@ -98,6 +115,7 @@ export class DailyEventSchedule extends EventSchedule {
     startDate,
     endDate,
     name,
+    activities,
   }: {
     id: string;
     time: number;
@@ -105,8 +123,14 @@ export class DailyEventSchedule extends EventSchedule {
     startDate: Date;
     endDate: Date;
     name: string;
+    activities: Activity[];
   }) {
-    super({ id: id, type: EventScheduleType.Daily, name: name });
+    super({
+      id: id,
+      type: EventScheduleType.Daily,
+      name: name,
+      activities: activities,
+    });
     this._time = time;
     this._timezoneOffset = timezoneOffset;
     this._endDate = endDate;
@@ -146,14 +170,21 @@ export class WeeklyEventSchedule extends EventSchedule {
     time,
     timezoneOffset,
     name,
+    activities,
   }: {
     id: string;
     day: number;
     time: number;
     timezoneOffset: number;
     name: string;
+    activities: Activity[];
   }) {
-    super({ id: id, type: EventScheduleType.Weekly, name });
+    super({
+      id: id,
+      type: EventScheduleType.Weekly,
+      name,
+      activities: activities,
+    });
     this._day = day;
     this._time = time;
     this._timezoneOffset = timezoneOffset;

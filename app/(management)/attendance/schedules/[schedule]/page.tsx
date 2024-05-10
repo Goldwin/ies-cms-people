@@ -1,4 +1,5 @@
 "use client";
+import { EventCheckInList } from "@/components/attendance/event_attendance_list";
 import { ChurchEventHeader } from "@/components/attendance/events/event_schedule_header";
 import { ChurchEvent } from "@/entities/attendance/events";
 import { EventSchedule } from "@/entities/attendance/schedules";
@@ -52,10 +53,10 @@ export default function EventPage() {
             <h1>Overview</h1>
           </Tab>
           <Tab key="check-in" title="Check-in">
-            {/* <SessionCheckInList
-              churchEventSession={selectedChurchEvent}
+            <EventCheckInList
+              churchEvent={selectedChurchEvent}
               className="flex flex-col h-full w-full justify-start"
-            /> */}
+            />
           </Tab>
           <Tab key="report" title="Report">
             Generate Report
