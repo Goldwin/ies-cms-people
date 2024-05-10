@@ -26,6 +26,13 @@ export class MockEventQuery implements EventQuery {
             time: parseAbsoluteToLocal("2024-04-11T00:00:00Z"),
             eventId: "1",
           }),
+          new EventActivity({
+            name: "Sunday School",
+            id: "2",
+            activityId: "2",
+            time: parseAbsoluteToLocal("2024-04-11T00:00:00Z"),
+            eventId: "1",
+          }),
         ],
       })
     );
@@ -48,6 +55,13 @@ export class MockEventQuery implements EventQuery {
             time: parseAbsoluteToLocal("2024-04-11T00:00:00Z"),
             eventId: "1",
           }),
+          new EventActivity({
+            name: "Sunday School",
+            id: "2",
+            activityId: "2",
+            time: parseAbsoluteToLocal("2024-04-11T00:00:00Z"),
+            eventId: "1",
+          }),
         ],
       }),
       new ChurchEvent({
@@ -62,6 +76,13 @@ export class MockEventQuery implements EventQuery {
             time: parseAbsoluteToLocal("2024-04-11T00:00:00Z"),
             eventId: "1",
           }),
+          new EventActivity({
+            name: "Sunday School",
+            id: "2",
+            activityId: "2",
+            time: parseAbsoluteToLocal("2024-04-11T00:00:00Z"),
+            eventId: "1",
+          }),
         ],
       }),
       new ChurchEvent({
@@ -73,6 +94,13 @@ export class MockEventQuery implements EventQuery {
             name: "Adult Service",
             id: "1",
             activityId: "1",
+            time: parseAbsoluteToLocal("2024-04-11T00:00:00Z"),
+            eventId: "1",
+          }),
+          new EventActivity({
+            name: "Sunday School",
+            id: "2",
+            activityId: "2",
             time: parseAbsoluteToLocal("2024-04-11T00:00:00Z"),
             eventId: "1",
           }),

@@ -13,6 +13,8 @@ import {
   Button,
   Card,
   CardBody,
+  Checkbox,
+  CheckboxGroup,
   Chip,
   Select,
   SelectItem,
@@ -21,18 +23,42 @@ import {
 import { useEffect, useState } from "react";
 
 const AttendanceFilterBar = ({
+  filter,
   onFilterChange,
   eventActivities,
 }: {
+  filter: EventAttendanceQueryFilter;
   onFilterChange: (filter: EventAttendanceQueryFilter) => void;
   eventActivities?: EventActivity[];
 }) => {
-  console.log(eventActivities);
+  let activityMap: { [id: string]: EventActivity } = {};
+  eventActivities?.reduce((acc, eventActivity) => {
+    acc[eventActivity.id] = eventActivity;
+    return acc;
+  }, activityMap);
+
+  const handleActivityChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    onFilterChange({
+      activity: activityMap[e.target.value],
+      attendanceTypes: filter.attendanceTypes,
+    });
+  };
+
+  const handleAttendanceTypeChange = (attendanceTypes: string[]) => {
+    onFilterChange({
+      activity: filter.activity,
+      attendanceTypes: attendanceTypes.map((key) => key as AttendanceType),
+    });
+  };
   return (
-    <div className="flex flex-row gap-2 my-2 w-[50%]">
-      <p className="">Filter by:</p>
+    <div className="flex flex-row gap-2 my-2">
+      <p className="flex w-20 align-middle py-4">Filter by:</p>
       {eventActivities && (
-        <Select label="Activity" className="flex">
+        <Select
+          label="Activity"
+          className="flex w-96"
+          onChange={handleActivityChange}
+        >
           {eventActivities?.map((eventActivity) => (
             <SelectItem
               key={eventActivity.id}
@@ -44,6 +70,20 @@ const AttendanceFilterBar = ({
           ))}
         </Select>
       )}
+      <CheckboxGroup
+        orientation="horizontal"
+        className="flex py-4 px-4 bg-default-100 rounded-xl"
+        onValueChange={handleAttendanceTypeChange}
+        value={filter.attendanceTypes}
+      >
+        {Object.keys(AttendanceType).map((key) => {
+          return (
+            <Checkbox key={key} value={key}>
+              {key}
+            </Checkbox>
+          );
+        })}
+      </CheckboxGroup>
     </div>
   );
 };
@@ -85,7 +125,6 @@ export const EventCheckInList = ({
       eventAttendanceQuery
         .getEventAttendanceList(churchEvent.id, filter, limit, "")
         .then((res) => {
-          console.log(res);
           return res;
         })
         .then((result) => {
@@ -102,6 +141,7 @@ export const EventCheckInList = ({
           <h1 className="text-2xl">Check-in List ({checkInCount})</h1>
         </div>
         <AttendanceFilterBar
+          filter={filter}
           onFilterChange={setFilter}
           eventActivities={churchEvent?.activities}
         />
