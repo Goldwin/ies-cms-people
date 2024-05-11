@@ -21,6 +21,7 @@ import {
   SelectItem,
   User,
 } from "@nextui-org/react";
+import { debounce } from "lodash";
 import { useEffect, useState } from "react";
 
 const AttendanceFilterBar = ({
@@ -64,7 +65,6 @@ const AttendanceFilterBar = ({
       <div className="flex">
         <Input
           label="Search By Name"
-          value={filter.name}
           onValueChange={handleNameFilterChange}
         />
       </div>
@@ -141,7 +141,6 @@ export const EventCheckInList = ({
     }
   };
 
-  //TODO add debounce
   useEffect(() => {
     if (churchEvent) {
       eventAttendanceQuery
@@ -164,7 +163,7 @@ export const EventCheckInList = ({
         </div>
         <AttendanceFilterBar
           filter={filter}
-          onFilterChange={setFilter}
+          onFilterChange={debounce(setFilter, 1000)}
           eventActivities={churchEvent?.activities}
         />
         {attendanceList.map((checkIn) => (
