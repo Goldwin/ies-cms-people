@@ -16,6 +16,7 @@ import {
   Checkbox,
   CheckboxGroup,
   Chip,
+  Input,
   Select,
   SelectItem,
   User,
@@ -50,40 +51,57 @@ const AttendanceFilterBar = ({
       attendanceTypes: attendanceTypes.map((key) => key as AttendanceType),
     });
   };
+
+  const handleNameFilterChange = (name: string) => {
+    onFilterChange({
+      activity: filter.activity,
+      name: name,
+      attendanceTypes: filter.attendanceTypes,
+    });
+  };
   return (
-    <div className="flex flex-row gap-2 my-2">
-      <p className="flex w-20 align-middle py-4">Filter by:</p>
-      {eventActivities && (
-        <Select
-          label="Activity"
-          className="flex w-96"
-          onChange={handleActivityChange}
+    <div className="flex flex-col gap-2">
+      <div className="flex">
+        <Input
+          label="Search By Name"
+          value={filter.name}
+          onValueChange={handleNameFilterChange}
+        />
+      </div>
+      <div className="flex flex-row gap-4 my-2">
+        <p className="flex w-16 align-middle py-4">Filter by:</p>
+        {eventActivities && (
+          <Select
+            label="Activity"
+            className="flex w-96"
+            onChange={handleActivityChange}
+          >
+            {eventActivities?.map((eventActivity) => (
+              <SelectItem
+                key={eventActivity.id}
+                value={eventActivity.id}
+                className=""
+              >
+                {eventActivity.name}
+              </SelectItem>
+            ))}
+          </Select>
+        )}
+        <CheckboxGroup
+          orientation="horizontal"
+          className="flex py-4 px-4 bg-default-100 rounded-xl"
+          onValueChange={handleAttendanceTypeChange}
+          value={filter.attendanceTypes}
         >
-          {eventActivities?.map((eventActivity) => (
-            <SelectItem
-              key={eventActivity.id}
-              value={eventActivity.id}
-              className=""
-            >
-              {eventActivity.name}
-            </SelectItem>
-          ))}
-        </Select>
-      )}
-      <CheckboxGroup
-        orientation="horizontal"
-        className="flex py-4 px-4 bg-default-100 rounded-xl"
-        onValueChange={handleAttendanceTypeChange}
-        value={filter.attendanceTypes}
-      >
-        {Object.keys(AttendanceType).map((key) => {
-          return (
-            <Checkbox key={key} value={key}>
-              {key}
-            </Checkbox>
-          );
-        })}
-      </CheckboxGroup>
+          {Object.keys(AttendanceType).map((key) => {
+            return (
+              <Checkbox key={key} value={key}>
+                {key}
+              </Checkbox>
+            );
+          })}
+        </CheckboxGroup>
+      </div>
     </div>
   );
 };
@@ -110,7 +128,10 @@ export const EventCheckInList = ({
   const limit = 10;
 
   const loadMoreCheckInList = () => {
-    const lastCheckInId = attendanceList[attendanceList.length - 1].id;
+    const lastCheckInId =
+      attendanceList.length > 0
+        ? attendanceList[attendanceList.length - 1].id
+        : "";
     if (churchEvent) {
       eventAttendanceQuery
         .getEventAttendanceList(churchEvent.id, filter, limit, lastCheckInId)
@@ -120,6 +141,7 @@ export const EventCheckInList = ({
     }
   };
 
+  //TODO add debounce
   useEffect(() => {
     if (churchEvent) {
       eventAttendanceQuery

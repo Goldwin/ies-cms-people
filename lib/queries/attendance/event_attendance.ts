@@ -14,6 +14,7 @@ export interface EventAttendanceQueryResult {
 export interface EventAttendanceQueryFilter {
   activity?: EventActivity;
   attendanceTypes: AttendanceType[];
+  name?: string;
 }
 
 export interface EventAttendanceQuery {
@@ -41,31 +42,45 @@ export class MockEventAttendanceQuery implements EventAttendanceQuery {
       if (i % 3 == 0) {
         attendanceType = "Volunteer" as AttendanceType;
       }
-      result.push(
-        new ChurchActivityAttendance({
-          id: id,
-          securityCode: "1234",
-          activity: new EventActivity({
-            name: "test",
-            id: "1",
-            activityId: "1",
-            time: fromDate(new Date(), "America/New_York"),
-            eventId: eventId,
-          }),
-          securityNumber: 1234,
-          checkinTime: new Date(),
-          checkinLocation: new events.ChurchEventLocation({
-            name: "test",
-            id: "1",
-          }),
-          personId: "1",
-          firstName: "test",
-          middleName: "test",
-          lastName: "test " + id,
-          profilePictureUrl: "",
-          attendanceType: attendanceType,
-        })
-      );
+      let eventActivityId = "1";
+      if (i % 4 == 0) {
+        eventActivityId = "2";
+      }
+      const item = new ChurchActivityAttendance({
+        id: id,
+        securityCode: "1234",
+        activity: new EventActivity({
+          name: "test",
+          id: eventActivityId,
+          activityId: eventActivityId,
+          time: fromDate(new Date(), "America/New_York"),
+          eventId: eventId,
+        }),
+        securityNumber: 1234,
+        checkinTime: new Date(),
+        checkinLocation: new events.ChurchEventLocation({
+          name: "test",
+          id: "1",
+        }),
+        personId: "1",
+        firstName: "test",
+        middleName: "test",
+        lastName: "test " + id,
+        profilePictureUrl: "",
+        attendanceType: attendanceType,
+      });
+
+      if (
+        (!filter.activity || filter.activity?.id === item.activity?.id) &&
+        filter.attendanceTypes.includes(item.attendanceType) &&
+        (!filter.name ||
+          filter.name === "" ||
+          item.lastName.startsWith(filter.name) ||
+          item.firstName.startsWith(filter.name) ||
+          item.middleName.startsWith(filter.name))
+      ) {
+        result.push(item);
+      }
     }
 
     return Promise.resolve({ attendance: result, count: 200 });
