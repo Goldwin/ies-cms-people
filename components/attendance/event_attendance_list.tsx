@@ -39,19 +39,22 @@ const AttendanceFilterBar = ({
     return acc;
   }, activityMap);
 
-  const handleActivityChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    onFilterChange({
-      activity: activityMap[e.target.value],
-      attendanceTypes: filter.attendanceTypes,
-    });
-  };
+  const handleActivityChange = debounce(
+    (e: React.ChangeEvent<HTMLSelectElement>) => {
+      onFilterChange({
+        activity: activityMap[e.target.value],
+        attendanceTypes: filter.attendanceTypes,
+      });
+    },
+    1000
+  );
 
-  const handleAttendanceTypeChange = (attendanceTypes: string[]) => {
+  const handleAttendanceTypeChange = debounce((attendanceTypes: string[]) => {
     onFilterChange({
       activity: filter.activity,
       attendanceTypes: attendanceTypes.map((key) => key as AttendanceType),
     });
-  };
+  }, 1000);
 
   const handleNameFilterChange = (name: string) => {
     onFilterChange({
@@ -63,10 +66,7 @@ const AttendanceFilterBar = ({
   return (
     <div className="flex flex-col gap-2">
       <div className="flex">
-        <Input
-          label="Search By Name"
-          onValueChange={handleNameFilterChange}
-        />
+        <Input label="Search By Name" onValueChange={handleNameFilterChange} />
       </div>
       <div className="flex flex-row gap-4 my-2">
         <p className="flex w-16 align-middle py-4">Filter by:</p>
@@ -91,7 +91,7 @@ const AttendanceFilterBar = ({
           orientation="horizontal"
           className="flex py-4 px-4 bg-default-100 rounded-xl"
           onValueChange={handleAttendanceTypeChange}
-          value={filter.attendanceTypes}
+          defaultValue={filter.attendanceTypes}
         >
           {Object.keys(AttendanceType).map((key) => {
             return (
