@@ -1,4 +1,5 @@
 "use client";
+import { EventScheduleActivitiesConfig } from "@/components/attendance/event_activities_config";
 import { EventCheckInList } from "@/components/attendance/event_attendance_list";
 import { ChurchEventHeader } from "@/components/attendance/events/event_schedule_header";
 import { ChurchEvent } from "@/entities/attendance/events";
@@ -69,8 +70,11 @@ export default function EventPage() {
             className="mt-4 px-0 cursor-default"
             isDisabled={true}
           ></Tab>
-          <Tab key="time" title="Times">
-            Time setting
+          <Tab key="time" title="Activities">
+            <EventScheduleActivitiesConfig
+              eventSchedule={eventSchedule}
+              className="flex flex-col h-full w-full justify-start"
+            />
           </Tab>
           <Tab key="location" title="Labels & Locations">
             Location and label

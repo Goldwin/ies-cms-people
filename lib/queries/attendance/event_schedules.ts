@@ -1,3 +1,4 @@
+import { Activity } from "@/entities/attendance/activity";
 import {
   EventSchedule,
   EventScheduleType,
@@ -18,7 +19,24 @@ export class MockEventScheduleQuery implements EventScheduleQuery {
         id: "1",
         name: "test",
         type: EventScheduleType.Weekly,
-        activities: [],
+        activities: [
+          new Activity({
+            id: "1",
+            name: "Adult Service",
+            scheduleId: "1",
+            timeHour: 9,
+            timeMinute: 30,
+            timezoneOffset: 7,
+          }),
+          new Activity({
+            id: "1",
+            name: "Sunday School",
+            scheduleId: "2",
+            timeHour: 9,
+            timeMinute: 30,
+            timezoneOffset: 7,
+          }),
+        ],
       })
     );
   }

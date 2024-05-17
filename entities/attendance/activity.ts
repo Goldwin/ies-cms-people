@@ -54,6 +54,16 @@ export class Activity {
   get timezoneOffset(): number {
     return this._timezoneOffset;
   }
+
+  toGenericObject(): any {
+    return {
+      id: this.id,
+      name: this.name,
+      scheduleId: this.scheduleId,
+      time: `${this.timeHour}:${this.timeMinute}`,
+      timezoneOffset: this.timezoneOffset,
+    };
+  }
 }
 
 export class EventActivity {
