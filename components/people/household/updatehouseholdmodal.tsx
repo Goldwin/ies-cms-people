@@ -211,6 +211,9 @@ export const UpdateHouseholdModal = ({
         console.log(error);
       });
   };
+  const removePersonFromList = (person: Person) => {
+    setPersonList(personList.filter((p) => p.id !== person.id));
+  };
 
   return (
     <Modal
@@ -286,9 +289,7 @@ export const UpdateHouseholdModal = ({
                         color="danger"
                         size="sm"
                         onClick={() => {
-                          setPersonList(
-                            personList.filter((p) => p.id !== person.id)
-                          );
+                          removePersonFromList(person);
                         }}
                       >
                         Remove
