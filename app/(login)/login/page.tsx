@@ -66,6 +66,7 @@ export default function LoginPage() {
             label="Email"
             placeholder="Enter your email"
             errorMessage={errors.email && "Email is Required"}
+            isInvalid={!!errors.email}
             {...register("email", { required: true })}
           />
           <Input
@@ -73,6 +74,7 @@ export default function LoginPage() {
             label="Password"
             placeholder="Enter your password"
             errorMessage={errors.password && "Password is Required"}
+            isInvalid={!!errors.password}
             {...register("password", { required: true })}
           />
           <div className="flex-row flex gap-4 justify-between">

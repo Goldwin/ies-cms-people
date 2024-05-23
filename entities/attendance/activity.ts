@@ -60,7 +60,7 @@ export class Activity {
       id: this.id,
       name: this.name,
       scheduleId: this.scheduleId,
-      time: `${this.timeHour}:${this.timeMinute}`,
+      startTime: `${this.timeHour}:${this.timeMinute}`,
       timezoneOffset: this.timezoneOffset,
     };
   }

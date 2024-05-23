@@ -1,7 +1,7 @@
 "use client";
-import { EventScheduleActivitiesConfig } from "@/components/attendance/event_activities_config";
+import { EventScheduleActivitiesConfig } from "@/components/attendance/schedule_activities_config";
 import { EventCheckInList } from "@/components/attendance/event_attendance_list";
-import { ChurchEventHeader } from "@/components/attendance/events/event_schedule_header";
+import { ChurchEventHeader } from "@/components/attendance/event_schedule_header";
 import { ChurchEvent } from "@/entities/attendance/events";
 import { EventSchedule } from "@/entities/attendance/schedules";
 import { eventQuery } from "@/lib/queries/attendance/event";
