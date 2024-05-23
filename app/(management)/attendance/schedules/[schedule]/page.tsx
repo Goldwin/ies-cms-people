@@ -70,17 +70,14 @@ export default function EventPage() {
             className="mt-4 px-0 cursor-default"
             isDisabled={true}
           ></Tab>
+          <Tab key="date" title="Schedule">
+            Date Settings
+          </Tab>
           <Tab key="time" title="Activities">
             <EventScheduleActivitiesConfig
               eventSchedule={eventSchedule}
               className="flex flex-col h-full w-full justify-start"
             />
-          </Tab>
-          <Tab key="location" title="Labels & Locations">
-            Location and label
-          </Tab>
-          <Tab key="settings" title="Settings">
-            settings
           </Tab>
         </Tabs>
       </section>
