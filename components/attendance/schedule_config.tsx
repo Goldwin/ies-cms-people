@@ -1,4 +1,5 @@
 import {
+  DailyEventSchedule,
   EventSchedule,
   EventScheduleType,
   OneTimeEventSchedule,
@@ -25,6 +26,7 @@ import {
 import {
   Control,
   Controller,
+  FieldErrors,
   useForm,
   UseFormRegister,
   UseFormWatch,
@@ -43,19 +45,29 @@ interface IOneTimeScheduleConfigValue {
   date: ZonedDateTime;
 }
 
+interface IDailyScheduleConfigValue {
+  startDate: ZonedDateTime;
+  endDate: ZonedDateTime;
+}
+
 interface IEventConfigValue {
   name: string;
   type: EventScheduleType;
   timezone: number;
-  schedule: IWeeklyScheduleConfigValue | IOneTimeScheduleConfigValue;
+  schedule:
+    | IWeeklyScheduleConfigValue
+    | IOneTimeScheduleConfigValue
+    | IDailyScheduleConfigValue;
 }
 
 const WeeklyScheduleConfigForm = ({
   register,
   watch,
+  errors,
 }: {
   register: UseFormRegister<IEventConfigValue>;
   watch: UseFormWatch<IEventConfigValue>;
+  errors: FieldErrors<IEventConfigValue>;
 }) => {
   const weekdays = [
     "Monday",
@@ -94,10 +106,10 @@ const WeeklyScheduleConfigForm = ({
 };
 
 const OneTimeScheduleConfigForm = ({
-  register,
   control,
+  errors,
 }: {
-  register: UseFormRegister<IEventConfigValue>;
+  errors: FieldErrors<IEventConfigValue>;
   control: Control<IEventConfigValue>;
 }) => {
   return (
@@ -117,24 +129,99 @@ const OneTimeScheduleConfigForm = ({
   );
 };
 
+const DailyScheduleConfigForm = ({
+  control,
+  errors,
+}: {
+  control: Control<IEventConfigValue>;
+  errors: FieldErrors<IEventConfigValue>;
+}) => {
+  console.log(errors.schedule);
+  return (
+    <Card>
+      <CardHeader>
+        <h1 className="text-md">Daily Schedule</h1>
+      </CardHeader>
+      <Divider />
+      <CardBody className="flex gap-4">
+        <Controller
+          render={({ field }) => (
+            <DatePicker
+              label="Start Date"
+              {...field}
+              isInvalid={!!(errors.schedule as any)?.startDate}
+              errorMessage={(errors.schedule as any)?.startDate?.message}
+            />
+          )}
+          name="schedule.startDate"
+          control={control}
+          rules={{
+            validate: (value, formValue) =>
+              formValue.type !== EventScheduleType.Daily ||
+              value.toDate().getTime() > Date.now() ||
+              "Start date cannot be in the past",
+          }}
+        />
+        <Controller
+          render={({ field }) => (
+            <DatePicker
+              label="End Date"
+              {...field}
+              isInvalid={!!(errors.schedule as any)?.endDate}
+              errorMessage={(errors.schedule as any)?.endDate?.message}
+            />
+          )}
+          name="schedule.endDate"
+          control={control}
+          rules={{
+            validate: {
+              notInThePast: (value, formValue) =>
+                formValue.type !== EventScheduleType.Daily ||
+                value.toDate().getTime() > Date.now() ||
+                "End date cannot be in the past",
+              endDateIsGreaterThanStartDate: (value, formValue) =>
+                formValue.type !== EventScheduleType.Daily ||
+                value.toDate().getTime() >
+                  (formValue.schedule as IDailyScheduleConfigValue).startDate
+                    .toDate()
+                    .getTime(),
+            },
+          }}
+        />
+      </CardBody>
+    </Card>
+  );
+};
+
 const ScheduleConfigForm = ({
   type,
   register,
   watch,
   control,
+  errors,
 }: {
   type: EventScheduleType;
   register: UseFormRegister<IEventConfigValue>;
   watch: UseFormWatch<IEventConfigValue>;
   control: Control<IEventConfigValue>;
+  errors: FieldErrors<IEventConfigValue>;
 }) => {
-  if (type === EventScheduleType.Weekly) {
-    return <WeeklyScheduleConfigForm register={register} watch={watch} />;
+  switch (type) {
+    case EventScheduleType.Daily:
+      return <DailyScheduleConfigForm control={control} errors={errors} />;
+    case EventScheduleType.Weekly:
+      return (
+        <WeeklyScheduleConfigForm
+          register={register}
+          watch={watch}
+          errors={errors}
+        />
+      );
+    case EventScheduleType.OneTime:
+      return <OneTimeScheduleConfigForm control={control} errors={errors} />;
+    default:
+      return <div></div>;
   }
-  if (type === EventScheduleType.OneTime) {
-    return <OneTimeScheduleConfigForm register={register} control={control} />;
-  }
-  return <div></div>;
 };
 
 export const EventScheduleConfigForm = ({
@@ -167,6 +254,12 @@ export const EventScheduleConfigForm = ({
         date:
           (schedule as OneTimeEventSchedule)?.date ??
           fromAbsolute(Date.now(), getLocalTimeZone()),
+        startDate:
+          (schedule as DailyEventSchedule)?.startDate ??
+          fromAbsolute(Date.now(), getLocalTimeZone()),
+        endDate:
+          (schedule as DailyEventSchedule)?.endDate ??
+          fromAbsolute(Date.now() + 24 * 60 * 60 * 1000, getLocalTimeZone()),
       },
     },
   });
@@ -189,7 +282,18 @@ export const EventScheduleConfigForm = ({
                 type="text"
                 label="Event Name"
                 defaultValue={schedule?.name}
-                {...register("name")}
+                {...register("name", {
+                  minLength: {
+                    value: 3,
+                    message: "Event Name must be at least 3 characters",
+                  },
+                  maxLength: {
+                    value: 63,
+                    message: "Event Name must be at most 63 characters",
+                  },
+                })}
+                isInvalid={!!errors.name}
+                errorMessage={errors.name?.message}
               />
               <Select label="Frequency" {...register("type")}>
                 {Object.keys(EventScheduleType).map((key) => (
@@ -212,6 +316,7 @@ export const EventScheduleConfigForm = ({
             register={register}
             watch={watch}
             control={control}
+            errors={errors}
           />
 
           <div className="flex justify-end">
