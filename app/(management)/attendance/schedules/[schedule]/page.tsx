@@ -1,5 +1,5 @@
 "use client";
-import { EventScheduleActivitiesConfig } from "@/components/attendance/schedule_activities_config";
+import { EventScheduleActivityConfigForm } from "@/components/attendance/schedule_activities_config";
 import { EventCheckInList } from "@/components/attendance/event_attendance_list";
 import { ChurchEventHeader } from "@/components/attendance/event_schedule_header";
 import { ChurchEvent } from "@/entities/attendance/events";
@@ -9,6 +9,7 @@ import { eventSchedulesQuery } from "@/lib/queries/attendance/event_schedules";
 import { Tab, Tabs } from "@nextui-org/react";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { ScheduleConfigForm } from "@/components/attendance/schedule_config";
 
 export default function EventPage() {
   const param = useParams();
@@ -54,10 +55,7 @@ export default function EventPage() {
             <h1>Overview</h1>
           </Tab>
           <Tab key="check-in" title="Check-in">
-            <EventCheckInList
-              churchEvent={selectedChurchEvent}
-              className="flex flex-col h-full w-full justify-start"
-            />
+            <EventCheckInList churchEvent={selectedChurchEvent} />
           </Tab>
           <Tab key="report" title="Report">
             Generate Report
@@ -70,13 +68,12 @@ export default function EventPage() {
             className="mt-4 px-0 cursor-default"
             isDisabled={true}
           ></Tab>
-          <Tab key="date" title="Schedule">
-            Date Settings
+          <Tab key="date" title="Settings">
+            <ScheduleConfigForm schedule={eventSchedule} />
           </Tab>
           <Tab key="time" title="Activities">
-            <EventScheduleActivitiesConfig
-              eventSchedule={eventSchedule}
-              className="flex flex-col h-full w-full justify-start"
+            <EventScheduleActivityConfigForm
+              eventSchedule={eventSchedule}              
             />
           </Tab>
         </Tabs>

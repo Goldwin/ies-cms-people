@@ -1,6 +1,7 @@
 "use client";
 
 import { Activity } from "@/entities/attendance/activity";
+import { EventSchedule } from "@/entities/attendance/schedules";
 import {
   Button,
   Input,
@@ -9,17 +10,10 @@ import {
   ModalContent,
   ModalFooter,
   ModalHeader,
-  Select,
-  SelectItem,
   TimeInput,
   TimeInputValue,
 } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
-
-interface TimezoneOption {
-  label: string;
-  value: number;
-}
 
 interface IScheduleActivity {
   id?: string;
@@ -32,10 +26,12 @@ export const ScheduleActivityModal = ({
   isOpen,
   onOpenChange,
   activity,
+  schedule
 }: {
   isOpen: boolean;
   activity?: Activity;
   onOpenChange: () => void;
+  schedule?: EventSchedule;
 }) => {
   const {
     register,
@@ -48,12 +44,6 @@ export const ScheduleActivityModal = ({
       timezone: activity?.timezoneOffset ?? 7,
     },
   });
-
-  const timezoneOptions: TimezoneOption[] = [
-    { label: "GMT +7", value: 7 },
-    { label: "GMT +8", value: 8 },
-    { label: "GMT +9", value: 9 },
-  ];
 
   const {
     onChange: onStartTimeChange,
@@ -96,20 +86,7 @@ export const ScheduleActivityModal = ({
                 isInvalid={!!errors.startTime}
                 errorMessage={errors.startTime?.message}
               />
-              <Select
-                label="Timezone"
-                isInvalid={!!errors.timezone}
-                errorMessage={errors.timezone?.message}
-                {...register("timezone", {
-                  required: true,
-                })}
-              >
-                {timezoneOptions.map((option) => (
-                  <SelectItem key={option.value} value={option.value}>
-                    {option.label}
-                  </SelectItem>
-                ))}
-              </Select>
+              <input type="hidden" value={schedule?.timezoneOffset} {...register("timezone")} />
             </ModalBody>
             <ModalFooter>
               <Button onClick={onClose}>Cancel</Button>

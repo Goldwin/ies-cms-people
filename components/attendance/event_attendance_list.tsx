@@ -108,7 +108,7 @@ const AttendanceFilterBar = ({
 
 export const EventCheckInList = ({
   churchEvent,
-  className,
+  className = "flex flex-col h-full w-full justify-start",
 }: {
   churchEvent?: ChurchEvent;
   className?: string;

@@ -6,9 +6,10 @@ import { Table, TableCell, TableColumn, TableRow } from "@nextui-org/table";
 import { TableBody, TableHeader } from "react-stately";
 import { ScheduleActivityModal } from "./schedule_activity_modal";
 
-export const EventScheduleActivitiesConfig = ({
+
+export const EventScheduleActivityConfigForm = ({
   eventSchedule,
-  className,
+  className="flex flex-col h-full w-full justify-start",
 }: {
   eventSchedule?: EventSchedule;
   className?: string;
@@ -22,10 +23,6 @@ export const EventScheduleActivitiesConfig = ({
     {
       key: "startTime",
       label: "Start Time",
-    },
-    {
-      key: "timezoneOffset",
-      label: "Timezone Offset",
     },
     {
       key: "actions",
@@ -69,7 +66,7 @@ export const EventScheduleActivitiesConfig = ({
         >
           New Activity
         </Button>
-        <ScheduleActivityModal isOpen={isOpen} onOpenChange={onOpenChange} />
+        <ScheduleActivityModal isOpen={isOpen} onOpenChange={onOpenChange} schedule={eventSchedule}/>
       </div>
       {eventSchedule && (
         <Table align="center" aria-label="Event Schedule Activities">

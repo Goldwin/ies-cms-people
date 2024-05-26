@@ -11,6 +11,7 @@ export class EventSchedule {
   private readonly _name: string;
   private readonly _type: EventScheduleType;
   private readonly _activities: Activity[];
+  private readonly _timezoneOffset: number;
 
   public get id(): string {
     return this._id;
@@ -28,21 +29,28 @@ export class EventSchedule {
     return this._activities;
   }
 
+  public get timezoneOffset(): number {
+    return this._timezoneOffset;
+  }
+
   constructor({
     id,
     name,
     type = EventScheduleType.OneTime,
     activities,
+    timezoneOffset = 7,
   }: {
     id: string;
     name: string;
     type?: EventScheduleType;
     activities: Activity[];
+    timezoneOffset: number;
   }) {
     this._id = id;
     this._name = name;
     this._type = type;
     this._activities = activities;
+    this._timezoneOffset = timezoneOffset;
   }
 }
 
@@ -60,17 +68,20 @@ export class OneTimeEventSchedule extends EventSchedule {
     date,
     name,
     activities,
+    timezoneOffset = 7,
   }: {
     id: string;
     date: Date;
     name: string;
     activities: Activity[];
+    timezoneOffset: number;
   }) {
     super({
       id: id,
       type: EventScheduleType.OneTime,
       name: name,
       activities: activities,
+      timezoneOffset: timezoneOffset,
     });
     this._date = date;
   }
@@ -78,7 +89,6 @@ export class OneTimeEventSchedule extends EventSchedule {
 
 export class DailyEventSchedule extends EventSchedule {
   private _startDate: Date;
-  private _timezoneOffset: number;
   private _endDate: Date;
   private _time: number;
   public get startDate(): Date {
@@ -102,12 +112,6 @@ export class DailyEventSchedule extends EventSchedule {
     this._time = value;
   }
 
-  public get timezoneOffset(): number {
-    return this._timezoneOffset;
-  }
-  public set timezoneOffset(value: number) {
-    this._timezoneOffset = value;
-  }
   constructor({
     id,
     time,
@@ -130,9 +134,9 @@ export class DailyEventSchedule extends EventSchedule {
       type: EventScheduleType.Daily,
       name: name,
       activities: activities,
+      timezoneOffset: timezoneOffset,
     });
     this._time = time;
-    this._timezoneOffset = timezoneOffset;
     this._endDate = endDate;
     this._startDate = startDate;
   }
@@ -141,7 +145,6 @@ export class DailyEventSchedule extends EventSchedule {
 export class WeeklyEventSchedule extends EventSchedule {
   private _day: number;
   private _time: number;
-  private _timezoneOffset: number;
 
   public get day(): number {
     return this._day;
@@ -155,13 +158,6 @@ export class WeeklyEventSchedule extends EventSchedule {
   }
   public set time(value: number) {
     this._time = value;
-  }
-
-  public get timezoneOffset(): number {
-    return this._timezoneOffset;
-  }
-  public set timezoneOffset(value: number) {
-    this._timezoneOffset = value;
   }
 
   constructor({
@@ -184,9 +180,9 @@ export class WeeklyEventSchedule extends EventSchedule {
       type: EventScheduleType.Weekly,
       name,
       activities: activities,
+      timezoneOffset: timezoneOffset,
     });
     this._day = day;
     this._time = time;
-    this._timezoneOffset = timezoneOffset;
   }
 }
