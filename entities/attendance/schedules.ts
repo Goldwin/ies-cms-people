@@ -90,7 +90,6 @@ export class OneTimeEventSchedule extends EventSchedule {
 export class DailyEventSchedule extends EventSchedule {
   private _startDate: Date;
   private _endDate: Date;
-  private _time: number;
   public get startDate(): Date {
     return this._startDate;
   }
@@ -103,13 +102,6 @@ export class DailyEventSchedule extends EventSchedule {
   }
   public set endDate(value: Date) {
     this._endDate = value;
-  }
-
-  public get time(): number {
-    return this._time;
-  }
-  public set time(value: number) {
-    this._time = value;
   }
 
   constructor({
@@ -136,41 +128,30 @@ export class DailyEventSchedule extends EventSchedule {
       activities: activities,
       timezoneOffset: timezoneOffset,
     });
-    this._time = time;
     this._endDate = endDate;
     this._startDate = startDate;
   }
 }
 
 export class WeeklyEventSchedule extends EventSchedule {
-  private _day: number;
-  private _time: number;
+  private _days: number[];
 
-  public get day(): number {
-    return this._day;
+  public get days(): number[] {
+    return this._days;
   }
-  public set day(value: number) {
-    this._day = value;
-  }
-
-  public get time(): number {
-    return this._time;
-  }
-  public set time(value: number) {
-    this._time = value;
+  public set day(value: number[]) {
+    this._days = value;
   }
 
   constructor({
     id,
-    day,
-    time,
+    days = [],
     timezoneOffset,
     name,
     activities,
   }: {
     id: string;
-    day: number;
-    time: number;
+    days: number[];
     timezoneOffset: number;
     name: string;
     activities: Activity[];
@@ -182,7 +163,6 @@ export class WeeklyEventSchedule extends EventSchedule {
       activities: activities,
       timezoneOffset: timezoneOffset,
     });
-    this._day = day;
-    this._time = time;
+    this._days = days;
   }
 }

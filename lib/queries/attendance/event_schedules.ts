@@ -2,6 +2,7 @@ import { Activity } from "@/entities/attendance/activity";
 import {
   EventSchedule,
   EventScheduleType,
+  WeeklyEventSchedule,
 } from "@/entities/attendance/schedules";
 
 export interface EventScheduleQuery {
@@ -15,10 +16,11 @@ export interface EventScheduleQuery {
 export class MockEventScheduleQuery implements EventScheduleQuery {
   getEventSchedule(eventScheduleId: string): Promise<EventSchedule> {
     return Promise.resolve(
-      new EventSchedule({
+      new WeeklyEventSchedule({
         id: "1",
         name: "test",
-        type: EventScheduleType.Weekly,
+        days: [1, 2, 3, 4, 5, 6, 7],
+        timezoneOffset: 7,
         activities: [
           new Activity({
             id: "1",
@@ -42,17 +44,19 @@ export class MockEventScheduleQuery implements EventScheduleQuery {
   }
   listEventSchedules(lastId: string, limit: number): Promise<EventSchedule[]> {
     return Promise.resolve([
-      new EventSchedule({
+      new WeeklyEventSchedule({
         id: "1",
         name: "test",
-        type: EventScheduleType.OneTime,
+        days: [1, 2, 3, 4, 5, 6, 7],
         activities: [],
+        timezoneOffset: 7,
       }),
       new EventSchedule({
         id: "2",
         name: "test2",
         type: EventScheduleType.Daily,
         activities: [],
+        timezoneOffset: 7,
       }),
     ]);
   }

@@ -9,7 +9,7 @@ import { eventSchedulesQuery } from "@/lib/queries/attendance/event_schedules";
 import { Tab, Tabs } from "@nextui-org/react";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { ScheduleConfigForm } from "@/components/attendance/schedule_config";
+import { EventScheduleConfigForm } from "@/components/attendance/schedule_config";
 
 export default function EventPage() {
   const param = useParams();
@@ -69,12 +69,10 @@ export default function EventPage() {
             isDisabled={true}
           ></Tab>
           <Tab key="date" title="Settings">
-            <ScheduleConfigForm schedule={eventSchedule} />
+            <EventScheduleConfigForm schedule={eventSchedule} />
           </Tab>
           <Tab key="time" title="Activities">
-            <EventScheduleActivityConfigForm
-              eventSchedule={eventSchedule}              
-            />
+            <EventScheduleActivityConfigForm eventSchedule={eventSchedule} />
           </Tab>
         </Tabs>
       </section>
