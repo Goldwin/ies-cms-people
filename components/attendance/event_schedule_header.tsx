@@ -21,6 +21,7 @@ export const ChurchEventHeader = ({
   );
   const [availableDates, setAvailableDates] = useState<string[]>([]);
   const [focusedEvent, setFocusedEvent] = useState<ChurchEvent>();
+  const [focusedEventIndex, setFocusedEventIndex] = useState<number>(0);
 
   useEffect(() => {
     setAvailableDates(
@@ -34,9 +35,17 @@ export const ChurchEventHeader = ({
         (event) => event.date.toAbsoluteString().split("T")[0]
       );
       setAvailableDates(availableDateString);
-      setFocusedEvent(eventList?.[0]);
+      setFocusedEvent(eventList?.[focusedEventIndex]);
     }
-  }, [eventList]);
+  }, [eventList, focusedEventIndex]);
+
+  const selectNextEvent = () => {
+    setFocusedEventIndex((i) => Math.max(i - 1, 0));
+  };
+
+  const selectPrevEvent = () => {
+    setFocusedEventIndex((i) => Math.min(i + 1, eventList?.length ?? 0));
+  };
 
   useEffect(() => {
     if (focusedEvent) {
@@ -58,10 +67,18 @@ export const ChurchEventHeader = ({
               <h1 className="text-3xl capitalize">{eventSchedule?.name}</h1>
               <div className="flex flex-row gap-2">
                 <ButtonGroup size="sm">
-                  <Button className="text-3xl" isIconOnly>
+                  <Button
+                    className="text-3xl"
+                    onPress={selectPrevEvent}
+                    isIconOnly
+                  >
                     &#8249;
                   </Button>
-                  <Button className="text-3xl" isIconOnly>
+                  <Button
+                    className="text-3xl"
+                    onPress={selectNextEvent}
+                    isIconOnly
+                  >
                     &#8250;
                   </Button>
                 </ButtonGroup>
