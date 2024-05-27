@@ -122,7 +122,19 @@ const OneTimeScheduleConfigForm = ({
         <Controller
           name="schedule.date"
           control={control}
-          render={({ field }) => <DatePicker label="Event Date" {...field} />}
+          render={({ field }) => (
+            <DatePicker
+              label="Event Date"
+              {...field}
+              isInvalid={!!(errors.schedule as any)?.date}
+              errorMessage={(errors.schedule as any)?.date?.message}
+            />
+          )}
+          rules={{
+            validate: (value) =>
+              value.toDate().getTime() > Date.now() ||
+              "Event date cannot be in the past",
+          }}
         />
       </CardBody>
     </Card>
