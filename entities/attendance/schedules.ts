@@ -106,7 +106,6 @@ export class DailyEventSchedule extends EventSchedule {
 
   constructor({
     id,
-    time,
     timezoneOffset,
     startDate,
     endDate,
