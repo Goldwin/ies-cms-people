@@ -42,7 +42,7 @@ export class EventSchedule {
   }: {
     id: string;
     name: string;
-    type?: EventScheduleType;
+    type: EventScheduleType;
     activities: Activity[];
     timezoneOffset: number;
   }) {

@@ -1,5 +1,6 @@
 "use client";
 
+import { EventSchedule, EventScheduleType } from "@/entities/attendance/schedules";
 import {
   Button,
   Input,
@@ -11,6 +12,7 @@ import {
   Select,
   SelectItem,
 } from "@nextui-org/react";
+import { useForm } from "react-hook-form";
 
 export const ChurchEventCreationModal = ({
   isOpen,
@@ -19,27 +21,27 @@ export const ChurchEventCreationModal = ({
   isOpen: boolean;
   onOpenChange: () => void;
 }) => {
-  const frequencyTypes = ["Weekly", "Daily"];
+  const frequencyTypes = [EventScheduleType.OneTime, EventScheduleType.Weekly, EventScheduleType.Daily];
+  const {register, handleSubmit} = useForm<EventSchedule>({ mode: "onSubmit" });
+  const createSchedule = (schedule:EventSchedule)=>{
+    console.log(schedule)
+  }
   return (
     <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
       <ModalContent>
         {(onClose) => (
-          <form>
+          <form onSubmit={handleSubmit(createSchedule)}>
             <ModalHeader>New Event</ModalHeader>
             <ModalBody>
-              <Input type="text" label="Event Name" />
-              <Select label="Frequency">
+              <Input type="text" label="Event Name" {...register("name")}/>
+              <Select label="Frequency" {...register("type")}>
                 {frequencyTypes.map((type) => (
                   <SelectItem key={type}>{type}</SelectItem>
                 ))}
               </Select>
             </ModalBody>
             <ModalFooter>
-              <Button
-                onClick={onClose}
-              >
-                Cancel
-              </Button>
+              <Button onClick={onClose}>Cancel</Button>
               <Button type="submit" color="primary">
                 Create
               </Button>
