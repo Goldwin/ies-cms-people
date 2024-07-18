@@ -1,6 +1,10 @@
 "use client";
 
-import { EventSchedule, EventScheduleType } from "@/entities/attendance/schedules";
+import {
+  EventSchedule,
+  EventScheduleType,
+} from "@/entities/attendance/schedules";
+import { eventScheduleCommands } from "@/lib/commands/attendance/attendance";
 import {
   Button,
   Input,
@@ -12,6 +16,7 @@ import {
   Select,
   SelectItem,
 } from "@nextui-org/react";
+import { redirect } from "next/navigation";
 import { useForm } from "react-hook-form";
 
 export const ChurchEventCreationModal = ({
@@ -21,11 +26,23 @@ export const ChurchEventCreationModal = ({
   isOpen: boolean;
   onOpenChange: () => void;
 }) => {
-  const frequencyTypes = [EventScheduleType.OneTime, EventScheduleType.Weekly, EventScheduleType.Daily];
-  const {register, handleSubmit} = useForm<EventSchedule>({ mode: "onSubmit" });
-  const createSchedule = (schedule:EventSchedule)=>{
-    console.log(schedule)
-  }
+  const frequencyTypes = [
+    EventScheduleType.OneTime,
+    EventScheduleType.Weekly,
+    EventScheduleType.Daily,
+  ];
+  const { register, handleSubmit } = useForm<EventSchedule>({
+    mode: "onSubmit",
+  });
+  const createSchedule = (schedule: EventSchedule) => {
+    eventScheduleCommands
+      .createEventSchedule(schedule)
+      .then(() => {
+        console.log(schedule);
+        //window.location.href = "/attendance/schedules/" + schedule.id;
+      })
+      .catch((e) => console.log(e));
+  };
   return (
     <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
       <ModalContent>
@@ -33,7 +50,7 @@ export const ChurchEventCreationModal = ({
           <form onSubmit={handleSubmit(createSchedule)}>
             <ModalHeader>New Event</ModalHeader>
             <ModalBody>
-              <Input type="text" label="Event Name" {...register("name")}/>
+              <Input type="text" label="Event Name" {...register("name")} />
               <Select label="Frequency" {...register("type")}>
                 {frequencyTypes.map((type) => (
                   <SelectItem key={type}>{type}</SelectItem>
