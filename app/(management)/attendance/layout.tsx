@@ -6,6 +6,8 @@ import { Providers } from "@/components/providers";
 import { Navbar } from "@/components/attendance/navbar";
 import { Link } from "@nextui-org/link";
 import clsx from "clsx";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export const metadata: Metadata = {
   title: {
@@ -41,6 +43,7 @@ export default function RootLayout({
           fontSans.variable
         )}
       >
+        <ToastContainer theme="dark" />
         <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
           <Navbar title="Attendance" />
           <div className="relative flex flex-col h-screen">

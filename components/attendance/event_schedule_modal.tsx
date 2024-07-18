@@ -18,6 +18,7 @@ import {
 } from "@nextui-org/react";
 import { redirect } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { Bounce, toast } from "react-toastify";
 
 export const ChurchEventCreationModal = ({
   isOpen,
@@ -39,9 +40,20 @@ export const ChurchEventCreationModal = ({
       .createEventSchedule(schedule)
       .then(() => {
         console.log(schedule);
-        //window.location.href = "/attendance/schedules/" + schedule.id;
+        window.location.href = "/attendance/schedules/" + schedule.id;
       })
-      .catch((e) => console.log(e));
+      .catch((e) => {
+        toast(e.response.data.error, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          transition: Bounce,
+        });
+      });
   };
   return (
     <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
