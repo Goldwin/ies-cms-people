@@ -26,9 +26,48 @@ class AttendanceService {
   ): Promise<EventSchedule> {
     const url = API_URL + "/schedules";
     const token = getToken();
-    return axios.post(url, eventSchedule, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    const eventScheduleDTO: EventScheduleDTO = {
+      id: eventSchedule.id,
+      name: eventSchedule.name,
+      type: eventSchedule.type,
+      activities: eventSchedule.activities?.map((activity) => {
+        return {
+          id: activity.id,
+          name: activity.name,
+          scheduleId: activity.scheduleId,
+          timeHour: activity.timeHour,
+          timeMinute: activity.timeMinute,
+          timezoneOffset: activity.timezoneOffset,
+        };
+      }),
+      timezoneOffset: parseInt(eventSchedule.timezoneOffset + ""),
+    };
+
+    const body = JSON.stringify(eventScheduleDTO);
+
+    return axios
+      .post(url, body, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((response) => {
+        const data = response.data.data;
+        return new EventSchedule({
+          id: data.id,
+          name: data.name,
+          type: data.type,
+          activities: data.activities?.map((activity: ActivityDTO) => {
+            return {
+              id: activity.id,
+              name: activity.name,
+              scheduleId: activity.scheduleId,
+              timeHour: activity.timeHour,
+              timeMinute: activity.timeMinute,
+              timezoneOffset: activity.timezoneOffset,
+            };
+          }),
+          timezoneOffset: data.timezoneOffset,
+        });
+      });
   }
 
   async updateEventSchedule(

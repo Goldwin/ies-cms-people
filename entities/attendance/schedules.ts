@@ -4,6 +4,7 @@ export enum EventScheduleType {
   OneTime = "OneTime",
   Daily = "Daily",
   Weekly = "Weekly",
+  None = "None",
 }
 
 export class EventSchedule {

@@ -4,7 +4,8 @@ import {
   EventSchedule,
   EventScheduleType,
 } from "@/entities/attendance/schedules";
-import { eventScheduleCommands } from "@/lib/commands/attendance/attendance";
+import { eventScheduleCommands } from "@/lib/commands/attendance/schedules";
+import { TIMEZONE_OPTIONS } from "@/lib/common/timezone";
 import {
   Button,
   Input,
@@ -16,7 +17,6 @@ import {
   Select,
   SelectItem,
 } from "@nextui-org/react";
-import { redirect } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { Bounce, toast } from "react-toastify";
 
@@ -27,22 +27,23 @@ export const ChurchEventCreationModal = ({
   isOpen: boolean;
   onOpenChange: () => void;
 }) => {
-  const frequencyTypes = [
-    EventScheduleType.OneTime,
-    EventScheduleType.Weekly,
-    EventScheduleType.Daily,
-  ];
-  const { register, handleSubmit } = useForm<EventSchedule>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<EventSchedule>({
     mode: "onSubmit",
   });
   const createSchedule = (schedule: EventSchedule) => {
+    console.log(schedule);
     eventScheduleCommands
       .createEventSchedule(schedule)
-      .then(() => {
-        console.log(schedule);
-        window.location.href = "/attendance/schedules/" + schedule.id;
+      .then((result) => {
+        console.log(result);
+        window.location.href = "/attendance/schedules/" + result.id;
       })
       .catch((e) => {
+        console.log(e);
         toast(e.response.data.error, {
           position: "top-right",
           autoClose: 5000,
@@ -63,11 +64,25 @@ export const ChurchEventCreationModal = ({
             <ModalHeader>New Event</ModalHeader>
             <ModalBody>
               <Input type="text" label="Event Name" {...register("name")} />
-              <Select label="Frequency" {...register("type")}>
-                {frequencyTypes.map((type) => (
-                  <SelectItem key={type}>{type}</SelectItem>
+              <Select
+                label="Timezone"
+                {...register("timezoneOffset", {
+                  required: "Timezone is required",
+                  setValueAs: (value) => parseInt(value),
+                })}
+                errorMessage={errors.timezoneOffset?.message}
+                isInvalid={!!errors.timezoneOffset}
+              >
+                {TIMEZONE_OPTIONS.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
                 ))}
               </Select>
+              <input
+                type="hidden"
+                {...register("type", { value: "None" as EventScheduleType })}
+              />
             </ModalBody>
             <ModalFooter>
               <Button onClick={onClose}>Cancel</Button>
