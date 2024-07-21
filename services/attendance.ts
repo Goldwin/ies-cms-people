@@ -40,7 +40,7 @@ class AttendanceService {
           timezoneOffset: activity.timezoneOffset,
         };
       }),
-      timezoneOffset: parseInt(eventSchedule.timezoneOffset + ""),
+      timezoneOffset: eventSchedule.timezoneOffset,
     };
 
     const body = JSON.stringify(eventScheduleDTO);

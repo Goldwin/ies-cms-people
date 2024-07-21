@@ -34,7 +34,14 @@ export const ChurchEventCreationModal = ({
   } = useForm<EventSchedule>({
     mode: "onSubmit",
   });
-  const createSchedule = (schedule: EventSchedule) => {
+  const createSchedule = (input: EventSchedule) => {
+    const schedule = new EventSchedule({
+      id: input.id,
+      name: input.name,
+      type: input.type,
+      activities: [],
+      timezoneOffset: parseInt(input.timezoneOffset + ""), //react hook form unable to bind it as number
+    });
     console.log(schedule);
     eventScheduleCommands
       .createEventSchedule(schedule)
