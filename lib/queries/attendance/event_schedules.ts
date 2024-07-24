@@ -4,6 +4,7 @@ import {
   EventScheduleType,
   WeeklyEventSchedule,
 } from "@/entities/attendance/schedules";
+import { attendanceService, AttendanceService } from "@/services/attendance";
 
 export interface EventScheduleQuery {
   listEventSchedules(
@@ -13,7 +14,25 @@ export interface EventScheduleQuery {
   getEventSchedule(eventScheduleId: string): Promise<EventSchedule>;
 }
 
-export class MockEventScheduleQuery implements EventScheduleQuery {
+class APIEventScheduleQuery implements EventScheduleQuery {
+  private readonly _attendanceService: AttendanceService;
+
+  constructor(attendanceService: AttendanceService) {
+    this._attendanceService = attendanceService;
+  }
+
+  getEventSchedule(eventScheduleId: string): Promise<EventSchedule> {
+    return this._attendanceService.getEventSchedule(eventScheduleId);
+  }
+  listEventSchedules(lastId: string, limit: number): Promise<EventSchedule[]> {
+    return this._attendanceService.listEventSchedule({
+      lastID: lastId,
+      limit: limit,
+    });
+  }
+}
+
+class MockEventScheduleQuery implements EventScheduleQuery {
   getEventSchedule(eventScheduleId: string): Promise<EventSchedule> {
     return Promise.resolve(
       new WeeklyEventSchedule({
@@ -63,4 +82,4 @@ export class MockEventScheduleQuery implements EventScheduleQuery {
 }
 
 export const eventSchedulesQuery: EventScheduleQuery =
-  new MockEventScheduleQuery();
+  new APIEventScheduleQuery(attendanceService);

@@ -1,4 +1,8 @@
-import { EventSchedule } from "@/entities/attendance/schedules";
+import { Activity } from "@/entities/attendance/activity";
+import {
+  EventSchedule,
+  EventScheduleType,
+} from "@/entities/attendance/schedules";
 import { getToken } from "@/lib/commands/login";
 import axios from "axios";
 
@@ -20,7 +24,7 @@ interface EventScheduleDTO {
   timezoneOffset: number;
 }
 
-class AttendanceService {
+export class AttendanceService {
   async createEventSchedule(
     eventSchedule: EventSchedule
   ): Promise<EventSchedule> {
@@ -78,6 +82,72 @@ class AttendanceService {
     return axios.put(url, eventSchedule, {
       headers: { Authorization: `Bearer ${token}` },
     });
+  }
+
+  async listEventSchedule({
+    limit = 100,
+    lastID = "",
+  }: {
+    limit: number;
+    lastID: string;
+  }): Promise<EventSchedule[]> {
+    const url = API_URL + "/schedules?limit=" + limit + "&last_id=" + lastID;
+    const token = getToken();
+    return axios
+      .get(url, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((response) => {
+        const data = response.data.data;
+        return data.map((eventSchedule: EventScheduleDTO) => {
+          return new EventSchedule({
+            id: eventSchedule.id,
+            name: eventSchedule.name,
+            type: eventSchedule.type as EventScheduleType,
+            activities: eventSchedule.activities?.map(
+              (activity: ActivityDTO): Activity => {
+                return new Activity({
+                  id: activity.id,
+                  name: activity.name,
+                  scheduleId: activity.scheduleId,
+                  timeHour: activity.timeHour,
+                  timeMinute: activity.timeMinute,
+                  timezoneOffset: activity.timezoneOffset,
+                });
+              }
+            ),
+            timezoneOffset: eventSchedule.timezoneOffset,
+          });
+        });
+      });
+  }
+
+  async getEventSchedule(id: string): Promise<EventSchedule> {
+    const url = API_URL + "/schedules/" + id;
+    const token = getToken();
+    return axios
+      .get(url, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((response) => {
+        const data = response.data.data;
+        return new EventSchedule({
+          id: data.id,
+          name: data.name,
+          type: data.type,
+          activities: data.activities?.map((activity: ActivityDTO) => {
+            return new Activity({
+              id: activity.id,
+              name: activity.name,
+              scheduleId: activity.scheduleId,
+              timeHour: activity.timeHour,
+              timeMinute: activity.timeMinute,
+              timezoneOffset: activity.timezoneOffset,
+            });
+          }),
+          timezoneOffset: data.timezoneOffset,
+        });
+      });
   }
 }
 

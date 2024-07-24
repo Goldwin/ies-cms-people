@@ -39,7 +39,10 @@ export default function AttendancePage() {
     useState<EventScheduleSummary>();
 
   useEffect(() => {
-    eventSchedulesQuery.listEventSchedules("", 10).then(setChurchEvents);
+    eventSchedulesQuery.listEventSchedules("", 10).then((result) => {
+      console.log(result);
+      setChurchEvents(result);
+    });
   }, []);
 
   useEffect(() => {
