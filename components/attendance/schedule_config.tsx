@@ -128,6 +128,7 @@ const OneTimeScheduleConfigForm = ({
               {...field}
               isInvalid={!!(errors.schedule as any)?.date}
               errorMessage={(errors.schedule as any)?.date?.message}
+              granularity="day"
             />
           )}
           rules={{
@@ -163,6 +164,7 @@ const DailyScheduleConfigForm = ({
               {...field}
               isInvalid={!!(errors.schedule as any)?.startDate}
               errorMessage={(errors.schedule as any)?.startDate?.message}
+              granularity="day"
             />
           )}
           name="schedule.startDate"
@@ -181,6 +183,7 @@ const DailyScheduleConfigForm = ({
               {...field}
               isInvalid={!!(errors.schedule as any)?.endDate}
               errorMessage={(errors.schedule as any)?.endDate?.message}
+              granularity="day"
             />
           )}
           name="schedule.endDate"
