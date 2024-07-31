@@ -1,3 +1,4 @@
+import { Activity } from "@/entities/attendance/activity";
 import {
   DailyEventSchedule,
   EventSchedule,
@@ -51,6 +52,7 @@ interface IDailyScheduleConfigValue {
 }
 
 interface IEventConfigValue {
+  id: string;
   name: string;
   type: EventScheduleType;
   timezone: number;
@@ -149,7 +151,6 @@ const DailyScheduleConfigForm = ({
   control: Control<IEventConfigValue>;
   errors: FieldErrors<IEventConfigValue>;
 }) => {
-  console.log(errors.schedule);
   return (
     <Card>
       <CardHeader>
@@ -239,6 +240,52 @@ const ScheduleConfigForm = ({
   }
 };
 
+const toEventSchedule = (
+  config: IEventConfigValue,
+  activities: Activity[]
+): EventSchedule => {
+  if (config.type === EventScheduleType.Daily) {
+    return new DailyEventSchedule({
+      id: config.id,
+      name: config.name,
+      timezoneOffset: config.timezone,
+      startDate: (
+        config.schedule as IDailyScheduleConfigValue
+      ).startDate.toDate(),
+      endDate: (config.schedule as IDailyScheduleConfigValue).endDate.toDate(),
+      activities: activities,
+    });
+  }
+
+  if (config.type === EventScheduleType.Weekly) {
+    return new WeeklyEventSchedule({
+      id: config.id,
+      name: config.name,
+      timezoneOffset: config.timezone,
+      days: (config.schedule as IWeeklyScheduleConfigValue).days,
+      activities: activities,
+    });
+  }
+
+  if (config.type === EventScheduleType.OneTime) {
+    return new OneTimeEventSchedule({
+      id: config.id,
+      name: config.name,
+      timezoneOffset: config.timezone,
+      date: (config.schedule as IOneTimeScheduleConfigValue).date.toDate(),
+      activities: activities,
+    });
+  }
+
+  return new EventSchedule({
+    id: config.id,
+    name: config.name,
+    timezoneOffset: config.timezone,
+    type: config.type,
+    activities: activities,
+  });
+};
+
 export const EventScheduleConfigForm = ({
   schedule,
   className = "w-full",
@@ -261,6 +308,7 @@ export const EventScheduleConfigForm = ({
   } = useForm<IEventConfigValue>({
     mode: "onChange",
     defaultValues: {
+      id: schedule?.id,
       name: schedule?.name,
       type: schedule?.type,
       timezone: schedule?.timezoneOffset,
@@ -279,20 +327,26 @@ export const EventScheduleConfigForm = ({
     },
   });
 
+  const update = (formSchedule: IEventConfigValue) => {
+    const eventSchedule = toEventSchedule(
+      formSchedule,
+      schedule?.activities ?? []
+    );
+    console.log(eventSchedule);
+  };
+
   return (
     <div className={className}>
       <div className="flex flex-col gap-4 my-4 w-[70%]">
         <h1 className="text-2xl">Event Configuration</h1>
-        <form
-          className="flex flex-col gap-4"
-          onSubmit={handleSubmit((data) => console.log(data))}
-        >
+        <form className="flex flex-col gap-4" onSubmit={handleSubmit(update)}>
           <Card>
             <CardHeader>
               <h1 className="text-md">General Settings</h1>
             </CardHeader>
             <Divider />
             <CardBody className="gap-4">
+              <input type="hidden" {...register("id")} />
               <Input
                 type="text"
                 label="Event Name"
@@ -310,7 +364,11 @@ export const EventScheduleConfigForm = ({
                 isInvalid={!!errors.name}
                 errorMessage={errors.name?.message}
               />
-              <Select label="Frequency" {...register("type")}>
+              <Select
+                label="Frequency"
+                selectedKeys={[watch("type")]}
+                {...register("type")}
+              >
                 {Object.keys(EventScheduleType).map((key) => (
                   <SelectItem key={key} value={key}>
                     {key}

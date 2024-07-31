@@ -114,7 +114,6 @@ export class DailyEventSchedule extends EventSchedule {
     activities,
   }: {
     id: string;
-    time: number;
     timezoneOffset: number;
     startDate: Date;
     endDate: Date;
