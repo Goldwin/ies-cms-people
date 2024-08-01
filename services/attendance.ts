@@ -1,7 +1,10 @@
 import { Activity } from "@/entities/attendance/activity";
 import {
+  DailyEventSchedule,
   EventSchedule,
   EventScheduleType,
+  OneTimeEventSchedule,
+  WeeklyEventSchedule,
 } from "@/entities/attendance/schedules";
 import { getToken } from "@/lib/commands/login";
 import axios from "axios";
@@ -22,6 +25,116 @@ interface EventScheduleDTO {
   type: string;
   activities: ActivityDTO[];
   timezoneOffset: number;
+  date?: string;
+  days?: number[];
+  startDate?: string;
+  endDate?: string;
+}
+
+function toEventScheduleDTO(eventSchedule: EventSchedule): EventScheduleDTO {
+  const dto: EventScheduleDTO = {
+    id: eventSchedule.id,
+    name: eventSchedule.name,
+    type: eventSchedule.type,
+    activities: eventSchedule.activities?.map((activity) => {
+      return {
+        id: activity.id,
+        name: activity.name,
+        scheduleId: activity.scheduleId,
+        timeHour: activity.timeHour,
+        timeMinute: activity.timeMinute,
+        timezoneOffset: activity.timezoneOffset,
+      };
+    }),
+    timezoneOffset: eventSchedule.timezoneOffset,
+  };
+  if (eventSchedule.type === EventScheduleType.Daily) {
+    const dailySchedule = eventSchedule as DailyEventSchedule;
+    dto.startDate = dailySchedule.startDate.toISOString();
+    dto.endDate = dailySchedule.endDate.toISOString();
+  } else if (eventSchedule.type === EventScheduleType.Weekly) {
+    const weeklySchedule = eventSchedule as WeeklyEventSchedule;
+    dto.days = weeklySchedule.days;
+  } else if (eventSchedule.type === EventScheduleType.OneTime) {
+    const oneTimeSchedule = eventSchedule as OneTimeEventSchedule;
+    dto.date = oneTimeSchedule.date.toISOString();
+  }
+
+  return dto;
+}
+
+function toEventSchedule(dto: EventScheduleDTO): EventSchedule {
+  if (dto.type === EventScheduleType.Daily) {
+    return new DailyEventSchedule({
+      id: dto.id,
+      name: dto.name,
+      startDate: dto.startDate ? new Date(dto.startDate) : new Date(),
+      endDate: dto.endDate ? new Date(dto.endDate) : new Date(),
+      activities: dto.activities?.map((activity: ActivityDTO): Activity => {
+        return new Activity({
+          id: activity.id,
+          name: activity.name,
+          scheduleId: activity.scheduleId,
+          timeHour: activity.timeHour,
+          timeMinute: activity.timeMinute,
+          timezoneOffset: activity.timezoneOffset,
+        });
+      }),
+      timezoneOffset: dto.timezoneOffset,
+    });
+  }
+  if (dto.type === EventScheduleType.Weekly) {
+    return new WeeklyEventSchedule({
+      id: dto.id,
+      name: dto.name,
+      days: dto.days ?? [],
+      activities: dto.activities?.map((activity: ActivityDTO): Activity => {
+        return new Activity({
+          id: activity.id,
+          name: activity.name,
+          scheduleId: activity.scheduleId,
+          timeHour: activity.timeHour,
+          timeMinute: activity.timeMinute,
+          timezoneOffset: activity.timezoneOffset,
+        });
+      }),
+      timezoneOffset: dto.timezoneOffset,
+    });
+  }
+  if (dto.type === EventScheduleType.OneTime) {
+    return new OneTimeEventSchedule({
+      id: dto.id,
+      name: dto.name,
+      activities: dto.activities?.map((activity: ActivityDTO): Activity => {
+        return new Activity({
+          id: activity.id,
+          name: activity.name,
+          scheduleId: activity.scheduleId,
+          timeHour: activity.timeHour,
+          timeMinute: activity.timeMinute,
+          timezoneOffset: activity.timezoneOffset,
+        });
+      }),
+      timezoneOffset: dto.timezoneOffset,
+      date: dto.date ? new Date(dto.date) : new Date(),
+    });
+  }
+  return new EventSchedule({
+    id: dto.id,
+    name: dto.name,
+    type: dto.type as EventScheduleType,
+    activities: dto.activities?.map((activity: ActivityDTO): Activity => {
+      return new Activity({
+        id: activity.id,
+        name: activity.name,
+        scheduleId: activity.scheduleId,
+        timeHour: activity.timeHour,
+        timeMinute: activity.timeMinute,
+        timezoneOffset: activity.timezoneOffset,
+      });
+    }),
+    timezoneOffset: dto.timezoneOffset,
+  });
 }
 
 export class AttendanceService {
@@ -30,23 +143,8 @@ export class AttendanceService {
   ): Promise<EventSchedule> {
     const url = API_URL + "/schedules";
     const token = getToken();
-    const eventScheduleDTO: EventScheduleDTO = {
-      id: eventSchedule.id,
-      name: eventSchedule.name,
-      type: eventSchedule.type,
-      activities: eventSchedule.activities?.map((activity) => {
-        return {
-          id: activity.id,
-          name: activity.name,
-          scheduleId: activity.scheduleId,
-          timeHour: activity.timeHour,
-          timeMinute: activity.timeMinute,
-          timezoneOffset: activity.timezoneOffset,
-        };
-      }),
-      timezoneOffset: eventSchedule.timezoneOffset,
-    };
-
+    const eventScheduleDTO: EventScheduleDTO =
+      toEventScheduleDTO(eventSchedule);
     const body = JSON.stringify(eventScheduleDTO);
 
     return axios
@@ -55,33 +153,26 @@ export class AttendanceService {
       })
       .then((response) => {
         const data = response.data.data;
-        return new EventSchedule({
-          id: data.id,
-          name: data.name,
-          type: data.type,
-          activities: data.activities?.map((activity: ActivityDTO) => {
-            return {
-              id: activity.id,
-              name: activity.name,
-              scheduleId: activity.scheduleId,
-              timeHour: activity.timeHour,
-              timeMinute: activity.timeMinute,
-              timezoneOffset: activity.timezoneOffset,
-            };
-          }),
-          timezoneOffset: data.timezoneOffset,
-        });
+        return toEventSchedule(data);
       });
   }
 
   async updateEventSchedule(
     eventSchedule: EventSchedule
   ): Promise<EventSchedule> {
-    const url = API_URL + "/schedules";
+    const url = API_URL + "/schedules/" + eventSchedule.id;
     const token = getToken();
-    return axios.put(url, eventSchedule, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    const body = JSON.stringify(toEventScheduleDTO(eventSchedule));
+
+    console.log(toEventScheduleDTO(eventSchedule));
+    return axios
+      .put(url, body, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((response) => {
+        const data = response.data.data;
+        return toEventSchedule(data);
+      });
   }
 
   async listEventSchedule({
@@ -100,24 +191,7 @@ export class AttendanceService {
       .then((response) => {
         const data = response.data.data;
         return data.map((eventSchedule: EventScheduleDTO) => {
-          return new EventSchedule({
-            id: eventSchedule.id,
-            name: eventSchedule.name,
-            type: eventSchedule.type as EventScheduleType,
-            activities: eventSchedule.activities?.map(
-              (activity: ActivityDTO): Activity => {
-                return new Activity({
-                  id: activity.id,
-                  name: activity.name,
-                  scheduleId: activity.scheduleId,
-                  timeHour: activity.timeHour,
-                  timeMinute: activity.timeMinute,
-                  timezoneOffset: activity.timezoneOffset,
-                });
-              }
-            ),
-            timezoneOffset: eventSchedule.timezoneOffset,
-          });
+          return toEventSchedule(eventSchedule);
         });
       });
   }
@@ -131,22 +205,7 @@ export class AttendanceService {
       })
       .then((response) => {
         const data = response.data.data;
-        return new EventSchedule({
-          id: data.id,
-          name: data.name,
-          type: data.type,
-          activities: data.activities?.map((activity: ActivityDTO) => {
-            return new Activity({
-              id: activity.id,
-              name: activity.name,
-              scheduleId: activity.scheduleId,
-              timeHour: activity.timeHour,
-              timeMinute: activity.timeMinute,
-              timezoneOffset: activity.timezoneOffset,
-            });
-          }),
-          timezoneOffset: data.timezoneOffset,
-        });
+        return toEventSchedule(data);
       });
   }
 }

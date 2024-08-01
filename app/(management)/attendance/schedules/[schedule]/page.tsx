@@ -69,7 +69,7 @@ export default function EventPage() {
             isDisabled={true}
           ></Tab>
           <Tab key="date" title="Settings">
-            <EventScheduleConfigForm schedule={eventSchedule} />
+            <EventScheduleConfigForm schedule={eventSchedule} onScheduleChange={setEventSchedule} onError={() => {}} />
           </Tab>
           <Tab key="time" title="Activities">
             <EventScheduleActivityConfigForm eventSchedule={eventSchedule} />

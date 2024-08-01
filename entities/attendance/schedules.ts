@@ -138,7 +138,7 @@ export class WeeklyEventSchedule extends EventSchedule {
   public get days(): number[] {
     return this._days;
   }
-  public set day(value: number[]) {
+  public set days(value: number[]) {
     this._days = value;
   }
 

@@ -51,7 +51,7 @@ export const ChurchEventCreationModal = ({
       })
       .catch((e) => {
         console.log(e);
-        toast(e.response.data.error, {
+        toast(e.response.data.error.message, {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,

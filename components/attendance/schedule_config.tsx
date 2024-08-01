@@ -6,6 +6,7 @@ import {
   OneTimeEventSchedule,
   WeeklyEventSchedule,
 } from "@/entities/attendance/schedules";
+import { eventScheduleCommands } from "@/lib/commands/attendance/schedules";
 import {
   fromAbsolute,
   getLocalTimeZone,
@@ -32,14 +33,15 @@ import {
   UseFormRegister,
   UseFormWatch,
 } from "react-hook-form";
+import { Bounce, toast } from "react-toastify";
 
 interface TimezoneOption {
   label: string;
-  value: number;
+  value: string;
 }
 
 interface IWeeklyScheduleConfigValue {
-  days: number[];
+  days: string[];
 }
 
 interface IOneTimeScheduleConfigValue {
@@ -55,7 +57,7 @@ interface IEventConfigValue {
   id: string;
   name: string;
   type: EventScheduleType;
-  timezone: number;
+  timezone: string;
   schedule:
     | IWeeklyScheduleConfigValue
     | IOneTimeScheduleConfigValue
@@ -248,7 +250,7 @@ const toEventSchedule = (
     return new DailyEventSchedule({
       id: config.id,
       name: config.name,
-      timezoneOffset: config.timezone,
+      timezoneOffset: parseInt(config.timezone),
       startDate: (
         config.schedule as IDailyScheduleConfigValue
       ).startDate.toDate(),
@@ -261,8 +263,10 @@ const toEventSchedule = (
     return new WeeklyEventSchedule({
       id: config.id,
       name: config.name,
-      timezoneOffset: config.timezone,
-      days: (config.schedule as IWeeklyScheduleConfigValue).days,
+      timezoneOffset: parseInt(config.timezone),
+      days: (config.schedule as IWeeklyScheduleConfigValue).days.map((day) =>
+        parseInt(day)
+      ),
       activities: activities,
     });
   }
@@ -271,7 +275,7 @@ const toEventSchedule = (
     return new OneTimeEventSchedule({
       id: config.id,
       name: config.name,
-      timezoneOffset: config.timezone,
+      timezoneOffset: parseInt(config.timezone),
       date: (config.schedule as IOneTimeScheduleConfigValue).date.toDate(),
       activities: activities,
     });
@@ -280,7 +284,7 @@ const toEventSchedule = (
   return new EventSchedule({
     id: config.id,
     name: config.name,
-    timezoneOffset: config.timezone,
+    timezoneOffset: parseInt(config.timezone),
     type: config.type,
     activities: activities,
   });
@@ -289,14 +293,17 @@ const toEventSchedule = (
 export const EventScheduleConfigForm = ({
   schedule,
   className = "w-full",
+  onScheduleChange,
 }: {
   schedule?: EventSchedule;
   className?: string;
+  onScheduleChange?: (schedule: EventSchedule) => void;
+  onError?: (error: Error) => void;
 }) => {
   const timezoneOptions: TimezoneOption[] = [
-    { label: "GMT +7", value: 7 },
-    { label: "GMT +8", value: 8 },
-    { label: "GMT +9", value: 9 },
+    { label: "GMT +7", value: "7" },
+    { label: "GMT +8", value: "8" },
+    { label: "GMT +9", value: "9" },
   ];
 
   const {
@@ -311,9 +318,10 @@ export const EventScheduleConfigForm = ({
       id: schedule?.id,
       name: schedule?.name,
       type: schedule?.type,
-      timezone: schedule?.timezoneOffset,
+      timezone: schedule?.timezoneOffset + "",
       schedule: {
-        days: (schedule as WeeklyEventSchedule)?.days ?? [],
+        days:
+          (schedule as WeeklyEventSchedule)?.days?.map((day) => day + "") ?? [],
         date:
           (schedule as OneTimeEventSchedule)?.date ??
           fromAbsolute(Date.now(), getLocalTimeZone()),
@@ -332,7 +340,23 @@ export const EventScheduleConfigForm = ({
       formSchedule,
       schedule?.activities ?? []
     );
-    console.log(eventSchedule);
+    eventScheduleCommands
+      .updateEventSchedule(eventSchedule)
+      .then((schedule) => {
+        onScheduleChange?.(schedule);
+      })
+      .catch((err) => {
+        toast(err.response.data.error.message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          transition: Bounce,
+        });
+      });
   };
 
   return (
