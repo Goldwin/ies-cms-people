@@ -2,6 +2,7 @@
 
 import { Activity } from "@/entities/attendance/activity";
 import { EventSchedule } from "@/entities/attendance/schedules";
+import { eventScheduleActivityCommands } from "@/lib/commands/attendance/activities";
 import {
   Button,
   Input,
@@ -14,22 +15,24 @@ import {
   TimeInputValue,
 } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
+import { Bounce, toast } from "react-toastify";
 
 interface IScheduleActivity {
   id?: string;
   name: string;
-  timezone: number;
   startTime: string;
 }
 
 export const ScheduleActivityModal = ({
   isOpen,
+  onScheduleChange: onScheduleUpdated,
   onOpenChange,
   activity,
-  schedule
+  schedule,
 }: {
   isOpen: boolean;
   activity?: Activity;
+  onScheduleChange: (schedule: EventSchedule) => void;
   onOpenChange: () => void;
   schedule?: EventSchedule;
 }) => {
@@ -41,7 +44,6 @@ export const ScheduleActivityModal = ({
     mode: "onSubmit",
     defaultValues: {
       name: activity?.name ?? "",
-      timezone: activity?.timezoneOffset ?? 7,
     },
   });
 
@@ -53,11 +55,83 @@ export const ScheduleActivityModal = ({
   } = register("startTime", {
     required: "Start Time is Required",
   });
+
+  const saveActivity = (data: IScheduleActivity) => {
+    console.log(data);
+    const updatedActivity = new Activity({
+      id: activity?.id ?? "",
+      name: data.name,
+      scheduleId: schedule?.id ?? "",
+      timeHour: parseInt(data.startTime.split(":")[0]),
+      timeMinute: parseInt(data.startTime.split(":")[1]),
+      timezoneOffset: schedule?.timezoneOffset ?? 7,
+    });
+
+    if (updatedActivity.id === "") {
+      eventScheduleActivityCommands
+        .createEventScheduleActivity(updatedActivity)
+        .then((result) => {
+          onOpenChange();
+          toast(`New Activity ${updatedActivity.name} Created`, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            transition: Bounce,
+          });
+          onScheduleUpdated(result);
+        })
+        .catch((e: any) => {
+          toast(e.response.data.error.message, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            transition: Bounce,
+          });
+        });
+    } else {
+      eventScheduleActivityCommands
+        .updateEventScheduleActivity(updatedActivity)
+        .then((result) => {
+          onOpenChange();
+          toast(`Activity ${updatedActivity.name} Updated`, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            transition: Bounce,
+          });
+          onScheduleUpdated(result);
+        })
+        .catch((e: any) => {
+          toast(e.response.data.error.message, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            transition: Bounce,
+          });
+        });
+    }
+  };
   return (
     <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
       <ModalContent>
         {(onClose) => (
-          <form onSubmit={handleSubmit((data) => console.log(data))}>
+          <form onSubmit={handleSubmit(saveActivity)}>
             <ModalHeader>Activity Details</ModalHeader>
             <ModalBody>
               <input type="hidden" value={activity?.id} {...register("id")} />
@@ -86,7 +160,6 @@ export const ScheduleActivityModal = ({
                 isInvalid={!!errors.startTime}
                 errorMessage={errors.startTime?.message}
               />
-              <input type="hidden" value={schedule?.timezoneOffset} {...register("timezone")} />
             </ModalBody>
             <ModalFooter>
               <Button onClick={onClose}>Cancel</Button>

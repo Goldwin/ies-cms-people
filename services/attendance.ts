@@ -1,3 +1,7 @@
+/**
+ * @fileoverview
+ * This file provides a client side interface to communicate with attendance services
+ */
 import { Activity } from "@/entities/attendance/activity";
 import {
   DailyEventSchedule,
@@ -15,8 +19,8 @@ interface ActivityDTO {
   id: string;
   name: string;
   scheduleId: string;
-  timeHour: number;
-  timeMinute: number;
+  hour: number;
+  minute: number;
   timezoneOffset: number;
 }
 interface EventScheduleDTO {
@@ -31,6 +35,17 @@ interface EventScheduleDTO {
   endDate?: string;
 }
 
+function toActivityDTO(activity: Activity): ActivityDTO {
+  return {
+    id: activity.id,
+    name: activity.name,
+    scheduleId: activity.scheduleId,
+    hour: activity.hour,
+    minute: activity.minute,
+    timezoneOffset: activity.timezoneOffset,
+  };
+}
+
 function toEventScheduleDTO(eventSchedule: EventSchedule): EventScheduleDTO {
   const dto: EventScheduleDTO = {
     id: eventSchedule.id,
@@ -41,8 +56,8 @@ function toEventScheduleDTO(eventSchedule: EventSchedule): EventScheduleDTO {
         id: activity.id,
         name: activity.name,
         scheduleId: activity.scheduleId,
-        timeHour: activity.timeHour,
-        timeMinute: activity.timeMinute,
+        hour: activity.hour,
+        minute: activity.minute,
         timezoneOffset: activity.timezoneOffset,
       };
     }),
@@ -75,8 +90,8 @@ function toEventSchedule(dto: EventScheduleDTO): EventSchedule {
           id: activity.id,
           name: activity.name,
           scheduleId: activity.scheduleId,
-          timeHour: activity.timeHour,
-          timeMinute: activity.timeMinute,
+          timeHour: activity.hour,
+          timeMinute: activity.minute,
           timezoneOffset: activity.timezoneOffset,
         });
       }),
@@ -93,8 +108,8 @@ function toEventSchedule(dto: EventScheduleDTO): EventSchedule {
           id: activity.id,
           name: activity.name,
           scheduleId: activity.scheduleId,
-          timeHour: activity.timeHour,
-          timeMinute: activity.timeMinute,
+          timeHour: activity.hour,
+          timeMinute: activity.minute,
           timezoneOffset: activity.timezoneOffset,
         });
       }),
@@ -110,8 +125,8 @@ function toEventSchedule(dto: EventScheduleDTO): EventSchedule {
           id: activity.id,
           name: activity.name,
           scheduleId: activity.scheduleId,
-          timeHour: activity.timeHour,
-          timeMinute: activity.timeMinute,
+          timeHour: activity.hour,
+          timeMinute: activity.minute,
           timezoneOffset: activity.timezoneOffset,
         });
       }),
@@ -128,8 +143,8 @@ function toEventSchedule(dto: EventScheduleDTO): EventSchedule {
         id: activity.id,
         name: activity.name,
         scheduleId: activity.scheduleId,
-        timeHour: activity.timeHour,
-        timeMinute: activity.timeMinute,
+        timeHour: activity.hour,
+        timeMinute: activity.minute,
         timezoneOffset: activity.timezoneOffset,
       });
     }),
@@ -201,6 +216,48 @@ export class AttendanceService {
     const token = getToken();
     return axios
       .get(url, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((response) => {
+        const data = response.data.data;
+        console.log(data);
+        return toEventSchedule(data);
+      });
+  }
+
+  async createEventScheduleActivity(
+    activity: Activity
+  ): Promise<EventSchedule> {
+    const url = API_URL + "/schedules/" + activity.scheduleId + "/activities";
+    const token = getToken();
+    const activityDTO: ActivityDTO = toActivityDTO(activity);
+    const body = JSON.stringify(activityDTO);
+
+    return axios
+      .post(url, body, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((response) => {
+        const data = response.data.data;
+        return toEventSchedule(data);
+      });
+  }
+
+  async updateEventScheduleActivity(
+    activity: Activity
+  ): Promise<EventSchedule> {
+    const url =
+      API_URL +
+      "/schedules/" +
+      activity.scheduleId +
+      "/activities/" +
+      activity.id;
+    const token = getToken();
+    const activityDTO: ActivityDTO = toActivityDTO(activity);
+    const body = JSON.stringify(activityDTO);
+
+    return axios
+      .put(url, body, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((response) => {

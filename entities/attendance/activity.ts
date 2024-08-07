@@ -43,11 +43,11 @@ export class Activity {
     return this._scheduleId;
   }
 
-  get timeHour(): number {
+  get hour(): number {
     return this._timeHour;
   }
 
-  get timeMinute(): number {
+  get minute(): number {
     return this._timeMinute;
   }
 
@@ -60,7 +60,7 @@ export class Activity {
       id: this.id,
       name: this.name,
       scheduleId: this.scheduleId,
-      startTime: `${this.timeHour}:${this.timeMinute}`,
+      startTime: `${this.hour}:${this.minute}`,
       timezoneOffset: this.timezoneOffset,
     };
   }

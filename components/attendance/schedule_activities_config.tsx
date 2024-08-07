@@ -6,15 +6,17 @@ import { Table, TableCell, TableColumn, TableRow } from "@nextui-org/table";
 import { TableBody, TableHeader } from "react-stately";
 import { ScheduleActivityModal } from "./schedule_activity_modal";
 
-
 export const EventScheduleActivityConfigForm = ({
   eventSchedule,
-  className="flex flex-col h-full w-full justify-start",
+  className = "flex flex-col h-full w-full justify-start",
+  onScheduleChange,
 }: {
   eventSchedule?: EventSchedule;
   className?: string;
+  onScheduleChange: (schedule: EventSchedule) => void;
 }) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
   const columns: { label: string; key: string }[] = [
     {
       key: "name",
@@ -66,7 +68,12 @@ export const EventScheduleActivityConfigForm = ({
         >
           New Activity
         </Button>
-        <ScheduleActivityModal isOpen={isOpen} onOpenChange={onOpenChange} schedule={eventSchedule}/>
+        <ScheduleActivityModal
+          isOpen={isOpen}
+          onScheduleChange={onScheduleChange}
+          onOpenChange={onOpenChange}
+          schedule={eventSchedule}
+        />
       </div>
       {eventSchedule && (
         <Table align="center" aria-label="Event Schedule Activities">

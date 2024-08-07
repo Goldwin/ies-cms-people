@@ -344,6 +344,16 @@ export const EventScheduleConfigForm = ({
       .updateEventSchedule(eventSchedule)
       .then((schedule) => {
         onScheduleChange?.(schedule);
+        toast(`Event schedule "${schedule.name}" has been updated`, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          transition: Bounce,
+        });
       })
       .catch((err) => {
         toast(err.response.data.error.message, {
