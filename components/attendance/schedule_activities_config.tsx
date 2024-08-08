@@ -5,6 +5,7 @@ import { useDisclosure } from "@nextui-org/modal";
 import { Table, TableCell, TableColumn, TableRow } from "@nextui-org/table";
 import { TableBody, TableHeader } from "react-stately";
 import { ScheduleActivityModal } from "./schedule_activity_modal";
+import { useState } from "react";
 
 export const EventScheduleActivityConfigForm = ({
   eventSchedule,
@@ -16,6 +17,9 @@ export const EventScheduleActivityConfigForm = ({
   onScheduleChange: (schedule: EventSchedule) => void;
 }) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const [selectedActivity, setSelectedActivity] = useState<
+    Activity | undefined
+  >(undefined);
 
   const columns: { label: string; key: string }[] = [
     {
@@ -42,6 +46,10 @@ export const EventScheduleActivityConfigForm = ({
           size="sm"
           color="primary"
           aria-label={`Edit Activity ${activity.id}`}
+          onPress={() => {
+            setSelectedActivity(activity);
+            onOpen();
+          }}
         >
           Edit
         </Button>
@@ -63,7 +71,10 @@ export const EventScheduleActivityConfigForm = ({
         <Button
           size="sm"
           color="primary"
-          onPress={onOpen}
+          onPress={() => {
+            setSelectedActivity(undefined);
+            onOpen();
+          }}
           aria-label="New Activity"
         >
           New Activity
@@ -73,6 +84,7 @@ export const EventScheduleActivityConfigForm = ({
           onScheduleChange={onScheduleChange}
           onOpenChange={onOpenChange}
           schedule={eventSchedule}
+          activity={selectedActivity}
         />
       </div>
       {eventSchedule && (

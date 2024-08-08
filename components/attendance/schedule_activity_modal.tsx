@@ -3,6 +3,7 @@
 import { Activity } from "@/entities/attendance/activity";
 import { EventSchedule } from "@/entities/attendance/schedules";
 import { eventScheduleActivityCommands } from "@/lib/commands/attendance/activities";
+import { Time } from "@internationalized/date";
 import {
   Button,
   Input,
@@ -14,6 +15,7 @@ import {
   TimeInput,
   TimeInputValue,
 } from "@nextui-org/react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Bounce, toast } from "react-toastify";
 
@@ -40,10 +42,14 @@ export const ScheduleActivityModal = ({
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<IScheduleActivity>({
     mode: "onSubmit",
     defaultValues: {
       name: activity?.name ?? "",
+      startTime: activity
+        ? `${activity.hour}:${activity.minute}`
+        : `${new Date().getHours()}:${new Date().getMinutes()}`,
     },
   });
 
@@ -56,8 +62,16 @@ export const ScheduleActivityModal = ({
     required: "Start Time is Required",
   });
 
+  useEffect(() => {
+    reset({
+      name: activity?.name ?? "",
+      startTime: activity
+        ? `${activity.hour}:${activity.minute}`
+        : `${new Date().getHours()}:${new Date().getMinutes()}`,
+    });
+  }, [reset, activity]);
+
   const saveActivity = (data: IScheduleActivity) => {
-    console.log(data);
     const updatedActivity = new Activity({
       id: activity?.id ?? "",
       name: data.name,
@@ -140,6 +154,7 @@ export const ScheduleActivityModal = ({
                 label="Activity Name"
                 isInvalid={!!errors.name}
                 errorMessage={errors.name?.message}
+                defaultValue={activity?.name ?? ""}
                 {...register("name", {
                   required: "Activity Name Is Required",
                 })}
@@ -157,6 +172,9 @@ export const ScheduleActivityModal = ({
                 onBlur={onStartTimeBlur}
                 name={startTimeName}
                 ref={startTimeRef}
+                defaultValue={
+                  new Time(activity?.hour ?? 0, activity?.minute ?? 0)
+                }
                 isInvalid={!!errors.startTime}
                 errorMessage={errors.startTime?.message}
               />
