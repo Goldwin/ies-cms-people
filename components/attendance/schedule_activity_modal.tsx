@@ -86,20 +86,23 @@ export const ScheduleActivityModal = ({
         .createEventScheduleActivity(updatedActivity)
         .then((result) => {
           onOpenChange();
-          toast(`New Activity ${updatedActivity.name} Created`, {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            transition: Bounce,
-          });
+          toast.success(
+            `New Activity "${updatedActivity.name}" has been created`,
+            {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              transition: Bounce,
+            }
+          );
           onScheduleUpdated(result);
         })
         .catch((e: any) => {
-          toast(e.response.data.error.message, {
+          toast.error(e.response.data.error.message, {
             position: "top-right",
             autoClose: 5000,
             hideProgressBar: false,
@@ -115,7 +118,7 @@ export const ScheduleActivityModal = ({
         .updateEventScheduleActivity(updatedActivity)
         .then((result) => {
           onOpenChange();
-          toast(`Activity ${updatedActivity.name} Updated`, {
+          toast.success(`Activity ${updatedActivity.name} Updated`, {
             position: "top-right",
             autoClose: 5000,
             hideProgressBar: false,
@@ -128,7 +131,7 @@ export const ScheduleActivityModal = ({
           onScheduleUpdated(result);
         })
         .catch((e: any) => {
-          toast(e.response.data.error.message, {
+          toast.error(e.response.data.error.message, {
             position: "top-right",
             autoClose: 5000,
             hideProgressBar: false,

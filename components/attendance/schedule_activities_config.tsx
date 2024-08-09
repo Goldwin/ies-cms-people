@@ -7,6 +7,8 @@ import { TableBody, TableHeader } from "react-stately";
 import { ScheduleActivityModal } from "./schedule_activity_modal";
 import { useState } from "react";
 import { ButtonWithPrompt } from "../common/prompt";
+import { eventScheduleActivityCommands } from "@/lib/commands/attendance/activities";
+import { Bounce, toast } from "react-toastify";
 
 export const EventScheduleActivityConfigForm = ({
   eventSchedule,
@@ -61,7 +63,33 @@ export const EventScheduleActivityConfigForm = ({
           title="Delete Activity Confirmation"
           aria-label={`Delete Activity ${activity.id}`}
           onConfirm={() => {
-            console.log("Delete Activity", activity.id);
+            eventScheduleActivityCommands
+              .removeEventScheduleActivity(activity)
+              .then((schedule) => {
+                toast.success("Activity deleted successfully", {
+                  position: "top-right",
+                  autoClose: 5000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined,
+                  transition: Bounce,
+                });
+                onScheduleChange(schedule);
+              })
+              .catch((e) => {
+                toast.error(e.response.data.error.message, {
+                  position: "top-right",
+                  autoClose: 5000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined,
+                  transition: Bounce,
+                });
+              });
           }}
         >
           Delete

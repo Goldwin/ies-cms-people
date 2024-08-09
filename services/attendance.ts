@@ -89,7 +89,7 @@ function toEventSchedule(dto: EventScheduleDTO): EventSchedule {
         return new Activity({
           id: activity.id,
           name: activity.name,
-          scheduleId: activity.scheduleId,
+          scheduleId: dto.id,
           timeHour: activity.hour,
           timeMinute: activity.minute,
           timezoneOffset: activity.timezoneOffset,
@@ -107,7 +107,7 @@ function toEventSchedule(dto: EventScheduleDTO): EventSchedule {
         return new Activity({
           id: activity.id,
           name: activity.name,
-          scheduleId: activity.scheduleId,
+          scheduleId: dto.id,
           timeHour: activity.hour,
           timeMinute: activity.minute,
           timezoneOffset: activity.timezoneOffset,
@@ -124,7 +124,7 @@ function toEventSchedule(dto: EventScheduleDTO): EventSchedule {
         return new Activity({
           id: activity.id,
           name: activity.name,
-          scheduleId: activity.scheduleId,
+          scheduleId: dto.id,
           timeHour: activity.hour,
           timeMinute: activity.minute,
           timezoneOffset: activity.timezoneOffset,
@@ -142,7 +142,7 @@ function toEventSchedule(dto: EventScheduleDTO): EventSchedule {
       return new Activity({
         id: activity.id,
         name: activity.name,
-        scheduleId: activity.scheduleId,
+        scheduleId: dto.id,
         timeHour: activity.hour,
         timeMinute: activity.minute,
         timezoneOffset: activity.timezoneOffset,
@@ -220,7 +220,6 @@ export class AttendanceService {
       })
       .then((response) => {
         const data = response.data.data;
-        console.log(data);
         return toEventSchedule(data);
       });
   }
@@ -235,6 +234,26 @@ export class AttendanceService {
 
     return axios
       .post(url, body, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((response) => {
+        const data = response.data.data;
+        return toEventSchedule(data);
+      });
+  }
+
+  async removeEventScheduleActivity(
+    activity: Activity
+  ): Promise<EventSchedule> {
+    const url =
+      API_URL +
+      "/schedules/" +
+      activity.scheduleId +
+      "/activities/" +
+      activity.id;
+    const token = getToken();
+    return axios
+      .delete(url, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((response) => {

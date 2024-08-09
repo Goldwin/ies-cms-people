@@ -344,7 +344,7 @@ export const EventScheduleConfigForm = ({
       .updateEventSchedule(eventSchedule)
       .then((schedule) => {
         onScheduleChange?.(schedule);
-        toast(`Event schedule "${schedule.name}" has been updated`, {
+        toast.success(`Event schedule "${schedule.name}" has been updated`, {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
@@ -356,7 +356,7 @@ export const EventScheduleConfigForm = ({
         });
       })
       .catch((err) => {
-        toast(err.response.data.error.message, {
+        toast.error(err.response.data.error.message, {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
