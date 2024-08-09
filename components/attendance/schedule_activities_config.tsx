@@ -6,6 +6,7 @@ import { Table, TableCell, TableColumn, TableRow } from "@nextui-org/table";
 import { TableBody, TableHeader } from "react-stately";
 import { ScheduleActivityModal } from "./schedule_activity_modal";
 import { useState } from "react";
+import { ButtonWithPrompt } from "../common/prompt";
 
 export const EventScheduleActivityConfigForm = ({
   eventSchedule,
@@ -53,13 +54,18 @@ export const EventScheduleActivityConfigForm = ({
         >
           Edit
         </Button>
-        <Button
+        <ButtonWithPrompt
           size="sm"
           color="danger"
+          message={`Are you sure you want to delete "${activity.name}" activity?`}
+          title="Delete Activity Confirmation"
           aria-label={`Delete Activity ${activity.id}`}
+          onConfirm={() => {
+            console.log("Delete Activity", activity.id);
+          }}
         >
           Delete
-        </Button>
+        </ButtonWithPrompt>
       </div>
     );
   };
