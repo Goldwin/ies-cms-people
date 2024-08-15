@@ -42,7 +42,6 @@ export const ChurchEventCreationModal = ({
       activities: [],
       timezoneOffset: parseInt(input.timezoneOffset + ""), //react hook form unable to bind it as number
     });
-    console.log(schedule);
     eventScheduleCommands
       .createEventSchedule(schedule)
       .then((result) => {
