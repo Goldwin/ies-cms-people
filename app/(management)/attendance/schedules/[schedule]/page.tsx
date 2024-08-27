@@ -10,12 +10,17 @@ import { Tab, Tabs } from "@nextui-org/react";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { EventScheduleConfigForm } from "@/components/attendance/schedule_config";
+import { Bounce, toast } from "react-toastify";
+import { EventGetStarted } from "@/components/attendance/event_getting_started";
 
 export default function EventPage() {
   const param = useParams();
   const [eventSchedule, setEventSchedule] = useState<EventSchedule>();
   const [churchEventList, setChurchEventList] = useState<ChurchEvent[]>([]);
   const [selectedChurchEvent, setSelectedChurchEvent] = useState<ChurchEvent>();
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [selectedTab, setSelectedTab] = useState<string>("overview");
+
   useEffect(() => {
     eventSchedulesQuery
       .getEventSchedule(param.schedule as string)
@@ -24,7 +29,19 @@ export default function EventPage() {
 
   useEffect(() => {
     if (eventSchedule) {
-      eventQuery.listEvents(eventSchedule.id, "", 10).then(setChurchEventList);
+      const today = new Date();
+      const threeMonthsAgo = new Date();
+      threeMonthsAgo.setMonth(today.getMonth() - 3);
+      eventQuery
+        .listEvents({
+          eventScheduleId: eventSchedule.id,
+          lastId: "",
+          startDate: threeMonthsAgo,
+          endDate: today,
+          limit: 100,
+        })
+        .then(setChurchEventList)
+        .then(() => setIsLoaded(true));
     }
   }, [eventSchedule]);
 
@@ -50,9 +67,20 @@ export default function EventPage() {
             tabContent: "justify-center items-center",
             panel: "w-full h-full col-start-3 flex w-[80%]",
           }}
+          selectedKey={selectedTab}
+          onSelectionChange={(key) => setSelectedTab(key as string)}
         >
           <Tab key="overview" title="Overview">
-            <h1>Overview</h1>
+            {isLoaded && churchEventList.length > 0 && <h1>Overview</h1>}
+            {isLoaded && churchEventList.length === 0 && (
+              <EventGetStarted
+                schedule={eventSchedule}
+                onConfigureScheduleSelected={() => {
+                  setSelectedTab("date");
+                }}
+                onCreateEventSelected={() => {}}
+              />
+            )}
           </Tab>
           <Tab key="check-in" title="Check-in">
             <EventCheckInList churchEvent={selectedChurchEvent} />
@@ -72,7 +100,18 @@ export default function EventPage() {
             <EventScheduleConfigForm
               schedule={eventSchedule}
               onScheduleChange={setEventSchedule}
-              onError={() => {}}
+              onError={(e) => {
+                toast.error(e.message, {
+                  position: "top-right",
+                  autoClose: 5000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined,
+                  transition: Bounce,
+                });
+              }}
             />
           </Tab>
           <Tab key="time" title="Activities">

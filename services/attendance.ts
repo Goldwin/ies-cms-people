@@ -3,6 +3,7 @@
  * This file provides a client side interface to communicate with attendance services
  */
 import { Activity } from "@/entities/attendance/activity";
+import { ChurchEvent } from "@/entities/attendance/events";
 import {
   DailyEventSchedule,
   EventSchedule,
@@ -153,6 +154,11 @@ function toEventSchedule(dto: EventScheduleDTO): EventSchedule {
 }
 
 export class AttendanceService {
+  async listEvent(): Promise<ChurchEvent[]> {
+    //TODO implement client to fetch list of events
+    return Promise.resolve([]);
+  }
+
   async createEventSchedule(
     eventSchedule: EventSchedule
   ): Promise<EventSchedule> {

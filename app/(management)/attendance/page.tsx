@@ -1,6 +1,6 @@
 "use client";
 
-import { ChurchEventCreationModal } from "@/components/attendance/event_schedule_modal";
+import { ChurchEventScheduleCreationModal } from "@/components/attendance/event_schedule_modal";
 import { PencilIcon } from "@/components/icons";
 import { EventSchedule } from "@/entities/attendance/schedules";
 import { EventScheduleSummary } from "@/entities/attendance/stats";
@@ -61,7 +61,10 @@ export default function AttendancePage() {
 
   return (
     <div className="flex flex-col items-center justify-start h-full w-full">
-      <ChurchEventCreationModal isOpen={isOpen} onOpenChange={onOpenChange} />
+      <ChurchEventScheduleCreationModal
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+      />
       <Navbar
         className="mx-0 px-0 w-full bg-default-100"
         maxWidth="full"
@@ -82,7 +85,7 @@ export default function AttendancePage() {
               variant="flat"
               onPress={onOpen}
             >
-              Add Event
+              Create Event Schedule
             </Button>
           </NavbarItem>
         </NavbarContent>

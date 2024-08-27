@@ -2,12 +2,16 @@ import { EventActivity } from "@/entities/attendance/activity";
 import { ChurchEvent } from "@/entities/attendance/events";
 import { parseAbsoluteToLocal } from "@internationalized/date";
 
+interface EventQueryFilter {
+  eventScheduleId: string;
+  lastId: string;
+  startDate: Date;
+  endDate: Date;
+  limit: number;
+}
+
 export interface EventQuery {
-  listEvents(
-    eventScheduleId: string,
-    lastId: string,
-    limit: number
-  ): Promise<ChurchEvent[]>;
+  listEvents(filter: EventQueryFilter): Promise<ChurchEvent[]>;
   getEvent(eventId: string): Promise<ChurchEvent>;
 }
 
@@ -37,11 +41,10 @@ export class MockEventQuery implements EventQuery {
       })
     );
   }
-  listEvents(
-    eventScheduleId: string,
-    lastId: string,
-    limit: number
-  ): Promise<ChurchEvent[]> {
+  listEvents(filter: EventQueryFilter): Promise<ChurchEvent[]> {
+    if (true) {
+      return Promise.resolve([]);
+    }
     return Promise.resolve([
       new ChurchEvent({
         id: "3",

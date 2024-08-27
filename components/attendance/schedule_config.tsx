@@ -401,7 +401,14 @@ export const EventScheduleConfigForm = ({
               <Select
                 label="Frequency"
                 selectedKeys={[watch("type")]}
-                {...register("type")}
+                {...register("type", {
+                  validate: (value) =>
+                    value === EventScheduleType.None
+                      ? "Please select a frequency"
+                      : undefined,
+                })}
+                isInvalid={!!errors.type}
+                errorMessage={errors.type?.message}
               >
                 {Object.keys(EventScheduleType).map((key) => (
                   <SelectItem key={key} value={key}>

@@ -20,7 +20,7 @@ import {
 import { useForm } from "react-hook-form";
 import { Bounce, toast } from "react-toastify";
 
-export const ChurchEventCreationModal = ({
+export const ChurchEventScheduleCreationModal = ({
   isOpen,
   onOpenChange,
 }: {
@@ -67,7 +67,7 @@ export const ChurchEventCreationModal = ({
       <ModalContent>
         {(onClose) => (
           <form onSubmit={handleSubmit(createSchedule)}>
-            <ModalHeader>New Event</ModalHeader>
+            <ModalHeader>New Event Schedule</ModalHeader>
             <ModalBody>
               <Input type="text" label="Event Name" {...register("name")} />
               <Select

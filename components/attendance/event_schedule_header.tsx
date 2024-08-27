@@ -65,35 +65,44 @@ export const ChurchEventHeader = ({
           <div className="flex flex-row gap-4 align-middle">
             <div className="flex flex-col gap-4">
               <h1 className="text-3xl capitalize">{eventSchedule?.name}</h1>
-              <div className="flex flex-row gap-2">
-                <ButtonGroup size="sm">
-                  <Button
-                    className="text-3xl"
-                    onPress={selectPrevEvent}
-                    isIconOnly
-                  >
-                    &#8249;
-                  </Button>
-                  <Button
-                    className="text-3xl"
-                    onPress={selectNextEvent}
-                    isIconOnly
-                  >
-                    &#8250;
-                  </Button>
-                </ButtonGroup>
-                <DatePicker
-                  variant="faded"
-                  aria-label="Session Date"
-                  granularity="day"
-                  value={dateValue}
-                  onChange={setDateValue}
-                  isDateUnavailable={isDateUnavailable}
-                />
-              </div>
+              {eventList && eventList.length > 0 && (
+                <div className="flex flex-row gap-2">
+                  <ButtonGroup size="sm">
+                    <Button
+                      className="text-3xl"
+                      onPress={selectPrevEvent}
+                      isIconOnly
+                    >
+                      &#8249;
+                    </Button>
+                    <Button
+                      className="text-3xl"
+                      onPress={selectNextEvent}
+                      isIconOnly
+                    >
+                      &#8250;
+                    </Button>
+                  </ButtonGroup>
+                  <DatePicker
+                    variant="faded"
+                    aria-label="Session Date"
+                    granularity="day"
+                    value={dateValue}
+                    onChange={setDateValue}
+                    isDateUnavailable={isDateUnavailable}
+                  />
+                </div>
+              )}
             </div>
           </div>
         </Skeleton>
+      </div>
+      <div className="flex flex-row gap-4 justify-end w-full">
+        <div className="flex flex-col justify-end my-4 mx-4">
+          {eventList && eventList.length > 0 && (
+            <Button>Create Next Event</Button>
+          )}
+        </div>
       </div>
     </div>
   );
