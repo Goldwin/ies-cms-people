@@ -13,13 +13,13 @@ export const EventGetStarted = ({
 }) => {
   return (
     <div className="flex mx-4 my-4 w-full justify-center">
-      <Card className="flex w-[80%] h-[64%] my-[5%]">
+      <Card className="flex w-[50%] h-[50%] my-[5%]">
         <CardHeader className="flex-row p-4">
           <h1 className="text-2xl">Let&#39;s Create Your First Event</h1>
         </CardHeader>
         <CardBody className="flex-col">
-          <div className="flex flex-row w-full p-4 gap-8">
-            <div className="flex">
+          <div className="flex flex-row p-4 gap-8 h-full">
+            <div className="flex-col justify-begin">
               <Image
                 src="/event.svg"
                 width={160}

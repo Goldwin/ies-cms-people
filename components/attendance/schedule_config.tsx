@@ -126,15 +126,18 @@ const OneTimeScheduleConfigForm = ({
         <Controller
           name="schedule.date"
           control={control}
-          render={({ field }) => (
-            <DatePicker
-              label="Event Date"
-              {...field}
-              isInvalid={!!(errors.schedule as any)?.date}
-              errorMessage={(errors.schedule as any)?.date?.message}
-              granularity="day"
-            />
-          )}
+          render={({ field }) => {
+            console.log(field);
+            return (
+              <DatePicker
+                label="Event Date"
+                {...field}
+                isInvalid={!!(errors.schedule as any)?.date}
+                errorMessage={(errors.schedule as any)?.date?.message}
+                granularity="day"
+              />
+            );
+          }}
           rules={{
             validate: (value) =>
               value.toDate().getTime() > Date.now() ||
@@ -322,15 +325,19 @@ export const EventScheduleConfigForm = ({
       schedule: {
         days:
           (schedule as WeeklyEventSchedule)?.days?.map((day) => day + "") ?? [],
-        date:
-          (schedule as OneTimeEventSchedule)?.date ??
-          fromAbsolute(Date.now(), getLocalTimeZone()),
-        startDate:
-          (schedule as DailyEventSchedule)?.startDate ??
-          fromAbsolute(Date.now(), getLocalTimeZone()),
-        endDate:
-          (schedule as DailyEventSchedule)?.endDate ??
-          fromAbsolute(Date.now() + 24 * 60 * 60 * 1000, getLocalTimeZone()),
+        date: fromAbsolute(
+          (schedule as OneTimeEventSchedule)?.date?.getTime() ?? Date.now(),
+          getLocalTimeZone()
+        ),
+        startDate: fromAbsolute(
+          (schedule as DailyEventSchedule)?.startDate?.getTime() ?? Date.now(),
+          getLocalTimeZone()
+        ),
+        endDate: fromAbsolute(
+          (schedule as DailyEventSchedule)?.endDate?.getTime() ??
+            Date.now() + 24 * 60 * 60 * 1000,
+          getLocalTimeZone()
+        ),
       },
     },
   });

@@ -60,7 +60,7 @@ export const ChurchEventHeader = ({
 
   return (
     <div className="flex flex-row mx-0 px-0 w-full bg-default-100">
-      <div className="min-h-32 h-32 px-8 py-4">
+      <div className="min-h-32 h-32 px-8 py-4 w-full">
         <Skeleton isLoaded={!!eventSchedule}>
           <div className="flex flex-row gap-4 align-middle">
             <div className="flex flex-col gap-4">
