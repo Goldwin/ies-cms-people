@@ -127,7 +127,6 @@ const OneTimeScheduleConfigForm = ({
           name="schedule.date"
           control={control}
           render={({ field }) => {
-            console.log(field);
             return (
               <DatePicker
                 label="Event Date"

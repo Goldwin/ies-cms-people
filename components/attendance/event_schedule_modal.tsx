@@ -45,7 +45,6 @@ export const ChurchEventScheduleCreationModal = ({
     eventScheduleCommands
       .createEventSchedule(schedule)
       .then((result) => {
-        console.log(result);
         window.location.href = "/attendance/schedules/" + result.id;
       })
       .catch((e) => {

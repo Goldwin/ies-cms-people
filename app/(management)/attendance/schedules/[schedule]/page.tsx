@@ -32,7 +32,6 @@ export default function EventPage() {
     if (eventSchedule) {
       const nextThreeMonth = new Date(Date.now() + 90 * 24 * 60 * 60 * 1000);
       const threeMonthsAgo = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000);
-      console.log(eventSchedule);
       eventQuery
         .listEvents({
           eventScheduleId: eventSchedule.id,

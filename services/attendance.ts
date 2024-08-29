@@ -278,7 +278,6 @@ export class AttendanceService {
     const token = getToken();
     const body = JSON.stringify(toEventScheduleDTO(eventSchedule));
 
-    console.log(toEventScheduleDTO(eventSchedule));
     return axios
       .put(url, body, {
         headers: { Authorization: `Bearer ${token}` },
