@@ -13,6 +13,7 @@ import { EventScheduleConfigForm } from "@/components/attendance/schedule_config
 import { Bounce, toast } from "react-toastify";
 import { EventGetStarted } from "@/components/attendance/event_getting_started";
 import { churchEventCommands } from "@/lib/commands/attendance/events";
+import { EventOverview } from "@/components/attendance/event_overview";
 
 export default function EventPage() {
   const param = useParams();
@@ -71,7 +72,9 @@ export default function EventPage() {
           onSelectionChange={(key) => setSelectedTab(key as string)}
         >
           <Tab key="overview" title="Overview">
-            {isLoaded && churchEventList.length > 0 && <h1>Overview</h1>}
+            {isLoaded && churchEventList.length > 0 && (
+              <EventOverview event={selectedChurchEvent} />
+            )}
             {isLoaded && churchEventList.length === 0 && (
               <EventGetStarted
                 schedule={eventSchedule}
