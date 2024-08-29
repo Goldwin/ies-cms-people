@@ -2,7 +2,7 @@
  * @fileoverview
  * This file provides a client side interface to communicate with attendance services
  */
-import { Activity } from "@/entities/attendance/activity";
+import { Activity, EventActivity } from "@/entities/attendance/activity";
 import { ChurchEvent } from "@/entities/attendance/events";
 import {
   DailyEventSchedule,
@@ -12,6 +12,7 @@ import {
   WeeklyEventSchedule,
 } from "@/entities/attendance/schedules";
 import { getToken } from "@/lib/commands/login";
+import { fromDate } from "@internationalized/date";
 import axios from "axios";
 
 const API_URL = process.env.ATTENDANCE_URL ?? "";
@@ -34,6 +35,31 @@ interface EventScheduleDTO {
   days?: number[];
   startDate?: string;
   endDate?: string;
+}
+
+interface EventDTO {
+  id: string;
+  eventScheduleId: string;
+  date: string;
+  activities: ActivityDTO[];
+}
+
+function toChurchEvent(data: EventDTO): ChurchEvent {
+  return new ChurchEvent({
+    id: data.id,
+    eventScheduleId: data.eventScheduleId,
+    date: fromDate(new Date(data.date), "UTC"),
+    activities: data.activities.map((activity) => {
+      return new EventActivity({
+        id: activity.id,
+        name: activity.name,
+        time: fromDate(
+          new Date(`${data.date}T${activity.hour}:${activity.minute}:00.000Z`),
+          "UTC"
+        ),
+      });
+    }),
+  });
 }
 
 function toActivityDTO(activity: Activity): ActivityDTO {
@@ -154,9 +180,76 @@ function toEventSchedule(dto: EventScheduleDTO): EventSchedule {
 }
 
 export class AttendanceService {
-  async listEvent(): Promise<ChurchEvent[]> {
-    //TODO implement client to fetch list of events
-    return Promise.resolve([]);
+  async listEventBySchedule({
+    scheduleId,
+    startDate,
+    endDate,
+    lastId = "",
+    limit = 100,
+  }: {
+    scheduleId: string;
+    limit: number;
+    startDate: Date;
+    endDate: Date;
+    lastId: string;
+  }): Promise<ChurchEvent[]> {
+    const url = `${API_URL}/schedules/${scheduleId}/events?startDate=${startDate.toISOString()}&endDate=${endDate.toISOString()}&limit=${limit}&endDate=${endDate.toISOString()}&limit=${limit}&lastId=${lastId}`;
+    return axios
+      .get(url, {
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+      })
+      .then((response) => {
+        const data: EventDTO[] = response.data.data as EventDTO[];
+
+        return data.map((event: EventDTO): ChurchEvent => {
+          return toChurchEvent(event);
+        });
+      });
+  }
+
+  async createNextEvent(eventSchedule: EventSchedule): Promise<ChurchEvent[]> {
+    const url =
+      API_URL + "/schedules/" + eventSchedule.id + "/create-next-event";
+    const token = getToken();
+    return axios
+      .post(
+        url,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        const data: EventDTO[] = response.data.data as EventDTO[];
+
+        return data.map((event: EventDTO): ChurchEvent => {
+          return toChurchEvent(event);
+        });
+      });
+  }
+
+  async getEvent({
+    scheduleId,
+    eventId,
+  }: {
+    scheduleId: string;
+    eventId: string;
+  }): Promise<ChurchEvent> {
+    const url = `API_URL + /schedules/${scheduleId}/events/${eventId}`;
+    return axios
+      .get(url, {
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+      })
+      .then((response) => {
+        const data: EventDTO = response.data.data as EventDTO;
+        return toChurchEvent(data);
+      });
   }
 
   async createEventSchedule(

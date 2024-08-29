@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import { EventScheduleConfigForm } from "@/components/attendance/schedule_config";
 import { Bounce, toast } from "react-toastify";
 import { EventGetStarted } from "@/components/attendance/event_getting_started";
+import { churchEventCommands } from "@/lib/commands/attendance/events";
 
 export default function EventPage() {
   const param = useParams();
@@ -29,16 +30,16 @@ export default function EventPage() {
 
   useEffect(() => {
     if (eventSchedule) {
-      const today = new Date();
-      const threeMonthsAgo = new Date();
-      threeMonthsAgo.setMonth(today.getMonth() - 3);
+      const nextThreeMonth = new Date(Date.now() + 90 * 24 * 60 * 60 * 1000);
+      const threeMonthsAgo = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000);
+      console.log(eventSchedule);
       eventQuery
         .listEvents({
           eventScheduleId: eventSchedule.id,
           lastId: "",
           startDate: threeMonthsAgo,
-          endDate: today,
-          limit: 100,
+          endDate: nextThreeMonth,
+          limit: 200,
         })
         .then(setChurchEventList)
         .then(() => setIsLoaded(true));
@@ -78,7 +79,21 @@ export default function EventPage() {
                 onConfigureScheduleSelected={() => {
                   setSelectedTab("date");
                 }}
-                onCreateEventSelected={() => {}}
+                onCreateEventSelected={() => {
+                  if (eventSchedule) {
+                    churchEventCommands
+                      .createNextEvents(eventSchedule)
+                      .then((eventListResult: ChurchEvent[]) => {
+                        if (churchEventList) {
+                          const newEventList =
+                            churchEventList.concat(eventListResult);
+                          setChurchEventList(newEventList);
+                        } else {
+                          setChurchEventList(eventListResult);
+                        }
+                      });
+                  }
+                }}
               />
             )}
           </Tab>

@@ -70,28 +70,20 @@ export class Activity {
 
 export class EventActivity {
   id: string;
-  activityId: string;
-  eventId: string;
   name: string;
   time: ZonedDateTime;
 
   constructor({
     id,
     name,
-    activityId,
     time,
-    eventId,
   }: {
     id: string;
     name: string;
-    activityId: string;
     time: ZonedDateTime;
-    eventId: string;
   }) {
     this.id = id;
-    this.activityId = activityId;
     this.name = name;
     this.time = time;
-    this.eventId = eventId;
   }
 }

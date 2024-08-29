@@ -52,9 +52,7 @@ export class MockEventAttendanceQuery implements EventAttendanceQuery {
         activity: new EventActivity({
           name: "test",
           id: eventActivityId,
-          activityId: eventActivityId,
           time: fromDate(new Date(), "America/New_York"),
-          eventId: eventId,
         }),
         securityNumber: 1234,
         checkinTime: new Date(),
