@@ -27,6 +27,21 @@ export const ChurchEventHeader = ({
     setAvailableDates(
       eventList?.map((event) => event.date.toString().split("T")[0]) || []
     );
+
+    if (eventList) {
+      let pos = 0;
+      const now = Date.now();
+      const countScore = (event: ChurchEvent): number => {
+        return event.date.toDate().getTime() - now;
+      };
+      for (let i = 1; i < eventList?.length; i++) {
+        if (countScore(eventList[i]) < 0) continue;
+        if (countScore(eventList[i]) < countScore(eventList[pos])) {
+          pos = i;
+        }
+      }
+      setFocusedEventIndex(pos);
+    }
   }, [eventList]);
 
   useEffect(() => {
