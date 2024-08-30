@@ -11,10 +11,12 @@ export const ChurchEventHeader = ({
   eventSchedule,
   eventList,
   onEventSelectionChange,
+  onCreateNextEvent,
 }: {
   eventSchedule: EventSchedule | undefined;
   eventList: ChurchEvent[] | undefined;
   onEventSelectionChange: (s: ChurchEvent) => void;
+  onCreateNextEvent: () => void;
 }) => {
   const [dateValue, setDateValue] = useState<DateValue>(
     fromAbsolute(Date.now(), "UTC")
@@ -115,7 +117,7 @@ export const ChurchEventHeader = ({
       <div className="flex flex-row gap-4 justify-end w-full">
         <div className="flex flex-col justify-end my-4 mx-4">
           {eventList && eventList.length > 0 && (
-            <Button>Create Next Event</Button>
+            <Button onPress={onCreateNextEvent}>Create Next Event</Button>
           )}
         </div>
       </div>

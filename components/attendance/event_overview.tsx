@@ -7,6 +7,8 @@ import {
   Divider,
 } from "@nextui-org/react";
 
+import Chart from "react-apexcharts";
+
 interface EventOverviewProps {
   event?: ChurchEvent;
 }
@@ -75,21 +77,27 @@ export const EventOverview = ({ event }: EventOverviewProps) => {
           <Card className="w-full">
             <CardHeader>Activities</CardHeader>
             <Divider />
-            <CardBody>
-              <div className="flex flex-col">
-                <div className="flex flex-row gap-4 justify-between">
-                  <div className="flex gap-4">
-                    <span>123</span>
-                    <span>Activity 1</span>
-                  </div>
+            <CardBody className="flex gap-4">
+              {event?.activities.map((activity) => (
+                <div key={activity.id} className="flex flex-col">
                   <div className="flex flex-row gap-4 justify-between">
-                    <span>100</span>
-                    <span>11</span>
-                    <span>12</span>
+                    <div className="flex gap-4">
+                      <span>123</span>
+                      <span>{activity.name}</span>
+                    </div>
+                    <div className="flex flex-row gap-4 justify-between">
+                      <span>100</span>
+                      <span>11</span>
+                      <span>12</span>
+                    </div>
+                  </div>
+                  <div className="flex flex-row w-full">
+                    <div className="h-2 bg-blue-500" style={{ width: "56%" }}>&nbsp;</div>
+                    <div className="h-2 bg-purple-500" style={{ width: "30%" }}>&nbsp;</div>
+                    <div className="h-2 bg-red-600" style={{ width: "14%" }}>&nbsp;</div>
                   </div>
                 </div>
-                <div className="flex flex-row"></div>
-              </div>
+              ))}
             </CardBody>
           </Card>
         </div>

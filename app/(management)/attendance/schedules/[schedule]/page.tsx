@@ -46,6 +46,21 @@ export default function EventPage() {
     }
   }, [eventSchedule]);
 
+  const onCreateNextEvent = () => {
+    if (eventSchedule) {
+      churchEventCommands
+        .createNextEvents(eventSchedule)
+        .then((eventListResult: ChurchEvent[]) => {
+          if (churchEventList) {
+            const newEventList = churchEventList.concat(eventListResult);
+            setChurchEventList(newEventList);
+          } else {
+            setChurchEventList(eventListResult);
+          }
+        });
+    }
+  };
+
   return (
     <div className="flex flex-col items-center justify-start h-full w-full">
       <section className="flex w-full">
@@ -53,6 +68,7 @@ export default function EventPage() {
           eventSchedule={eventSchedule}
           eventList={churchEventList}
           onEventSelectionChange={setSelectedChurchEvent}
+          onCreateNextEvent={onCreateNextEvent}
         />
       </section>
       <section className="flex w-full h-full ">
@@ -81,21 +97,7 @@ export default function EventPage() {
                 onConfigureScheduleSelected={() => {
                   setSelectedTab("date");
                 }}
-                onCreateEventSelected={() => {
-                  if (eventSchedule) {
-                    churchEventCommands
-                      .createNextEvents(eventSchedule)
-                      .then((eventListResult: ChurchEvent[]) => {
-                        if (churchEventList) {
-                          const newEventList =
-                            churchEventList.concat(eventListResult);
-                          setChurchEventList(newEventList);
-                        } else {
-                          setChurchEventList(eventListResult);
-                        }
-                      });
-                  }
-                }}
+                onCreateEventSelected={onCreateNextEvent}
               />
             )}
           </Tab>
