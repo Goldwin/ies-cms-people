@@ -6,7 +6,7 @@ import { Table, TableCell, TableColumn, TableRow } from "@nextui-org/table";
 import { TableBody, TableHeader } from "react-stately";
 import { ScheduleActivityModal } from "./schedule_activity_modal";
 import { useState } from "react";
-import { ButtonWithPrompt } from "../common/prompt";
+import { ButtonWithPrompt } from "../../common/prompt";
 import { eventScheduleActivityCommands } from "@/lib/commands/attendance/activities";
 import { Bounce, toast } from "react-toastify";
 

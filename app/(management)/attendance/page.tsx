@@ -1,6 +1,6 @@
 "use client";
 
-import { ChurchEventScheduleCreationModal } from "@/components/attendance/event_schedule_modal";
+import { ChurchEventScheduleCreationModal } from "@/components/attendance/schedules/event_schedule_modal";
 import { PencilIcon } from "@/components/icons";
 import { EventSchedule } from "@/entities/attendance/schedules";
 import { EventScheduleSummary } from "@/entities/attendance/stats";

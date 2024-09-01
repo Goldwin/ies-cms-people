@@ -17,6 +17,7 @@ import {
   CheckboxGroup,
   Chip,
   Input,
+  Link,
   Select,
   SelectItem,
   User,
@@ -158,8 +159,17 @@ export const EventCheckInList = ({
   return (
     <div className={className}>
       <div className="flex flex-col gap-4 my-4">
-        <div>
+        <div className="flex flex-row justify-between">
           <h1 className="text-2xl">Check-in List ({checkInCount})</h1>
+          <Button
+            href={`/attendance/station/${churchEvent?.id}`}
+            as={Link}
+            color="primary"
+            showAnchorIcon
+            variant="solid"
+          >
+            Open Check-in Station
+          </Button>
         </div>
         <AttendanceFilterBar
           filter={filter}

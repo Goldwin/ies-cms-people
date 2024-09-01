@@ -42,6 +42,7 @@ interface EventDTO {
   eventScheduleId: string;
   date: string;
   activities: ActivityDTO[];
+  name: string;
 }
 
 function toChurchEvent(data: EventDTO): ChurchEvent {
@@ -49,6 +50,7 @@ function toChurchEvent(data: EventDTO): ChurchEvent {
     id: data.id,
     eventScheduleId: data.eventScheduleId,
     date: fromDate(new Date(data.date), "UTC"),
+    name: data.name,
     activities: data.activities.map((activity) => {
       return new EventActivity({
         id: activity.id,
@@ -239,7 +241,7 @@ export class AttendanceService {
     scheduleId: string;
     eventId: string;
   }): Promise<ChurchEvent> {
-    const url = `API_URL + /schedules/${scheduleId}/events/${eventId}`;
+    const url = `${API_URL}/schedules/${scheduleId}/events/${eventId}`;
     return axios
       .get(url, {
         headers: {

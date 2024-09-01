@@ -1,7 +1,7 @@
 "use client";
-import { EventScheduleActivityConfigForm } from "@/components/attendance/schedule_activities_config";
-import { EventCheckInList } from "@/components/attendance/event_attendance_list";
-import { ChurchEventHeader } from "@/components/attendance/event_schedule_header";
+import { EventScheduleActivityConfigForm } from "@/components/attendance/schedules/schedule_activities_config";
+import { EventCheckInList } from "@/components/attendance/schedules/event_attendance_list";
+import { ChurchEventHeader } from "@/components/attendance/schedules/event_schedule_header";
 import { ChurchEvent } from "@/entities/attendance/events";
 import { EventSchedule } from "@/entities/attendance/schedules";
 import { eventQuery } from "@/lib/queries/attendance/event";
@@ -9,11 +9,11 @@ import { eventSchedulesQuery } from "@/lib/queries/attendance/event_schedules";
 import { Tab, Tabs } from "@nextui-org/react";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { EventScheduleConfigForm } from "@/components/attendance/schedule_config";
+import { EventScheduleConfigForm } from "@/components/attendance/schedules/schedule_config";
 import { Bounce, toast } from "react-toastify";
-import { EventGetStarted } from "@/components/attendance/event_getting_started";
+import { EventGetStarted } from "@/components/attendance/schedules/event_getting_started";
 import { churchEventCommands } from "@/lib/commands/attendance/events";
-import { EventOverview } from "@/components/attendance/event_overview";
+import { EventOverview } from "@/components/attendance/schedules/event_overview";
 
 export default function EventPage() {
   const param = useParams();

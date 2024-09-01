@@ -7,8 +7,6 @@ import {
   Divider,
 } from "@nextui-org/react";
 
-import Chart from "react-apexcharts";
-
 interface EventOverviewProps {
   event?: ChurchEvent;
 }
@@ -92,9 +90,21 @@ export const EventOverview = ({ event }: EventOverviewProps) => {
                     </div>
                   </div>
                   <div className="flex flex-row w-full">
-                    <div className="h-2 bg-blue-500" style={{ width: "56%" }}>&nbsp;</div>
-                    <div className="h-2 bg-purple-500" style={{ width: "30%" }}>&nbsp;</div>
-                    <div className="h-2 bg-red-600" style={{ width: "14%" }}>&nbsp;</div>
+                    <div
+                      className="h-2 bg-blue-500"
+                      style={{ width: `${80}%` }}
+                    >
+                      &nbsp;
+                    </div>
+                    <div
+                      className="h-2 bg-purple-500"
+                      style={{ width: `${10}%` }}
+                    >
+                      &nbsp;
+                    </div>
+                    <div className="h-2 bg-red-600" style={{ width: `${10}%` }}>
+                      &nbsp;
+                    </div>
                   </div>
                 </div>
               ))}

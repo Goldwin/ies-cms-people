@@ -26,22 +26,26 @@ export class ChurchEvent {
   eventScheduleId: string;
   activities: EventActivity[];
   date: ZonedDateTime;
+  name: string;
 
   constructor({
     id,
     eventScheduleId,
     date,
+    name,
     activities,
   }: {
     id: string;
     eventScheduleId: string;
     date: ZonedDateTime;
     activities: EventActivity[];
+    name: string;
   }) {
     this.id = id;
     this.eventScheduleId = eventScheduleId;
     this.date = date;
     this.activities = activities;
+    this.name = name;
   }
 }
 

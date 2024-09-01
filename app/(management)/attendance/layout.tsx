@@ -3,7 +3,7 @@ import { Metadata, Viewport } from "next";
 import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
 import { Providers } from "@/components/providers";
-import { Navbar } from "@/components/attendance/navbar";
+import { Navbar } from "@/components/attendance/schedules/navbar";
 import { Link } from "@nextui-org/link";
 import clsx from "clsx";
 import { ToastContainer } from "react-toastify";
