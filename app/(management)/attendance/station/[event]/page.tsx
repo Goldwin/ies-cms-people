@@ -1,4 +1,5 @@
 "use client";
+import { StationCheckInForm } from "@/components/attendance/station/station_checkin_form";
 import { StationHeader } from "@/components/attendance/station/station_header";
 import { HouseholdPicker } from "@/components/attendance/station/station_household_picker";
 import { ChurchEvent } from "@/entities/attendance/events";
@@ -50,6 +51,12 @@ export default function StationEventPage() {
         <div className="flex-row flex h-64 w-full justify-center">
           {!selectedHousehold && (
             <HouseholdPicker onHouseholdSelected={onHouseholdSelected} />
+          )}
+          {selectedHousehold && (
+            <StationCheckInForm
+              event={churchEvent}
+              household={selectedHousehold}
+            />
           )}
         </div>
       </section>

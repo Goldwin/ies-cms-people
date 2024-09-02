@@ -1,3 +1,4 @@
+"use client";
 import { HouseholdInfo } from "@/entities/attendance/person";
 import { householdQuery } from "@/lib/queries/attendance/household";
 import { Autocomplete, AutocompleteItem } from "@nextui-org/react";
@@ -15,6 +16,12 @@ export function HouseholdPicker(prop: Readonly<HouseholdPickerProp>) {
   }>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const onInputChange = debounce((value: string) => {
+    if (value?.length < 3) {
+      setHouseholdList([]);
+      setHouseholdMap({});
+      setIsLoading(false);
+      return;
+    }
     householdQuery
       .listHouseholds({ name: value, limit: 10 })
       .then((householdList) => {
