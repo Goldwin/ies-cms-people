@@ -57,6 +57,18 @@ export default function EventPage() {
           } else {
             setChurchEventList(eventListResult);
           }
+        })
+        .catch((error) => {
+          toast.error(error.response.data.error.message, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            transition: Bounce,
+          });
         });
     }
   };
@@ -102,7 +114,18 @@ export default function EventPage() {
             )}
           </Tab>
           <Tab key="check-in" title="Check-in">
-            <EventCheckInList churchEvent={selectedChurchEvent} />
+            {isLoaded && churchEventList.length > 0 && (
+              <EventCheckInList churchEvent={selectedChurchEvent} />
+            )}
+            {isLoaded && churchEventList.length === 0 && (
+              <EventGetStarted
+                schedule={eventSchedule}
+                onConfigureScheduleSelected={() => {
+                  setSelectedTab("date");
+                }}
+                onCreateEventSelected={onCreateNextEvent}
+              />
+            )}
           </Tab>
           <Tab key="report" title="Report">
             Generate Report

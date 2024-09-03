@@ -13,7 +13,7 @@ export const EventGetStarted = ({
 }) => {
   return (
     <div className="flex mx-4 my-4 w-full justify-center">
-      <Card className="flex w-[50%] h-[50%] my-[5%]">
+      <Card className="flex w-min-[50%] h-min-[50%] my-[5%]">
         <CardHeader className="flex-row p-4">
           <h1 className="text-2xl">Let&#39;s Create Your First Event</h1>
         </CardHeader>
