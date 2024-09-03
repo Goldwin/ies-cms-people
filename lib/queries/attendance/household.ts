@@ -23,6 +23,7 @@ class MockHouseholdQuery implements HouseholdQuery {
           firstName: "John",
           lastName: "Doe",
           profilePictureUrl: "",
+          age: 30,
         }),
         members: [
           new PersonInfo({
@@ -30,12 +31,14 @@ class MockHouseholdQuery implements HouseholdQuery {
             firstName: "Jane",
             lastName: "Doe",
             profilePictureUrl: "",
+            age: 25,
           }),
           new PersonInfo({
             id: "3",
             firstName: "Jack",
             lastName: "Doe",
             profilePictureUrl: "",
+            age: 25,
           }),
         ],
       }),
@@ -48,6 +51,7 @@ class MockHouseholdQuery implements HouseholdQuery {
           firstName: "John",
           lastName: "Smith",
           profilePictureUrl: "",
+          age: 30,
         }),
         members: [
           new PersonInfo({
@@ -55,6 +59,7 @@ class MockHouseholdQuery implements HouseholdQuery {
             firstName: "Jane",
             lastName: "Smith",
             profilePictureUrl: "",
+            age: 25,
           }),
         ],
       }),

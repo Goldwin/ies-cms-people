@@ -47,8 +47,8 @@ export default function StationEventPage() {
       <section className="flex w-full">
         <StationHeader event={churchEvent} />
       </section>
-      <section className="flex flex-col w-full h-full justify-center">
-        <div className="flex-row flex h-64 w-full justify-center">
+      <section className="flex flex-col w-full h-full py-16">
+        <div className="flex-row flex w-full justify-center">
           {!selectedHousehold && (
             <HouseholdPicker onHouseholdSelected={onHouseholdSelected} />
           )}

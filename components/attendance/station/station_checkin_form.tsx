@@ -2,6 +2,8 @@
 import { ChurchEvent } from "@/entities/attendance/events";
 import { HouseholdInfo } from "@/entities/attendance/person";
 import { Checkbox, CheckboxGroup } from "@nextui-org/checkbox";
+import { Button, cn, Select, SelectItem, User } from "@nextui-org/react";
+import { StationPersonCheckbox } from "./station_person_checkbox";
 
 export interface StationCheckInFormProps {
   event?: ChurchEvent;
@@ -9,21 +11,40 @@ export interface StationCheckInFormProps {
 }
 
 export const StationCheckInForm = (props: StationCheckInFormProps) => {
+  if (props.household === undefined) {
+    return <></>;
+  }
+  const members = [props.household.householdHead, ...props.household.members];
   return (
-    <div>
-      <CheckboxGroup>
-        <Checkbox
-          key={props.household?.householdHead.id}
-          value={props.household?.householdHead.id}
-        >
-          {props.household?.householdHead.fullName}
-        </Checkbox>
-        {props.household?.members.map((member) => (
-          <Checkbox key={member.id} value={member.id}>
-            {member.fullName}
-          </Checkbox>
+    <div className="flex flex-col bg-default-50 w-[60%] h-full gap-4 p-4">
+      <h1 className="text-xl font-medium">{props.household?.name} Household</h1>
+      <CheckboxGroup
+        classNames={{
+          base: "w-full",
+        }}
+      >
+        {members.map((member) => (
+          <StationPersonCheckbox key={member.id} person={member} />
         ))}
       </CheckboxGroup>
+      <div className="flex flex-row justify-between">
+        <Select
+          label="Check In By"
+          defaultSelectedKeys={props.household.householdHead.id}
+          className="w-64"
+        >
+          {members
+            .filter((member) => member.isAdult)
+            .map((member) => (
+              <SelectItem key={member.id} value={member.id}>
+                {member.fullName}
+              </SelectItem>
+            ))}
+        </Select>
+        <Button color="primary" size="lg">
+          Check In
+        </Button>
+      </div>
     </div>
   );
 };

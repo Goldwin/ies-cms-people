@@ -20,28 +20,40 @@ export class PersonInfo {
     return this._profilePictureUrl;
   }
 
+  private readonly _age: number;
+  public get age(): number {
+    return this._age;
+  }
+
   constructor({
     id,
     firstName,
     middleName,
     lastName,
     profilePictureUrl,
+    age,
   }: {
     id: string;
     firstName: string;
     middleName?: string;
     lastName: string;
     profilePictureUrl?: string;
+    age: number;
   }) {
     this._id = id;
     this._firstName = firstName;
     this._middleName = middleName;
     this._lastName = lastName;
     this._profilePictureUrl = profilePictureUrl;
+    this._age = age;
   }
 
   public get fullName(): string {
     return `${this._firstName} ${this._middleName ?? ""} ${this._lastName}`;
+  }
+
+  public get isAdult(): boolean {
+    return this._age >= 18;
   }
 }
 
