@@ -1,11 +1,22 @@
+import { ChurchEvent } from "@/entities/attendance/events";
 import { PersonInfo } from "@/entities/attendance/person";
-import { Checkbox, cn, Link, User } from "@nextui-org/react";
+import {
+  Checkbox,
+  cn,
+  Link,
+  Select,
+  SelectItem,
+  User,
+} from "@nextui-org/react";
+import { useEffect } from "react";
 
 export interface PersonCheckboxProp {
-  person?: PersonInfo;
+  person: PersonInfo;
+  event?: ChurchEvent;
 }
 
 export const StationPersonCheckbox = (props: PersonCheckboxProp) => {
+  const activities = props.event?.activities ?? [];
   return (
     <Checkbox
       aria-label={props.person?.fullName}
@@ -25,6 +36,18 @@ export const StationPersonCheckbox = (props: PersonCheckboxProp) => {
           avatarProps={{ size: "md", src: props.person?.profilePictureUrl }}
           name={props.person?.fullName}
         />
+        <Select
+          className="max-w-64"
+          aria-label="activity"
+          label="Activity"
+          defaultSelectedKeys={[activities[0].id]}
+        >
+          {activities.map((activity) => (
+            <SelectItem key={activity.id} value={activity.id}>
+              {activity.name}
+            </SelectItem>
+          ))}
+        </Select>
       </div>
     </Checkbox>
   );

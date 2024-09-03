@@ -23,7 +23,6 @@ export default function StationEventPage() {
       .getEvent(scheduleId, eventId)
       .then(setChurchEvent)
       .catch((err) => {
-        console.log(err.response.data.message);
         toast.error(err.response.data.message, {
           position: "top-right",
           autoClose: 5000,
@@ -38,14 +37,16 @@ export default function StationEventPage() {
   }, [param]);
 
   const onHouseholdSelected = (household: HouseholdInfo) => {
-    console.log(household);
     setSelectedHousehold(household);
   };
 
   return (
     <div className="flex flex-col items-center h-full w-full">
       <section className="flex w-full">
-        <StationHeader event={churchEvent} />
+        <StationHeader
+          event={churchEvent}
+          onStartOver={() => setSelectedHousehold(undefined)}
+        />
       </section>
       <section className="flex flex-col w-full h-full py-16">
         <div className="flex-row flex w-full justify-center">

@@ -15,11 +15,11 @@ class MockHouseholdQuery implements HouseholdQuery {
   constructor() {
     this._householdList = [
       new HouseholdInfo({
-        id: "1",
+        id: "1111",
         name: "Doe",
         pictureUrl: "",
         householdHead: new PersonInfo({
-          id: "1",
+          id: "111",
           firstName: "John",
           lastName: "Doe",
           profilePictureUrl: "",
@@ -27,14 +27,14 @@ class MockHouseholdQuery implements HouseholdQuery {
         }),
         members: [
           new PersonInfo({
-            id: "2",
+            id: "222",
             firstName: "Jane",
             lastName: "Doe",
             profilePictureUrl: "",
             age: 25,
           }),
           new PersonInfo({
-            id: "3",
+            id: "333",
             firstName: "Jack",
             lastName: "Doe",
             profilePictureUrl: "",
@@ -43,11 +43,11 @@ class MockHouseholdQuery implements HouseholdQuery {
         ],
       }),
       new HouseholdInfo({
-        id: "2",
+        id: "2222",
         name: "Smith",
         pictureUrl: "",
         householdHead: new PersonInfo({
-          id: "4",
+          id: "444",
           firstName: "John",
           lastName: "Smith",
           profilePictureUrl: "",
@@ -55,7 +55,7 @@ class MockHouseholdQuery implements HouseholdQuery {
         }),
         members: [
           new PersonInfo({
-            id: "5",
+            id: "555",
             firstName: "Jane",
             lastName: "Smith",
             profilePictureUrl: "",

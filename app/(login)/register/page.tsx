@@ -65,7 +65,6 @@ const OTPConfirmationStage = (
   errors: any
 ): any => {
   const onSubmit: SubmitHandler<IRegistrationInput> = (data) => {
-    console.log(data);
     nextStage();
   };
   return (
