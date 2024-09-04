@@ -1,5 +1,5 @@
 "use client";
-import { StationCheckInForm } from "@/components/attendance/station/station_checkin_form";
+import { StationCheckInForm } from "@/components/attendance/station/station_regular_checkin_form";
 import { StationHeader } from "@/components/attendance/station/station_header";
 import { HouseholdPicker } from "@/components/attendance/station/station_household_picker";
 import { ChurchEvent } from "@/entities/attendance/events";
@@ -57,6 +57,19 @@ export default function StationEventPage() {
             <StationCheckInForm
               event={churchEvent}
               household={selectedHousehold}
+              onSuccess={() => {
+                setSelectedHousehold(undefined);
+                toast.success("Checked in successfully", {
+                  position: "top-right",
+                  autoClose: 5000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined,
+                  transition: Bounce,
+                });
+              }}
             />
           )}
         </div>

@@ -1,5 +1,6 @@
 import { EventActivity } from "./activity";
 import { ChurchEventLocation } from "./events";
+import { PersonInfo } from "./person";
 
 export enum AttendanceType {
   Volunteer = "Volunteer",
@@ -11,11 +12,7 @@ export class ChurchActivityAttendance {
   id: string;
   activity: EventActivity;
 
-  personId: string;
-  firstName: string;
-  middleName: string;
-  lastName: string;
-  profilePictureUrl?: string;
+  person: PersonInfo;
 
   securityCode: string;
   securityNumber: number;
@@ -35,6 +32,7 @@ export class ChurchActivityAttendance {
     lastName,
     profilePictureUrl,
     attendanceType = AttendanceType.Regular,
+    age = 0,
   }: {
     id: string;
     activity: EventActivity;
@@ -48,22 +46,26 @@ export class ChurchActivityAttendance {
     lastName: string;
     profilePictureUrl?: string;
     attendanceType: AttendanceType;
+    age: number;
   }) {
     this.id = id;
     this.securityCode = securityCode;
     this.securityNumber = securityNumber;
     this.checkinTime = checkinTime;
-    this.personId = personId;
-    this.firstName = firstName;
-    this.middleName = middleName;
-    this.lastName = lastName;
-    this.profilePictureUrl = profilePictureUrl;
+    this.person = new PersonInfo({
+      id: personId,
+      firstName: firstName,
+      middleName: middleName,
+      lastName: lastName,
+      profilePictureUrl: profilePictureUrl,
+      age: age,
+    });
     this.activity = activity;
     this.attendanceType = attendanceType;
   }
 
   getFullName(): string {
-    return `${this.firstName} ${this.middleName} ${this.lastName}`;
+    return this.person.fullName;
   }
 
   getCheckInTime(): string {
