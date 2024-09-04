@@ -1,9 +1,16 @@
 "use client";
 import { ChurchEvent } from "@/entities/attendance/events";
 import { HouseholdInfo } from "@/entities/attendance/person";
-import { CheckboxGroup } from "@nextui-org/checkbox";
-import { Button, Select, SelectItem } from "@nextui-org/react";
-import { StationPersonCheckbox } from "./station_person_checkbox";
+import { Checkbox, CheckboxGroup } from "@nextui-org/checkbox";
+import {
+  Accordion,
+  AccordionItem,
+  Button,
+  Select,
+  SelectItem,
+  Switch,
+  User,
+} from "@nextui-org/react";
 
 export interface StationCheckInFormProps {
   event?: ChurchEvent;
@@ -11,27 +18,51 @@ export interface StationCheckInFormProps {
 }
 
 export const StationCheckInForm = (props: StationCheckInFormProps) => {
-  if (props.household === undefined) {
+  if (props.household === undefined || props.event === undefined) {
     return <></>;
   }
+
+  const activities = props.event?.activities ?? [];
   const members = [props.household.householdHead, ...props.household.members];
   return (
     <div className="flex flex-col bg-default-50 w-[60%] h-full gap-4 p-4">
       <h1 className="text-xl font-medium">{props.household?.name} Household</h1>
-      <CheckboxGroup
-        classNames={{
-          base: "w-full",
+      <Accordion
+        variant="splitted"
+        selectionMode="multiple"
+        itemClasses={{
+          base: "group-[.is-splitted]:bg-content2",
+          content: "flex flex-row justify-between",
         }}
       >
-        {props.event &&
-          members.map((member) => (
-            <StationPersonCheckbox
-              key={member.id}
-              person={member}
-              event={props.event}
-            />
-          ))}
-      </CheckboxGroup>
+        {members.map((member) => (
+          <AccordionItem
+            key={member.id}
+            startContent={
+              <Checkbox value={member.id} size="lg">
+                <User
+                  avatarProps={{ size: "md", src: member.profilePictureUrl }}
+                  name={member.fullName}
+                />
+              </Checkbox>
+            }
+          >
+            <Select
+              className="max-w-64"
+              aria-label="activity"
+              label="Activity"
+              defaultSelectedKeys={[activities[0].id]}
+            >
+              {activities.map((activity) => (
+                <SelectItem key={activity.id} value={activity.id}>
+                  {activity.name}
+                </SelectItem>
+              ))}
+            </Select>
+            <Switch aria-label="Is Volunteer">Check-In as Volunteer</Switch>
+          </AccordionItem>
+        ))}
+      </Accordion>
       <div className="flex flex-row justify-between">
         <Select
           label="Check In By"
