@@ -45,6 +45,7 @@ export default function StationEventPage() {
       <section className="flex w-full">
         <StationHeader
           event={churchEvent}
+          type="check-in"
           onStartOver={() => setSelectedHousehold(undefined)}
         />
       </section>

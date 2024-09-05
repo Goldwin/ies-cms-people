@@ -4,6 +4,7 @@ import { Skeleton, Button } from "@nextui-org/react";
 
 export interface StationHeaderProp {
   event?: ChurchEvent;
+  type: "check-in" | "check-out";
   onStartOver?: () => void;
 }
 
@@ -14,7 +15,7 @@ export function StationHeader(props: Readonly<StationHeaderProp>) {
         <Skeleton isLoaded={!!props.event}>
           <div className="flex flex-row gap-4 align-middle">
             <div className="flex flex-col gap-4">
-              <h1 className="text-3xl capitalize">{props.event?.name}</h1>
+              <h1 className="text-3xl capitalize">{`${props.event?.name} event ${props.type}`}</h1>
               <h3>
                 {props.event?.date.toDate().toLocaleDateString("en-GB", {
                   year: "numeric",

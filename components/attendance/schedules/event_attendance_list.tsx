@@ -162,11 +162,12 @@ export const EventCheckInList = ({
         <div className="flex flex-row justify-between">
           <h1 className="text-2xl">Check-in List ({checkInCount})</h1>
           <Button
-            href={`/attendance/station/${churchEvent?.id}`}
+            href={`/attendance/station/checkin/${churchEvent?.id}`}
             as={Link}
             color="primary"
             showAnchorIcon
             variant="solid"
+            target="_blank"
           >
             Open Check-in Station
           </Button>
