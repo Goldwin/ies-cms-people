@@ -39,17 +39,20 @@ export const StationCheckInForm = (props: StationCheckInFormProps) => {
     ? [props.household.householdHead, ...props.household.members]
     : [];
 
-  const { register, handleSubmit, control } = useForm<StationCheckInFormValue>({
-    defaultValues: {
-      eventId: props.event?.id ?? "",
-      checkInList: members.map((member) => ({
-        personId: member.id,
-        activityId: activities[0].id,
-        isCheckedIn: false,
-        isVolunteer: false,
-      })),
-    },
-  });
+  const { register, handleSubmit, control, watch } =
+    useForm<StationCheckInFormValue>({
+      defaultValues: {
+        eventId: props.event?.id ?? "",
+        checkInList: members.map((member) => ({
+          personId: member.id,
+          activityId: activities[0].id,
+          isCheckedIn: false,
+          isVolunteer: false,
+        })),
+      },
+    });
+
+  const checkInList = watch("checkInList");
 
   const onSubmit = (data: StationCheckInFormValue) => {
     console.log(data);
@@ -69,6 +72,9 @@ export const StationCheckInForm = (props: StationCheckInFormProps) => {
           base: "group-[.is-splitted]:bg-content2",
           content: "flex flex-row justify-between",
         }}
+        selectedKeys={checkInList
+          .filter((checkIn) => checkIn.isCheckedIn)
+          .map((checkIn) => checkIn.personId)}
       >
         {members.map((member, i) => (
           <AccordionItem
@@ -82,6 +88,7 @@ export const StationCheckInForm = (props: StationCheckInFormProps) => {
                     size="lg"
                     isSelected={field.value}
                     onChange={field.onChange}
+                    name={`checkInList.${i}.isCheckedIn`}
                   >
                     <User
                       avatarProps={{
@@ -132,7 +139,8 @@ export const StationCheckInForm = (props: StationCheckInFormProps) => {
       </Accordion>
       <div className="flex flex-row justify-between">
         <Select
-          label="Check In By"
+          label="Check in By"
+          aria-label="checkInBy"
           defaultSelectedKeys={[props.household?.householdHead.id ?? ""]}
           className="w-64"
           {...register("checkInBy")}
