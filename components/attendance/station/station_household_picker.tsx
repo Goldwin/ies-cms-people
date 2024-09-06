@@ -47,7 +47,7 @@ export function HouseholdPicker(prop: Readonly<HouseholdPickerProp>) {
       className="flex w-[60%]"
       size="lg"
       label=""
-      placeholder="Search or add new person by name"
+      placeholder="Search person by name"
       items={householdList}
       aria-label="Search Person"
       onInputChange={(value) => {
