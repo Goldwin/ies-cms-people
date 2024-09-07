@@ -7,7 +7,7 @@ export class PersonInfo {
   public get firstName(): string {
     return this._firstName;
   }
-  private readonly _middleName?: string | undefined;
+  private readonly _middleName: string | undefined;
   public get middleName(): string | undefined {
     return this._middleName;
   }
@@ -15,7 +15,7 @@ export class PersonInfo {
   public get lastName(): string {
     return this._lastName;
   }
-  private readonly _profilePictureUrl?: string | undefined;
+  private readonly _profilePictureUrl: string | undefined;
   public get profilePictureUrl(): string | undefined {
     return this._profilePictureUrl;
   }

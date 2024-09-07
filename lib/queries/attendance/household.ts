@@ -1,4 +1,5 @@
 import { HouseholdInfo, PersonInfo } from "@/entities/attendance/person";
+import { attendanceService } from "@/services/attendance";
 
 export interface HouseholdFilter {
   name: string;
@@ -72,4 +73,12 @@ class MockHouseholdQuery implements HouseholdQuery {
   }
 }
 
-export const householdQuery: HouseholdQuery = new MockHouseholdQuery();
+class APIHouseholdQuery implements HouseholdQuery {
+  listHouseholds(filter: HouseholdFilter): Promise<HouseholdInfo[]> {
+    return attendanceService.searchHousehold({
+      name: filter.name,
+      limit: filter.limit,});
+  }
+}
+
+export const householdQuery: HouseholdQuery = new APIHouseholdQuery();
