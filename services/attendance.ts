@@ -3,6 +3,10 @@
  * This file provides a client side interface to communicate with attendance services
  */
 import { Activity, EventActivity } from "@/entities/attendance/activity";
+import {
+  AttendanceType,
+  ChurchActivityAttendance,
+} from "@/entities/attendance/attendance";
 import { ChurchEvent } from "@/entities/attendance/events";
 import { HouseholdInfo, PersonInfo } from "@/entities/attendance/person";
 import {
@@ -26,6 +30,24 @@ interface ActivityDTO {
   minute: number;
   timezoneOffset: number;
 }
+
+function toActivityDTO(activity: Activity): ActivityDTO {
+  return {
+    id: activity.id,
+    name: activity.name,
+    scheduleId: activity.scheduleId,
+    hour: activity.hour,
+    minute: activity.minute,
+    timezoneOffset: activity.timezoneOffset,
+  };
+}
+
+interface EventActivityDTO {
+  id: string;
+  name: string;
+  time: Date;
+}
+
 interface EventScheduleDTO {
   id: string;
   name: string;
@@ -56,6 +78,7 @@ interface HouseholdDTO {
 
 interface PersonDTO {
   id: string;
+  personId: string;
   firstName: string;
   lastName: string;
   profilePictureUrl: string;
@@ -63,6 +86,7 @@ interface PersonDTO {
 }
 
 function toPersonInfo(person: PersonDTO): PersonInfo {
+  console.log(person)
   return new PersonInfo({
     id: person.id,
     firstName: person.firstName,
@@ -95,21 +119,10 @@ function toChurchEvent(data: EventDTO): ChurchEvent {
         time: fromDate(
           new Date(`${data.date}T${activity.hour}:${activity.minute}:00.000Z`),
           "UTC"
-        ),
+        ).toDate(),
       });
     }),
   });
-}
-
-function toActivityDTO(activity: Activity): ActivityDTO {
-  return {
-    id: activity.id,
-    name: activity.name,
-    scheduleId: activity.scheduleId,
-    hour: activity.hour,
-    minute: activity.minute,
-    timezoneOffset: activity.timezoneOffset,
-  };
 }
 
 function toEventScheduleDTO(eventSchedule: EventSchedule): EventScheduleDTO {
@@ -215,6 +228,37 @@ function toEventSchedule(dto: EventScheduleDTO): EventSchedule {
       });
     }),
     timezoneOffset: dto.timezoneOffset,
+  });
+}
+
+interface AttendanceDTO {
+  id: string;
+  event: EventDTO;
+  activity: EventActivityDTO;
+  attendee: PersonDTO;
+  checkedInBy: PersonDTO;
+  securityCode: string;
+  securityNumber: number;
+  checkinTime: string;
+  attendanceType: string;
+}
+
+function toChurchActivityAttendance(
+  dto: AttendanceDTO
+): ChurchActivityAttendance {
+  return new ChurchActivityAttendance({
+    id: dto.id,
+    attendee: toPersonInfo(dto.attendee),
+    checkedInBy: toPersonInfo(dto.checkedInBy),
+    securityCode: dto.securityCode,
+    securityNumber: dto.securityNumber,
+    checkinTime: new Date(dto.checkinTime),
+    activity: new EventActivity({
+      id: dto.activity.id,
+      name: dto.activity.name,
+      time: new Date(dto.activity.time),
+    }),
+    attendanceType: dto.attendanceType as AttendanceType,
   });
 }
 
@@ -449,6 +493,42 @@ export class AttendanceService {
       .then((response) => {
         const data = response.data.data;
         return toEventSchedule(data);
+      });
+  }
+
+  async checkin({
+    eventId,
+    attendees,
+    checkedInBy,
+  }: {
+    eventId: string;
+    checkedInBy: string;
+    attendees: {
+      personId: string;
+      eventActivityId: string;
+      attendanceType: string;
+    }[];
+  }): Promise<ChurchActivityAttendance[]> {
+    const scheduleId = eventId.split(".")[0];
+    const url = `${API_URL}/schedules/${scheduleId}/events/${eventId}/checkin`;
+    const token = getToken();
+    const checkinRequest = {
+      eventId: eventId,
+      attendees: attendees,
+      checkedinBy: checkedInBy,
+    };
+    const body = JSON.stringify(checkinRequest);
+    return axios
+      .post(url, body, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((response) => {
+        const data = response.data.data as AttendanceDTO[];
+
+        console.log(data);
+        return data.map((attendance: AttendanceDTO) => {
+          return toChurchActivityAttendance(attendance);
+        });
       });
   }
 }

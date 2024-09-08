@@ -1,5 +1,3 @@
-import { ZonedDateTime } from "@internationalized/date";
-
 export class Activity {
   private readonly _id: string;
   private readonly _name: string;
@@ -71,17 +69,9 @@ export class Activity {
 export class EventActivity {
   id: string;
   name: string;
-  time: ZonedDateTime;
+  time: Date;
 
-  constructor({
-    id,
-    name,
-    time,
-  }: {
-    id: string;
-    name: string;
-    time: ZonedDateTime;
-  }) {
+  constructor({ id, name, time }: { id: string; name: string; time: Date }) {
     this.id = id;
     this.name = name;
     this.time = time;

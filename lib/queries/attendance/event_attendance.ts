@@ -3,8 +3,7 @@ import {
   AttendanceType,
   ChurchActivityAttendance,
 } from "@/entities/attendance/attendance";
-import * as events from "@/entities/attendance/events";
-import { fromDate } from "@internationalized/date";
+import { PersonInfo } from "@/entities/attendance/person";
 
 export interface EventAttendanceQueryResult {
   attendance: ChurchActivityAttendance[];
@@ -52,19 +51,26 @@ export class MockEventAttendanceQuery implements EventAttendanceQuery {
         activity: new EventActivity({
           name: "test",
           id: eventActivityId,
-          time: fromDate(new Date(), "America/New_York"),
+          time: new Date(),
         }),
         securityNumber: 1234,
         checkinTime: new Date(),
-        checkinLocation: new events.ChurchEventLocation({
-          name: "test",
+        attendee: new PersonInfo({
           id: "1",
+          firstName: "test",
+          middleName: "test",
+          lastName: "test " + id,
+          age: 0,
+          profilePictureUrl: "",
         }),
-        personId: "1",
-        firstName: "test",
-        middleName: "test",
-        lastName: "test " + id,
-        profilePictureUrl: "",
+        checkedInBy: new PersonInfo({
+          id: "1",
+          firstName: "test",
+          middleName: "test",
+          lastName: "test " + id,
+          age: 0,
+          profilePictureUrl: "",
+        }),
         attendanceType: attendanceType,
       });
 
@@ -73,9 +79,9 @@ export class MockEventAttendanceQuery implements EventAttendanceQuery {
         filter.attendanceTypes.includes(item.attendanceType) &&
         (!filter.name ||
           filter.name === "" ||
-          item.lastName.startsWith(filter.name) ||
-          item.firstName.startsWith(filter.name) ||
-          item.middleName.startsWith(filter.name))
+          item.person.lastName.startsWith(filter.name) ||
+          item.person.firstName.startsWith(filter.name) ||
+          item.person.middleName?.startsWith(filter.name))
       ) {
         result.push(item);
       }

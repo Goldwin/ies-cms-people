@@ -1,8 +1,12 @@
 "use client";
-import { ChurchActivityAttendance } from "@/entities/attendance/attendance";
+import {
+  AttendanceType,
+  ChurchActivityAttendance,
+} from "@/entities/attendance/attendance";
 import { ChurchEvent } from "@/entities/attendance/events";
 import { HouseholdInfo } from "@/entities/attendance/person";
-import { Checkbox, CheckboxGroup } from "@nextui-org/checkbox";
+import { attendanceCommands } from "@/lib/commands/attendance/attendance";
+import { Checkbox } from "@nextui-org/checkbox";
 import {
   Accordion,
   AccordionItem,
@@ -18,11 +22,12 @@ export interface StationCheckInFormProps {
   event?: ChurchEvent;
   household?: HouseholdInfo;
   onSuccess?: (attendances: ChurchActivityAttendance[]) => void;
+  onFailure?: (error: any) => void;
 }
 
 interface PersonCheckInFormValue {
   personId: string;
-  activityId: string;
+  eventActivityId: string;
   isCheckedIn: boolean;
   isVolunteer: boolean;
 }
@@ -55,8 +60,22 @@ export const StationCheckInForm = (props: StationCheckInFormProps) => {
   const checkInList = watch("checkInList");
 
   const onSubmit = (data: StationCheckInFormValue) => {
-    console.log(data);
-    props.onSuccess?.([]);
+    attendanceCommands
+      .checkin({
+        eventId: data.eventId,
+        checkedInBy: data.checkInBy,
+        attendees: data.checkInList
+          .filter((checkIn) => checkIn.isCheckedIn)
+          .map((checkIn) => ({
+            personId: checkIn.personId,
+            eventActivityId: checkIn.eventActivityId,
+            attendanceType: checkIn.isVolunteer
+              ? AttendanceType.Volunteer
+              : AttendanceType.Regular,
+          })),
+      })
+      .then(props.onSuccess)
+      .catch(props.onFailure);
   };
 
   return (
@@ -108,7 +127,7 @@ export const StationCheckInForm = (props: StationCheckInFormProps) => {
               aria-label="activity"
               label="Activity"
               defaultSelectedKeys={[activities[0].id]}
-              {...register(`checkInList.${i}.activityId`)}
+              {...register(`checkInList.${i}.eventActivityId`)}
             >
               {activities.map((activity) => (
                 <SelectItem

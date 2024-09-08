@@ -71,6 +71,22 @@ export default function StationEventPage() {
                   transition: Bounce,
                 });
               }}
+              onFailure={(error) => {
+                console.log(error);
+                toast.error(
+                  "Failed to check in. Please Contact Your Administrator",
+                  {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    transition: Bounce,
+                  }
+                );
+              }}
             />
           )}
         </div>
