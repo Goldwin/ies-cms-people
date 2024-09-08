@@ -292,6 +292,31 @@ export class AttendanceService {
       });
   }
 
+  public async listAttendanceByEvent({
+    eventId,
+    lastId = "",
+    limit = 100,
+  }: {
+    eventId: string;
+    lastId: string;
+    limit: number;
+  }) : Promise<ChurchActivityAttendance[]> {
+    const scheduleId = eventId.split(".")[0];
+    const url = `${API_URL}/schedules/${scheduleId}/events/${eventId}/attendees?limit=${limit}&lastId=${lastId}`;
+    return axios
+      .get(url, {
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+      })
+      .then((response) => {
+        const data: AttendanceDTO[] = response.data.data as AttendanceDTO[];
+        return data.map((attendance: AttendanceDTO): ChurchActivityAttendance => {
+          return toChurchActivityAttendance(attendance);
+        });
+      });
+  }
+
   async searchHousehold({
     name,
     limit = 200,
