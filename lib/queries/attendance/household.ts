@@ -74,7 +74,7 @@ class MockHouseholdQuery implements HouseholdQuery {
 }
 
 class APIHouseholdQuery implements HouseholdQuery {
-  listHouseholds(filter: HouseholdFilter): Promise<HouseholdInfo[]> {
+  async listHouseholds(filter: HouseholdFilter): Promise<HouseholdInfo[]> {
     return attendanceService.searchHousehold({
       name: filter.name,
       limit: filter.limit,});

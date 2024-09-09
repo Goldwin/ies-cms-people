@@ -23,7 +23,7 @@ export function HouseholdPicker(prop: Readonly<HouseholdPickerProp>) {
       return;
     }
     householdQuery
-      .listHouseholds({ name: value, limit: 10 })
+      .listHouseholds({ name: value, limit: 200 })
       .then((householdList) => {
         setHouseholdList(householdList);
         setHouseholdMap(
