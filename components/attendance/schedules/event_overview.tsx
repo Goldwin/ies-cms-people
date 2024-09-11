@@ -68,7 +68,7 @@ export const EventOverview = ({ event }: EventOverviewProps) => {
           <Card className="w-1/3">
             <CardBody className="flex w-full justify-center bg-blue-500">
               <h1 className="text-5xl text-center font-bold">
-                {summary?.totalByType[AttendanceType.Regular]}
+                {summary?.totalByType[AttendanceType.Regular] ?? 0}
               </h1>
             </CardBody>
             <CardFooter className="flex w-full justify-center text-center font-medium bg-blue-700">
