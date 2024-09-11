@@ -2,22 +2,12 @@ import { AttendanceType } from "./attendance";
 
 export class EventScheduleStats {
   private _id: string;
-  private _name: string;
 
-  private _eventSummaries: EventStats[];
+  private _eventStats: EventStats[];
 
-  constructor({
-    id,
-    eventSummaries,
-    name,
-  }: {
-    id: string;
-    eventSummaries: EventStats[];
-    name: string;
-  }) {
+  constructor({ id, eventStats }: { id: string; eventStats: EventStats[] }) {
     this._id = id;
-    this._eventSummaries = eventSummaries;
-    this._name = name;
+    this._eventStats = eventStats;
   }
 
   public get attendanceSeries(): { name: string; data: number[] }[] {
@@ -40,15 +30,10 @@ export class EventScheduleStats {
     return this.eventSummaries.map((eventSummary) => eventSummary.date);
   }
 
-  public get name(): string {
-    return this._name;
-  }
-  public set name(value: string) {
-    this._name = value;
-  }
   public get eventSummaries(): EventStats[] {
-    return this._eventSummaries;
+    return this._eventStats;
   }
+
   public get id(): string {
     return this._id;
   }

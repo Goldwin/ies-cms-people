@@ -4,19 +4,25 @@ import {
   EventScheduleStats,
   EventStats,
 } from "@/entities/attendance/stats";
+import { attendanceService } from "@/services/attendance";
 
-export interface ChurchEventStatsQuery {
-  getEventStats(eventScheduleId: string): Promise<EventScheduleStats>;
+export interface ChurchEventScheduleStatsQuery {
+  getStats(eventScheduleId: string): Promise<EventScheduleStats>;
 }
 
-export class MockEventStatsQuery implements ChurchEventStatsQuery {
-  getEventStats(eventId: string): Promise<EventScheduleStats> {
+class APIEventStatsQuery implements ChurchEventScheduleStatsQuery {
+  getStats(eventId: string): Promise<EventScheduleStats> {
+    return attendanceService.getEventScheduleStats({ scheduleId: eventId });
+  }
+}
+
+class MockEventStatsQuery implements ChurchEventScheduleStatsQuery {
+  getStats(eventId: string): Promise<EventScheduleStats> {
     if (eventId !== "1") {
       return Promise.resolve(
         new EventScheduleStats({
           id: "2",
-          name: "test2",
-          eventSummaries: [
+          eventStats: [
             new EventStats({
               id: "1",
               date: "2022-06-11",
@@ -42,8 +48,7 @@ export class MockEventStatsQuery implements ChurchEventStatsQuery {
     return Promise.resolve(
       new EventScheduleStats({
         id: "1",
-        name: "test",
-        eventSummaries: [
+        eventStats: [
           new EventStats({
             id: "1",
             date: "2022-06-11",
@@ -140,5 +145,5 @@ export class MockEventStatsQuery implements ChurchEventStatsQuery {
   }
 }
 
-export const attendanceStatsQuery: ChurchEventStatsQuery =
-  new MockEventStatsQuery();
+export const attendanceStatsQuery: ChurchEventScheduleStatsQuery =
+  new APIEventStatsQuery();

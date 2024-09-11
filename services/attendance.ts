@@ -16,7 +16,11 @@ import {
   OneTimeEventSchedule,
   WeeklyEventSchedule,
 } from "@/entities/attendance/schedules";
-import { EventStats } from "@/entities/attendance/stats";
+import {
+  EventAttendanceCountStats,
+  EventScheduleStats,
+  EventStats,
+} from "@/entities/attendance/stats";
 import {
   ActivityAttendanceSummary,
   EventAttendanceSummary,
@@ -329,7 +333,59 @@ function toEventAttendanceSummary(
   });
 }
 
+interface EventAttendanceCountStatsDTO {
+  attendanceType: string;
+  count: number;
+}
+interface EventStatsDTO {
+  id: string;
+  date: string;
+  attendanceCount: EventAttendanceCountStatsDTO[];
+}
+function toEventStats(dto: EventStatsDTO): EventStats {
+  return new EventStats({
+    id: dto.id,
+    date: dto.date,
+    attendanceCount: dto.attendanceCount.map(
+      (attendanceCount) =>
+        new EventAttendanceCountStats({
+          attendanceType: attendanceCount.attendanceType as AttendanceType,
+          count: attendanceCount.count,
+        })
+    ),
+  });
+}
+interface EventScheduleStatsDTO {
+  id: string;
+  eventStats: EventStatsDTO[];
+}
+
+function toEventScheduleStats(dto: EventScheduleStatsDTO): EventScheduleStats {
+  return new EventScheduleStats({
+    id: dto.id,
+    eventStats: dto.eventStats.map(toEventStats),
+  });
+}
+
 export class AttendanceService {
+  public async getEventScheduleStats({
+    scheduleId,
+  }: {
+    scheduleId: string;
+  }): Promise<EventScheduleStats> {
+    const url = `${API_URL}/schedules/${scheduleId}/stats`;
+    return axios
+      .get(url, {
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+      })
+      .then((response) => {
+        const data: EventScheduleStatsDTO = response.data
+          .data as EventScheduleStatsDTO;
+        return toEventScheduleStats(data);
+      });
+  }
   public async getEventAttendanceSummary({
     eventId,
   }: {

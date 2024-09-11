@@ -50,9 +50,7 @@ export default function AttendancePage() {
 
   useEffect(() => {
     if (focusedEventId) {
-      attendanceStatsQuery
-        .getEventStats(focusedEventId)
-        .then(setFocusedEventStats);
+      attendanceStatsQuery.getStats(focusedEventId).then(setFocusedEventStats);
     }
   }, [focusedEventId]);
 
