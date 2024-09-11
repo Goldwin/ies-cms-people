@@ -16,6 +16,11 @@ import {
   OneTimeEventSchedule,
   WeeklyEventSchedule,
 } from "@/entities/attendance/schedules";
+import { EventStats } from "@/entities/attendance/stats";
+import {
+  ActivityAttendanceSummary,
+  EventAttendanceSummary,
+} from "@/entities/attendance/summary";
 import { getToken } from "@/lib/commands/login";
 import { fromDate } from "@internationalized/date";
 import axios from "axios";
@@ -86,7 +91,7 @@ interface PersonDTO {
 }
 
 function toPersonInfo(person: PersonDTO): PersonInfo {
-  console.log(person)
+  console.log(person);
   return new PersonInfo({
     id: person.id,
     firstName: person.firstName,
@@ -262,8 +267,89 @@ function toChurchActivityAttendance(
   });
 }
 
+/*
+type ActivityAttendanceSummaryDTO struct {
+	Total       int
+	Name        string
+	TotalByType map[string]int
+}
+
+type EventAttendanceSummaryDTO struct {
+	TotalCheckedIn  int
+	TotalCheckedOut int
+	TotalFirstTimer int
+	Total           int
+
+	TotalByType        map[string]int
+	AcitivitiesSummary []ActivityAttendanceSummaryDTO
+
+	Date time.Time
+	ID   string
+}*/
+
+interface ActivityAttendanceSummaryDTO {
+  total: number;
+  name: string;
+  totalByType: { [key: string]: number };
+}
+
+function toActivityAttendanceSummary(
+  dto: ActivityAttendanceSummaryDTO
+): ActivityAttendanceSummary {
+  return new ActivityAttendanceSummary({
+    name: dto.name,
+    total: dto.total,
+    totalByType: dto.totalByType,
+  });
+}
+
+interface EventAttendanceSummaryDTO {
+  totalCheckedIn: number;
+  totalCheckedOut: number;
+  totalFirstTimer: number;
+  total: number;
+  totalByType: { [key: string]: number };
+  activitiesSummary: ActivityAttendanceSummaryDTO[];
+  date: string;
+  id: string;
+}
+
+function toEventAttendanceSummary(
+  dto: EventAttendanceSummaryDTO
+): EventAttendanceSummary {
+  return new EventAttendanceSummary({
+    totalCheckedIn: dto.totalCheckedIn,
+    totalCheckedOut: dto.totalCheckedOut,
+    totalFirstTimer: dto.totalFirstTimer,
+    total: dto.total,
+    totalByType: dto.totalByType,
+    activitiesSummary: dto.activitiesSummary?.map(toActivityAttendanceSummary),
+    date: new Date(dto.date),
+    id: dto.id,
+  });
+}
+
 export class AttendanceService {
-  async listEventBySchedule({
+  public async getEventAttendanceSummary({
+    eventId,
+  }: {
+    eventId: string;
+  }): Promise<EventAttendanceSummary> {
+    const scheduleId = eventId.split(".")[0];
+    const url = `${API_URL}/schedules/${scheduleId}/events/${eventId}/summary`;
+    return axios
+      .get(url, {
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+      })
+      .then((response) => {
+        const data: EventAttendanceSummaryDTO = response.data
+          .data as EventAttendanceSummaryDTO;
+        return toEventAttendanceSummary(data);
+      });
+  }
+  public async listEventBySchedule({
     scheduleId,
     startDate,
     endDate,
@@ -300,7 +386,7 @@ export class AttendanceService {
     eventId: string;
     lastId: string;
     limit: number;
-  }) : Promise<ChurchActivityAttendance[]> {
+  }): Promise<ChurchActivityAttendance[]> {
     const scheduleId = eventId.split(".")[0];
     const url = `${API_URL}/schedules/${scheduleId}/events/${eventId}/attendees?limit=${limit}&lastId=${lastId}`;
     return axios
@@ -311,13 +397,15 @@ export class AttendanceService {
       })
       .then((response) => {
         const data: AttendanceDTO[] = response.data.data as AttendanceDTO[];
-        return data.map((attendance: AttendanceDTO): ChurchActivityAttendance => {
-          return toChurchActivityAttendance(attendance);
-        });
+        return data.map(
+          (attendance: AttendanceDTO): ChurchActivityAttendance => {
+            return toChurchActivityAttendance(attendance);
+          }
+        );
       });
   }
 
-  async searchHousehold({
+  public async searchHousehold({
     name,
     limit = 200,
   }: {
@@ -347,7 +435,9 @@ export class AttendanceService {
       });
   }
 
-  async createNextEvent(eventSchedule: EventSchedule): Promise<ChurchEvent[]> {
+  public async createNextEvent(
+    eventSchedule: EventSchedule
+  ): Promise<ChurchEvent[]> {
     const url =
       API_URL + "/schedules/" + eventSchedule.id + "/create-next-event";
     const token = getToken();
@@ -370,7 +460,7 @@ export class AttendanceService {
       });
   }
 
-  async getEvent({
+  public async getEvent({
     scheduleId,
     eventId,
   }: {
@@ -390,7 +480,7 @@ export class AttendanceService {
       });
   }
 
-  async createEventSchedule(
+  public async createEventSchedule(
     eventSchedule: EventSchedule
   ): Promise<EventSchedule> {
     const url = API_URL + "/schedules";
@@ -409,7 +499,7 @@ export class AttendanceService {
       });
   }
 
-  async updateEventSchedule(
+  public async updateEventSchedule(
     eventSchedule: EventSchedule
   ): Promise<EventSchedule> {
     const url = API_URL + "/schedules/" + eventSchedule.id;
@@ -426,7 +516,7 @@ export class AttendanceService {
       });
   }
 
-  async listEventSchedule({
+  public async listEventSchedule({
     limit = 100,
     lastID = "",
   }: {
@@ -447,7 +537,7 @@ export class AttendanceService {
       });
   }
 
-  async getEventSchedule(id: string): Promise<EventSchedule> {
+  public async getEventSchedule(id: string): Promise<EventSchedule> {
     const url = API_URL + "/schedules/" + id;
     const token = getToken();
     return axios
@@ -460,7 +550,7 @@ export class AttendanceService {
       });
   }
 
-  async createEventScheduleActivity(
+  public async createEventScheduleActivity(
     activity: Activity
   ): Promise<EventSchedule> {
     const url = API_URL + "/schedules/" + activity.scheduleId + "/activities";
@@ -478,7 +568,7 @@ export class AttendanceService {
       });
   }
 
-  async removeEventScheduleActivity(
+  public async removeEventScheduleActivity(
     activity: Activity
   ): Promise<EventSchedule> {
     const url =
@@ -498,7 +588,7 @@ export class AttendanceService {
       });
   }
 
-  async updateEventScheduleActivity(
+  public async updateEventScheduleActivity(
     activity: Activity
   ): Promise<EventSchedule> {
     const url =
@@ -521,7 +611,7 @@ export class AttendanceService {
       });
   }
 
-  async checkin({
+  public async checkin({
     eventId,
     attendees,
     checkedInBy,

@@ -3,7 +3,7 @@
 import { ChurchEventScheduleCreationModal } from "@/components/attendance/schedules/event_schedule_modal";
 import { PencilIcon } from "@/components/icons";
 import { EventSchedule } from "@/entities/attendance/schedules";
-import { EventScheduleSummary } from "@/entities/attendance/stats";
+import { EventScheduleStats } from "@/entities/attendance/stats";
 import { eventSchedulesQuery } from "@/lib/queries/attendance/event_schedules";
 import { attendanceStatsQuery } from "@/lib/queries/attendance/event_stats";
 import { Button } from "@nextui-org/button";
@@ -36,7 +36,7 @@ export default function AttendancePage() {
   const [churchEvents, setChurchEvents] = useState<EventSchedule[]>([]);
   const [focusedEventId, setFocusedEventId] = useState<string>();
   const [focusedEventStats, setFocusedEventStats] =
-    useState<EventScheduleSummary>();
+    useState<EventScheduleStats>();
 
   useEffect(() => {
     eventSchedulesQuery.listEventSchedules("", 10).then((result) => {

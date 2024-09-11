@@ -1,10 +1,10 @@
 import { AttendanceType } from "./attendance";
 
-export class EventScheduleSummary {
+export class EventScheduleStats {
   private _id: string;
   private _name: string;
 
-  private _eventSummaries: EventSummary[];
+  private _eventSummaries: EventStats[];
 
   constructor({
     id,
@@ -12,7 +12,7 @@ export class EventScheduleSummary {
     name,
   }: {
     id: string;
-    eventSummaries: EventSummary[];
+    eventSummaries: EventStats[];
     name: string;
   }) {
     this._id = id;
@@ -46,7 +46,7 @@ export class EventScheduleSummary {
   public set name(value: string) {
     this._name = value;
   }
-  public get eventSummaries(): EventSummary[] {
+  public get eventSummaries(): EventStats[] {
     return this._eventSummaries;
   }
   public get id(): string {
@@ -54,10 +54,10 @@ export class EventScheduleSummary {
   }
 }
 
-export class EventSummary {
+export class EventStats {
   private _id: string;
   private _date: string;
-  private _attendanceCount: EventAttendanceCountSummary[];
+  private _attendanceCount: EventAttendanceCountStats[];
 
   constructor({
     id,
@@ -66,14 +66,14 @@ export class EventSummary {
   }: {
     id: string;
     date: string;
-    attendanceCount: EventAttendanceCountSummary[];
+    attendanceCount: EventAttendanceCountStats[];
   }) {
     this._id = id;
     this._date = date;
     this._attendanceCount = attendanceCount;
   }
 
-  public get attendanceCount(): EventAttendanceCountSummary[] {
+  public get attendanceCount(): EventAttendanceCountStats[] {
     return this._attendanceCount;
   }
 
@@ -86,7 +86,7 @@ export class EventSummary {
   }
 }
 
-export class EventAttendanceCountSummary {
+export class EventAttendanceCountStats {
   private _attendanceType: AttendanceType;
   private _count: number;
 

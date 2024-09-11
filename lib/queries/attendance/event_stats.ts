@@ -1,35 +1,35 @@
 import { AttendanceType } from "@/entities/attendance/attendance";
 import {
-  EventAttendanceCountSummary,
-  EventScheduleSummary,
-  EventSummary,
+  EventAttendanceCountStats,
+  EventScheduleStats,
+  EventStats,
 } from "@/entities/attendance/stats";
 
 export interface ChurchEventStatsQuery {
-  getEventStats(eventScheduleId: string): Promise<EventScheduleSummary>;
+  getEventStats(eventScheduleId: string): Promise<EventScheduleStats>;
 }
 
 export class MockEventStatsQuery implements ChurchEventStatsQuery {
-  getEventStats(eventId: string): Promise<EventScheduleSummary> {
+  getEventStats(eventId: string): Promise<EventScheduleStats> {
     if (eventId !== "1") {
       return Promise.resolve(
-        new EventScheduleSummary({
+        new EventScheduleStats({
           id: "2",
           name: "test2",
           eventSummaries: [
-            new EventSummary({
+            new EventStats({
               id: "1",
               date: "2022-06-11",
               attendanceCount: [
-                new EventAttendanceCountSummary({
+                new EventAttendanceCountStats({
                   attendanceType: "Regular" as AttendanceType,
                   count: 100,
                 }),
-                new EventAttendanceCountSummary({
+                new EventAttendanceCountStats({
                   attendanceType: "Volunteer" as AttendanceType,
                   count: 20,
                 }),
-                new EventAttendanceCountSummary({
+                new EventAttendanceCountStats({
                   attendanceType: "Guest" as AttendanceType,
                   count: 30,
                 }),
@@ -40,95 +40,95 @@ export class MockEventStatsQuery implements ChurchEventStatsQuery {
       );
     }
     return Promise.resolve(
-      new EventScheduleSummary({
+      new EventScheduleStats({
         id: "1",
         name: "test",
         eventSummaries: [
-          new EventSummary({
+          new EventStats({
             id: "1",
             date: "2022-06-11",
             attendanceCount: [
-              new EventAttendanceCountSummary({
+              new EventAttendanceCountStats({
                 attendanceType: "Regular" as AttendanceType,
                 count: 100,
               }),
-              new EventAttendanceCountSummary({
+              new EventAttendanceCountStats({
                 attendanceType: "Volunteer" as AttendanceType,
                 count: 20,
               }),
-              new EventAttendanceCountSummary({
+              new EventAttendanceCountStats({
                 attendanceType: "Guest" as AttendanceType,
                 count: 30,
               }),
             ],
           }),
-          new EventSummary({
+          new EventStats({
             id: "1",
             date: "2022-06-12",
             attendanceCount: [
-              new EventAttendanceCountSummary({
+              new EventAttendanceCountStats({
                 attendanceType: "Regular" as AttendanceType,
                 count: 130,
               }),
-              new EventAttendanceCountSummary({
+              new EventAttendanceCountStats({
                 attendanceType: "Volunteer" as AttendanceType,
                 count: 20,
               }),
-              new EventAttendanceCountSummary({
+              new EventAttendanceCountStats({
                 attendanceType: "Guest" as AttendanceType,
                 count: 30,
               }),
             ],
           }),
-          new EventSummary({
+          new EventStats({
             id: "1",
             date: "2022-06-13",
             attendanceCount: [
-              new EventAttendanceCountSummary({
+              new EventAttendanceCountStats({
                 attendanceType: "Regular" as AttendanceType,
                 count: 125,
               }),
-              new EventAttendanceCountSummary({
+              new EventAttendanceCountStats({
                 attendanceType: "Volunteer" as AttendanceType,
                 count: 20,
               }),
-              new EventAttendanceCountSummary({
+              new EventAttendanceCountStats({
                 attendanceType: "Guest" as AttendanceType,
                 count: 30,
               }),
             ],
           }),
-          new EventSummary({
+          new EventStats({
             id: "1",
             date: "2022-06-14",
             attendanceCount: [
-              new EventAttendanceCountSummary({
+              new EventAttendanceCountStats({
                 attendanceType: "Regular" as AttendanceType,
                 count: 75,
               }),
-              new EventAttendanceCountSummary({
+              new EventAttendanceCountStats({
                 attendanceType: "Volunteer" as AttendanceType,
                 count: 20,
               }),
-              new EventAttendanceCountSummary({
+              new EventAttendanceCountStats({
                 attendanceType: "Guest" as AttendanceType,
                 count: 30,
               }),
             ],
           }),
-          new EventSummary({
+          new EventStats({
             id: "1",
             date: "2022-06-15",
             attendanceCount: [
-              new EventAttendanceCountSummary({
+              new EventAttendanceCountStats({
                 attendanceType: "Regular" as AttendanceType,
                 count: 180,
               }),
-              new EventAttendanceCountSummary({
+              new EventAttendanceCountStats({
                 attendanceType: "Volunteer" as AttendanceType,
                 count: 20,
               }),
-              new EventAttendanceCountSummary({
+              new EventAttendanceCountStats({
                 attendanceType: "Guest" as AttendanceType,
                 count: 30,
               }),
