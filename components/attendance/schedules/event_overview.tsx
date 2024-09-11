@@ -8,7 +8,6 @@ import {
   CardFooter,
   CardHeader,
   Divider,
-  Skeleton,
 } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 
