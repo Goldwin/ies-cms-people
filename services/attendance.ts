@@ -67,6 +67,8 @@ interface EventScheduleDTO {
   days?: number[];
   startDate?: string;
   endDate?: string;
+  startTime?: string;
+  endTime?: string;
 }
 
 interface EventDTO {
@@ -150,6 +152,8 @@ function toEventScheduleDTO(eventSchedule: EventSchedule): EventScheduleDTO {
       };
     }),
     timezoneOffset: eventSchedule.timezoneOffset,
+    startTime: "00:00",
+    endTime:"23:59"
   };
   if (eventSchedule.type === EventScheduleType.Daily) {
     const dailySchedule = eventSchedule as DailyEventSchedule;
@@ -270,26 +274,6 @@ function toChurchActivityAttendance(
     attendanceType: dto.attendanceType as AttendanceType,
   });
 }
-
-/*
-type ActivityAttendanceSummaryDTO struct {
-	Total       int
-	Name        string
-	TotalByType map[string]int
-}
-
-type EventAttendanceSummaryDTO struct {
-	TotalCheckedIn  int
-	TotalCheckedOut int
-	TotalFirstTimer int
-	Total           int
-
-	TotalByType        map[string]int
-	AcitivitiesSummary []ActivityAttendanceSummaryDTO
-
-	Date time.Time
-	ID   string
-}*/
 
 interface ActivityAttendanceSummaryDTO {
   total: number;
