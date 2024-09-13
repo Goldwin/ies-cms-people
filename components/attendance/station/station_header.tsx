@@ -1,11 +1,12 @@
 "use client";
 import { ChurchEvent } from "@/entities/attendance/events";
-import { Skeleton, Button } from "@nextui-org/react";
+import { Skeleton, Button, ButtonGroup, Divider } from "@nextui-org/react";
 
 export interface StationHeaderProp {
   event?: ChurchEvent;
   type: "check-in" | "check-out";
   onStartOver?: () => void;
+  onAddPerson?: () => void;
 }
 
 export function StationHeader(props: Readonly<StationHeaderProp>) {
@@ -30,14 +31,16 @@ export function StationHeader(props: Readonly<StationHeaderProp>) {
       <div className="flex flex-row gap-4 justify-end w-full">
         <div className="flex flex-col justify-end my-4 mx-4">
           {props.event && (
-            <Button onPress={props.onStartOver}>Start Over</Button>
+            <ButtonGroup size="lg">
+              <Button onPress={props.onStartOver}>Start Over</Button>
+              <Divider orientation="vertical" />
+              <Button href="/add" onPress={props.onAddPerson}>
+                Add Person
+              </Button>
+            </ButtonGroup>
           )}
         </div>
       </div>
     </div>
-    // <div>
-    //   <h1 className="text-3xl font-bold">{prop.event.name}</h1>
-    //   <h3> {prop.event.date.toLocaleString()}</h3>
-    // </div>
   );
 }

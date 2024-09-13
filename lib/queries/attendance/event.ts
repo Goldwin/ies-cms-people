@@ -1,5 +1,4 @@
 import { ChurchEvent } from "@/entities/attendance/events";
-import { EventScheduleStats } from "@/entities/attendance/stats";
 import { EventAttendanceSummary } from "@/entities/attendance/summary";
 import { attendanceService } from "@/services/attendance";
 

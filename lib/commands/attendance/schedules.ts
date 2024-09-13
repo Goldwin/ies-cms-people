@@ -1,7 +1,7 @@
 import { EventSchedule } from "@/entities/attendance/schedules";
 import { attendanceService } from "@/services/attendance";
 
-interface EventScheduleCommands {
+export interface EventScheduleCommands {
   createEventSchedule(eventSchedule: EventSchedule): Promise<EventSchedule>;
   updateEventSchedule(eventSchedule: EventSchedule): Promise<EventSchedule>;
 }

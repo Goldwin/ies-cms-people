@@ -8,6 +8,8 @@ import { eventQuery } from "@/lib/queries/attendance/event";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Bounce, toast } from "react-toastify";
+import { AddPersonModalForm } from "@/components/attendance/station/station_addperson";
+import { useDisclosure } from "@nextui-org/modal";
 
 export default function StationEventPage() {
   const param = useParams();
@@ -15,6 +17,8 @@ export default function StationEventPage() {
   const [selectedHousehold, setSelectedHousehold] = useState<
     HouseholdInfo | undefined
   >();
+
+  const { isOpen, onOpenChange } = useDisclosure();
 
   useEffect(() => {
     const eventId = param.event as string;
@@ -47,12 +51,16 @@ export default function StationEventPage() {
           event={churchEvent}
           type="check-in"
           onStartOver={() => setSelectedHousehold(undefined)}
+          onAddPerson={onOpenChange}
         />
       </section>
       <section className="flex flex-col w-full h-full py-16">
+        <AddPersonModalForm isOpen={isOpen} onOpenChange={onOpenChange} />
         <div className="flex-row flex w-full justify-center">
           {!selectedHousehold && (
-            <HouseholdPicker onHouseholdSelected={onHouseholdSelected} />
+            <div className="flex w-[60%]">
+              <HouseholdPicker onHouseholdSelected={onHouseholdSelected} />{" "}
+            </div>
           )}
           {selectedHousehold && (
             <StationCheckInForm

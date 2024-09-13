@@ -77,7 +77,8 @@ class APIHouseholdQuery implements HouseholdQuery {
   async listHouseholds(filter: HouseholdFilter): Promise<HouseholdInfo[]> {
     return attendanceService.searchHousehold({
       name: filter.name,
-      limit: filter.limit,});
+      limit: filter.limit,
+    });
   }
 }
 

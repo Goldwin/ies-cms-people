@@ -7,6 +7,9 @@ import { useState } from "react";
 
 export interface HouseholdPickerProp {
   onHouseholdSelected?: (household: HouseholdInfo) => void;
+  onHouseholdUnselected?: () => void;
+  isInvalid?: boolean;
+  errorMessage?: string;
 }
 
 export function HouseholdPicker(prop: Readonly<HouseholdPickerProp>) {
@@ -44,10 +47,10 @@ export function HouseholdPicker(prop: Readonly<HouseholdPickerProp>) {
 
   return (
     <Autocomplete
-      className="flex w-[60%]"
+      className="flex"
       size="lg"
       label=""
-      placeholder="Search person by name"
+      placeholder="Start typing person name..."
       items={householdList}
       aria-label="Search Person"
       onInputChange={(value) => {
@@ -57,9 +60,13 @@ export function HouseholdPicker(prop: Readonly<HouseholdPickerProp>) {
       onSelectionChange={(value) => {
         if (householdMap?.[value]) {
           prop.onHouseholdSelected?.(householdMap[value]);
+        } else {
+          prop.onHouseholdUnselected?.();
         }
       }}
       isLoading={isLoading}
+      isInvalid={prop.isInvalid}
+      errorMessage={prop.errorMessage}
     >
       {(household) => (
         <AutocompleteItem

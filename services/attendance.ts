@@ -8,7 +8,7 @@ import {
   ChurchActivityAttendance,
 } from "@/entities/attendance/attendance";
 import { ChurchEvent } from "@/entities/attendance/events";
-import { HouseholdInfo, PersonInfo } from "@/entities/attendance/person";
+import { PersonInfo, HouseholdInfo } from "@/entities/attendance/person";
 import {
   DailyEventSchedule,
   EventSchedule,
@@ -153,7 +153,7 @@ function toEventScheduleDTO(eventSchedule: EventSchedule): EventScheduleDTO {
     }),
     timezoneOffset: eventSchedule.timezoneOffset,
     startTime: "00:00",
-    endTime:"23:59"
+    endTime: "23:59",
   };
   if (eventSchedule.type === EventScheduleType.Daily) {
     const dailySchedule = eventSchedule as DailyEventSchedule;

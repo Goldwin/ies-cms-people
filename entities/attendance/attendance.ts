@@ -1,5 +1,5 @@
+import { PersonInfo } from "../attendance/person";
 import { EventActivity } from "./activity";
-import { PersonInfo } from "./person";
 
 export enum AttendanceType {
   Volunteer = "Volunteer",
