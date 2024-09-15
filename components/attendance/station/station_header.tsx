@@ -18,7 +18,7 @@ export function StationHeader(props: Readonly<StationHeaderProp>) {
             <div className="flex flex-col gap-4">
               <h1 className="text-3xl capitalize">{`${props.event?.name} event ${props.type}`}</h1>
               <h3>
-                {props.event?.date.toDate().toLocaleDateString("en-GB", {
+                {props.event?.startDate.toDate().toLocaleDateString("en-GB", {
                   year: "numeric",
                   month: "long",
                   day: "numeric",

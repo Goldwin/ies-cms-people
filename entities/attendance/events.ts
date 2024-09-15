@@ -25,27 +25,46 @@ export class ChurchEvent {
   id: string;
   eventScheduleId: string;
   activities: EventActivity[];
-  date: ZonedDateTime;
+  startDate: ZonedDateTime;
+  endDate: ZonedDateTime;
   name: string;
 
   constructor({
     id,
     eventScheduleId,
-    date,
+    startDate,
+    endDate,
     name,
     activities,
   }: {
     id: string;
     eventScheduleId: string;
-    date: ZonedDateTime;
+    startDate: ZonedDateTime;
+    endDate: ZonedDateTime;
     activities: EventActivity[];
     name: string;
   }) {
     this.id = id;
     this.eventScheduleId = eventScheduleId;
-    this.date = date;
+    this.startDate = startDate;
+    this.endDate = endDate;
     this.activities = activities;
     this.name = name;
+  }
+
+  hasEnded(): boolean {
+    const now = new Date();
+    return this.endDate.toDate() < now;
+  }
+
+  notStarted(): boolean {
+    const now = new Date();
+    return now < this.startDate.toDate();
+  }
+
+  isActive(): boolean {
+    const now = new Date();
+    return this.startDate.toDate() <= now && now <= this.endDate.toDate();
   }
 }
 

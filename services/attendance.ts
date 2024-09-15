@@ -74,7 +74,8 @@ interface EventScheduleDTO {
 interface EventDTO {
   id: string;
   eventScheduleId: string;
-  date: string;
+  startDate: string;
+  endDate: string;
   activities: ActivityDTO[];
   name: string;
 }
@@ -121,14 +122,17 @@ function toChurchEvent(data: EventDTO): ChurchEvent {
   return new ChurchEvent({
     id: data.id,
     eventScheduleId: data.eventScheduleId,
-    date: fromDate(new Date(data.date), "UTC"),
+    startDate: fromDate(new Date(data.startDate), "UTC"),
+    endDate: fromDate(new Date(data.endDate), "UTC"),
     name: data.name,
     activities: data.activities.map((activity) => {
       return new EventActivity({
         id: activity.id,
         name: activity.name,
         time: fromDate(
-          new Date(`${data.date}T${activity.hour}:${activity.minute}:00.000Z`),
+          new Date(
+            `${data.startDate}T${activity.hour}:${activity.minute}:00.000Z`
+          ),
           "UTC"
         ).toDate(),
       });

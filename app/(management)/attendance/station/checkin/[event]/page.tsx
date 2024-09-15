@@ -11,6 +11,82 @@ import { Bounce, toast } from "react-toastify";
 import { AddPersonModalForm } from "@/components/attendance/station/station_addperson";
 import { useDisclosure } from "@nextui-org/modal";
 
+interface StationActiveEventProp {
+  selectedHousehold?: HouseholdInfo;
+  onHouseholdSelected: (household: HouseholdInfo) => void;
+  churchEvent: ChurchEvent;
+  setSelectedHousehold: (household: HouseholdInfo | undefined) => void;
+}
+function StationActiveEventPage({
+  selectedHousehold,
+  onHouseholdSelected,
+  churchEvent,
+  setSelectedHousehold,
+}: Readonly<StationActiveEventProp>) {
+  return (
+    <div className="flex-row flex w-full justify-center">
+      {!selectedHousehold && (
+        <div className="flex w-[60%]">
+          <HouseholdPicker onHouseholdSelected={onHouseholdSelected} />
+        </div>
+      )}
+      {selectedHousehold && (
+        <StationCheckInForm
+          event={churchEvent}
+          household={selectedHousehold}
+          onSuccess={() => {
+            setSelectedHousehold(undefined);
+            toast.success("Checked in successfully", {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              transition: Bounce,
+            });
+          }}
+          onFailure={(error) => {
+            toast.error(`${error.response.data.error.message}`, {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              transition: Bounce,
+            });
+          }}
+        />
+      )}
+    </div>
+  );
+}
+
+function StationClosedEventPage({ event }: Readonly<{ event: ChurchEvent }>) {
+  const getMessage = () => {
+    if (event.hasEnded()) {
+      return `Can't Check in to this event. Event has ended at ${event.endDate
+        .toDate()
+        .toLocaleTimeString()}`;
+    }
+    if (event.notStarted()) {
+      return `Can't Check in yet. Event has not started yet, and will start at ${event.startDate
+        .toDate()
+        .toLocaleTimeString()}`;
+    }
+  };
+  return (
+    <div className="flex-row flex w-full justify-center">
+      <div className="flex flex-col bg-default-50 w-[60%] h-32 gap-4 p-4 justify-center">
+        <h1 className="text-xl font-medium text-center">{getMessage()}</h1>
+      </div>
+    </div>
+  );
+}
+
 export default function StationEventPage() {
   const param = useParams();
   const [churchEvent, setChurchEvent] = useState<ChurchEvent>();
@@ -57,45 +133,19 @@ export default function StationEventPage() {
       <section className="flex flex-col w-full h-full py-16">
         <AddPersonModalForm isOpen={isOpen} onOpenChange={onOpenChange} />
         <div className="flex-row flex w-full justify-center">
-          {!selectedHousehold && (
-            <div className="flex w-[60%]">
-              <HouseholdPicker onHouseholdSelected={onHouseholdSelected} />{" "}
-            </div>
-          )}
-          {selectedHousehold && (
-            <StationCheckInForm
-              event={churchEvent}
-              household={selectedHousehold}
-              onSuccess={() => {
-                setSelectedHousehold(undefined);
-                toast.success("Checked in successfully", {
-                  position: "top-right",
-                  autoClose: 5000,
-                  hideProgressBar: false,
-                  closeOnClick: true,
-                  pauseOnHover: true,
-                  draggable: true,
-                  progress: undefined,
-                  transition: Bounce,
-                });
-              }}
-              onFailure={(error) => {
-                console.log(error);
-                toast.error(
-                  "Failed to check in. Please Contact Your Administrator",
-                  {
-                    position: "top-right",
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    transition: Bounce,
-                  }
-                );
+          {churchEvent && churchEvent.isActive() && (
+            <StationActiveEventPage
+              {...{
+                selectedHousehold,
+                onHouseholdSelected,
+                setSelectedHousehold,
+                churchEvent,
               }}
             />
+          )}
+
+          {churchEvent && !churchEvent.isActive() && (
+            <StationClosedEventPage event={churchEvent} />
           )}
         </div>
       </section>

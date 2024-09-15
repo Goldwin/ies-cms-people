@@ -27,14 +27,14 @@ export const ChurchEventHeader = ({
 
   useEffect(() => {
     setAvailableDates(
-      eventList?.map((event) => event.date.toString().split("T")[0]) || []
+      eventList?.map((event) => event.startDate.toString().split("T")[0]) || []
     );
 
     if (eventList) {
       let pos = 0;
       const now = Date.now();
       const countScore = (event: ChurchEvent): number => {
-        return event.date.toDate().getTime() - now;
+        return event.startDate.toDate().getTime() - now;
       };
       for (let i = 1; i < eventList?.length; i++) {
         if (countScore(eventList[i]) < 0) continue;
@@ -49,7 +49,7 @@ export const ChurchEventHeader = ({
   useEffect(() => {
     if (eventList) {
       const availableDateString = eventList.map(
-        (event) => event.date.toAbsoluteString().split("T")[0]
+        (event) => event.startDate.toAbsoluteString().split("T")[0]
       );
       setAvailableDates(availableDateString);
       setFocusedEvent(eventList?.[focusedEventIndex]);
@@ -67,7 +67,7 @@ export const ChurchEventHeader = ({
   useEffect(() => {
     if (focusedEvent) {
       onEventSelectionChange(focusedEvent);
-      setDateValue(focusedEvent.date);
+      setDateValue(focusedEvent.startDate);
     }
   }, [focusedEvent, onEventSelectionChange]);
 
