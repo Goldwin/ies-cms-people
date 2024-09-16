@@ -138,9 +138,13 @@ const OneTimeScheduleConfigForm = ({
             );
           }}
           rules={{
-            validate: (value) =>
-              value.toDate().getTime() > Date.now() ||
-              "Event date cannot be in the past",
+            validate: (value) => {
+              const now = new Date();
+              now.setHours(0, 0, 0, 0);
+              return (
+                value.toDate() >= now || "Event date cannot be in the past"
+              );
+            },
           }}
         />
       </CardBody>
