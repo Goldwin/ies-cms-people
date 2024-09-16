@@ -16,6 +16,7 @@ import {
 } from "@nextui-org/navbar";
 import { Skeleton, Tab, Tabs, useDisclosure } from "@nextui-org/react";
 import _ from "lodash";
+import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import Chart from "react-apexcharts";
 
@@ -37,6 +38,8 @@ export default function AttendancePage() {
   const [focusedEventId, setFocusedEventId] = useState<string>();
   const [focusedEventStats, setFocusedEventStats] =
     useState<EventScheduleStats>();
+
+  const { theme } = useTheme();
 
   useEffect(() => {
     eventSchedulesQuery.listEventSchedules("", 10).then((result) => {
@@ -130,7 +133,7 @@ export default function AttendancePage() {
                           fontWeight: "bold",
                         },
                       },
-                      theme: { mode: "dark" },
+                      theme: { mode: theme === "light" ? "light" : "dark" },
                     }}
                   />
                 )}

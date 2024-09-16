@@ -88,6 +88,19 @@ const HouseholdCard = ({
   );
 };
 
+const HouseholdLoadingCard = () => (
+  <Card className="w-full">
+    <CardHeader className="flex flex-row justify-between">
+      <h1 className="text-xl">Household</h1>
+    </CardHeader>
+    <CardBody className="gap-8 flex flex-col justify-center items-center">
+      <Skeleton className="gap-4 flex flex-col w-10/12 items-center">
+        loading
+      </Skeleton>
+    </CardBody>
+  </Card>
+);
+
 const NoHouseholdCard = ({
   person,
   onHouseholdOpen,
@@ -195,77 +208,91 @@ export default function PersonPage() {
         </section>
 
         <section className="col-start-2 col-end-7 items-start justify-start gap-4 py-8 md:py-10 px-4 h-full w-full flex flex-row">
-          <Skeleton isLoaded={!!person} className="w-[70%]">
-            <Card className="w-full">
-              <CardBody className="gap-8">
-                <div className="gap-4 flex flex-col">
-                  <div className="flex flex-row justify-between">
-                    <h1 className="text-xl">Contact Information</h1>
-                    <Button color="primary" size="sm" onPress={onPersonOpen}>
-                      Edit
-                    </Button>
-                  </div>
-                  <div className="gap-4 grid grid-cols-7 w-96">
-                    <p className="text-foreground-500 col-span-2 flex gap-1">
-                      <EmailIcon />
-                      Email
-                    </p>
-                    <p className="col-span-5">
-                      {person?.emailAddress ? person.emailAddress : "N/A"}
-                    </p>
-
-                    <p className="text-foreground-500 flex gap-1 col-span-2">
-                      <PhoneIcon /> Phone
-                    </p>
-                    <p className="col-span-5">
-                      {person?.phoneNumber ? person?.phoneNumber : "N/A"}
-                    </p>
-
-                    <p className="text-foreground-500 flex gap-1 col-span-2">
-                      <LocationIcon />
-                      Address
-                    </p>
-                    <p className="words-break col-span-5">
-                      {person?.address ? person?.address : "N/A"}
-                    </p>
-                  </div>
+          <Card className="w-[70%]">
+            <CardBody className="gap-8">
+              <div className="gap-4 flex flex-col">
+                <div className="flex flex-row justify-between">
+                  <h1 className="text-xl">Contact Information</h1>
+                  <Button color="primary" size="sm" onPress={onPersonOpen}>
+                    Edit
+                  </Button>
                 </div>
-                <div className="gap-4 flex flex-col">
-                  <div className="flex flex-row justify-between">
-                    <h1 className="text-xl">Personal Information</h1>
-                  </div>
-                  <div className="gap-4 grid grid-cols-7 w-96">
-                    <p className="text-foreground-500 flex gap-1 col-span-2">
-                      <GenderIcon /> Gender
-                    </p>
-                    <p className="col-span-5">
-                      {person?.gender ? person?.gender : "N/A"}
-                    </p>
-                    <p className="text-foreground-500 flex gap-1 col-span-2">
-                      <BirthdayIcon /> Birthday
-                    </p>
-                    <p className="col-span-5">
-                      {person?.birthday ? person?.getBirthdayString() : "N/A"}
-                    </p>
-                  </div>
+                <div className="gap-4 grid grid-cols-7 w-96">
+                  <p className="text-foreground-500 col-span-2 flex gap-1">
+                    <EmailIcon />
+                    Email
+                  </p>
+                  <Skeleton
+                    className="col-span-5"
+                    isLoaded={person !== undefined}
+                  >
+                    {person?.emailAddress ? person.emailAddress : "N/A"}
+                  </Skeleton>
+
+                  <p className="text-foreground-500 flex gap-1 col-span-2">
+                    <PhoneIcon /> Phone
+                  </p>
+                  <Skeleton
+                    className="col-span-5"
+                    isLoaded={person !== undefined}
+                  >
+                    {person?.phoneNumber ? person?.phoneNumber : "N/A"}
+                  </Skeleton>
+
+                  <p className="text-foreground-500 flex gap-1 col-span-2">
+                    <LocationIcon />
+                    Address
+                  </p>
+                  <Skeleton
+                    className="words-break col-span-5"
+                    isLoaded={person !== undefined}
+                  >
+                    {person?.address ? person?.address : "N/A"}
+                  </Skeleton>
                 </div>
-              </CardBody>
-            </Card>
-          </Skeleton>
-          <Skeleton isLoaded={!isHouseholdLoading} className="w-[30%]">
-            {household && (
+              </div>
+              <div className="gap-4 flex flex-col">
+                <div className="flex flex-row justify-between">
+                  <h1 className="text-xl">Personal Information</h1>
+                </div>
+                <div className="gap-4 grid grid-cols-7 w-96">
+                  <p className="text-foreground-500 flex gap-1 col-span-2">
+                    <GenderIcon /> Gender
+                  </p>
+                  <Skeleton
+                    className="col-span-5"
+                    isLoaded={person !== undefined}
+                  >
+                    {person?.gender ? person?.gender : "N/A"}
+                  </Skeleton>
+                  <p className="text-foreground-500 flex gap-1 col-span-2">
+                    <BirthdayIcon /> Birthday
+                  </p>
+                  <Skeleton
+                    className="col-span-5"
+                    isLoaded={person !== undefined}
+                  >
+                    {person?.birthday ? person?.getBirthdayString() : "N/A"}
+                  </Skeleton>
+                </div>
+              </div>
+            </CardBody>
+          </Card>
+          <div className="w-[30%]">
+            {isHouseholdLoading && <HouseholdLoadingCard />}
+            {!isHouseholdLoading && household && (
               <HouseholdCard
                 household={household}
                 onHouseholdOpen={onHouseholdUpdateModalOpen}
               />
             )}
-            {!household && (
+            {!isHouseholdLoading && !household && (
               <NoHouseholdCard
                 person={person}
                 onHouseholdOpen={onHouseholdCreationModalOpen}
               />
             )}
-          </Skeleton>
+          </div>
         </section>
       </div>
     </div>

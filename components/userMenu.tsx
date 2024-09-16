@@ -7,6 +7,7 @@ import {
   DropdownTrigger,
 } from "@nextui-org/react";
 import { redirect } from "next/navigation";
+import { ThemeSwitch } from "./theme-switch";
 
 export const UserMenu = () => {
   return (
@@ -32,6 +33,9 @@ export const UserMenu = () => {
           }
         >
           Logout
+        </DropdownItem>
+        <DropdownItem>
+          <ThemeSwitch />
         </DropdownItem>
       </DropdownMenu>
     </Dropdown>
