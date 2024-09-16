@@ -95,6 +95,40 @@ export const PhoneIcon: React.FC<IconSvgProps> = ({
   </svg>
 );
 
+export const DownloadIcon: React.FC<IconSvgProps> = ({
+  size = 24,
+  width,
+  height,
+  ...props
+}) => (
+  <svg
+    fill="currentColor"
+    height={size || height}
+    width={size || width}
+    version="1.1"
+    id="Capa_1"
+    stroke="currentColor"
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 29.978 29.978"
+    xmlSpace="preserve"
+  >
+    <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
+    <g
+      id="SVGRepo_tracerCarrier"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    ></g>
+    <g id="SVGRepo_iconCarrier">
+      <g>
+        <path d="M25.462,19.105v6.848H4.515v-6.848H0.489v8.861c0,1.111,0.9,2.012,2.016,2.012h24.967c1.115,0,2.016-0.9,2.016-2.012 v-8.861H25.462z"></path>
+        <path d="M14.62,18.426l-5.764-6.965c0,0-0.877-0.828,0.074-0.828s3.248,0,3.248,0s0-0.557,0-1.416c0-2.449,0-6.906,0-8.723 c0,0-0.129-0.494,0.615-0.494c0.75,0,4.035,0,4.572,0c0.536,0,0.524,0.416,0.524,0.416c0,1.762,0,6.373,0,8.742 c0,0.768,0,1.266,0,1.266s1.842,0,2.998,0c1.154,0,0.285,0.867,0.285,0.867s-4.904,6.51-5.588,7.193 C15.092,18.979,14.62,18.426,14.62,18.426z"></path>
+        <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g>
+        <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g>
+      </g>
+    </g>
+  </svg>
+);
+
 export const DangerIcon: React.FC<IconSvgProps> = ({
   size = 24,
   width,
@@ -114,17 +148,17 @@ export const DangerIcon: React.FC<IconSvgProps> = ({
     <path
       d="M12 6C12.5523 6 13 6.44772 13 7V13C13 13.5523 12.5523 14 12 14C11.4477 14 11 13.5523 11 13V7C11 6.44772 11.4477 6 12 6Z"
       fill="red"
-    ></path>{" "}
+    ></path>
     <path
       d="M12 16C11.4477 16 11 16.4477 11 17C11 17.5523 11.4477 18 12 18C12.5523 18 13 17.5523 13 17C13 16.4477 12.5523 16 12 16Z"
       fill="red"
-    ></path>{" "}
+    ></path>
     <path
       fillRule="evenodd"
       clipRule="evenodd"
       d="M12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2ZM4 12C4 16.4183 7.58172 20 12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4C7.58172 4 4 7.58172 4 12Z"
       fill="red"
-    ></path>{" "}
+    ></path>
   </svg>
 );
 

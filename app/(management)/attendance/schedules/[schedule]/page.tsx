@@ -14,6 +14,7 @@ import { Bounce, toast } from "react-toastify";
 import { EventGetStarted } from "@/components/attendance/schedules/event_getting_started";
 import { churchEventCommands } from "@/lib/commands/attendance/events";
 import { EventOverview } from "@/components/attendance/schedules/event_overview";
+import { EventReportList } from "@/components/attendance/reports/report";
 
 export default function EventPage() {
   const param = useParams();
@@ -128,7 +129,7 @@ export default function EventPage() {
             )}
           </Tab>
           <Tab key="report" title="Report">
-            Generate Report
+            <EventReportList classNames="mx-4 my-4 w-full" />
           </Tab>
           <Tab
             key="configuration-title"
