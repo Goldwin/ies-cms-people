@@ -74,9 +74,9 @@ class APIPersonCommands implements PersonCommands {
       }
       return peopleService
         .updateHousehold({
-          id: request.household.id!!,
+          id: request.household.id,
           name: request.household.name,
-          headPersonId: request.household.headId!!,
+          headPersonId: request.household.headId,
           memberPersonIds: [...request.household.memberIds, result.id],
         })
         .then((household) => {

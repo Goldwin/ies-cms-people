@@ -64,14 +64,13 @@ interface StageProp {
   onCancel: () => void;
 }
 
-const HouseholdSelectionMode = (props: StageProp) => {
+const HouseholdSelectionMode = ({ ...props }: StageProp) => {
   return (
     <div className="flex flex-row gap-4">
       <Card
         className="bg-default-100 w-64 h-64"
         isPressable
         onPress={() => {
-          console.log("Create Household");
           props.setStage(FormStage.CreateHousehold);
         }}
       >
@@ -94,7 +93,7 @@ const HouseholdSelectionMode = (props: StageProp) => {
   );
 };
 
-const CreateHouseholdForm = (props: StageProp) => {
+const CreateHouseholdForm = ({ ...props }: StageProp) => {
   const [isValid, setIsValid] = useState(true);
   const onCreateHousehold = () => {
     if (!props.household || props.household?.name === "") {
@@ -131,7 +130,7 @@ const CreateHouseholdForm = (props: StageProp) => {
   );
 };
 
-const AddPersonForm = (props: StageProp) => {
+const AddPersonForm = ({ ...props }: StageProp) => {
   const {
     register,
     handleSubmit,
@@ -140,20 +139,22 @@ const AddPersonForm = (props: StageProp) => {
   console.log(props.household);
   const genders = ["Male", "Female"];
   const maritalStatus = ["Single", "Married"];
-  const cancel = () => {
-    props.setHousehold({ id: "", name: "", isNewHousehold: false });
-    props.setStage(FormStage.HouseholdSelectionMode);
-  };
   const createPerson = (data: PersonData) => {
+    if (!props.household) {
+      props.onError("Household is not selected");
+      return;
+    }
     personCommands
       .addPerson({
-        household: props.household!!,
+        household: props.household,
         person: data,
       })
       .then((person: PersonInfo) => {
         props.onComplete(person);
       })
-      .catch((err) => {});
+      .catch((err) => {
+        props.onError(err);
+      });
   };
   return (
     <form
@@ -270,10 +271,10 @@ const AddPersonForm = (props: StageProp) => {
   );
 };
 
-const SearchExistingHouseholdForm = (props: StageProp) => {
+const SearchExistingHouseholdForm = ({ ...props }: StageProp) => {
   const [isValid, setIsValid] = useState(true);
   const next = () => {
-    if (!props.household || !props.household.id || props.household.id === "") {
+    if (!props.household?.id || props.household.id === "") {
       setIsValid(false);
       return;
     }
