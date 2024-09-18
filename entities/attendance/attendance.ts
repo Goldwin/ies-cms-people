@@ -19,6 +19,7 @@ export class ChurchActivityAttendance {
   checkinTime: Date;
 
   attendanceType: AttendanceType;
+  firstTime: boolean;
 
   constructor({
     id,
@@ -29,6 +30,7 @@ export class ChurchActivityAttendance {
     attendee,
     checkedInBy,
     attendanceType = AttendanceType.Regular,
+    firstTime = false,
   }: {
     id: string;
     activity: EventActivity;
@@ -38,6 +40,7 @@ export class ChurchActivityAttendance {
     attendee: PersonInfo;
     checkedInBy: PersonInfo;
     attendanceType: AttendanceType;
+    firstTime: boolean;
   }) {
     this.id = id;
     this.securityCode = securityCode;
@@ -47,6 +50,7 @@ export class ChurchActivityAttendance {
     this.checkedInBy = checkedInBy;
     this.activity = activity;
     this.attendanceType = attendanceType;
+    this.firstTime = firstTime;
   }
 
   getFullName(): string {

@@ -98,7 +98,6 @@ interface PersonDTO {
 }
 
 function toPersonInfo(person: PersonDTO): PersonInfo {
-  console.log(person);
   return new PersonInfo({
     id: person.id,
     firstName: person.firstName,
@@ -258,6 +257,7 @@ interface AttendanceDTO {
   securityNumber: number;
   checkinTime: string;
   attendanceType: string;
+  firstTime: boolean;
 }
 
 function toChurchActivityAttendance(
@@ -276,6 +276,7 @@ function toChurchActivityAttendance(
       time: new Date(dto.activity.time),
     }),
     attendanceType: dto.attendanceType as AttendanceType,
+    firstTime: dto.firstTime,
   });
 }
 
@@ -684,7 +685,6 @@ export class AttendanceService {
       .then((response) => {
         const data = response.data.data as AttendanceDTO[];
 
-        console.log(data);
         return data.map((attendance: AttendanceDTO) => {
           return toChurchActivityAttendance(attendance);
         });

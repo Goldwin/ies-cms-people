@@ -66,6 +66,14 @@ export class ChurchEvent {
     const now = new Date();
     return this.startDate.toDate() <= now && now <= this.endDate.toDate();
   }
+
+  getDateString(): string {
+    return this.startDate.toDate().toLocaleDateString("en-GB", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  }
 }
 
 export class ChurchEventLocation {

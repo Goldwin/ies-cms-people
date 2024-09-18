@@ -129,7 +129,7 @@ export default function EventPage() {
             )}
           </Tab>
           <Tab key="report" title="Report">
-            <EventReportList classNames="mx-4 my-4 w-full" />
+            <EventReportList classNames="mx-4 my-4 w-full" event={selectedChurchEvent}/>
           </Tab>
           <Tab
             key="configuration-title"
