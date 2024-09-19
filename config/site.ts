@@ -75,6 +75,16 @@ export const siteConfig = {
       href: "/logout",
     },
   ],
+  attendanceNavItems: [
+    {
+      label: "Events",
+      href: "/attendance",
+    },
+    {
+      label: "Labels",
+      href: "/attendance/labels",
+    }
+  ],
   links: {
     github: "https://github.com/Goldwin/ies-cms-people",
     // twitter: "https://twitter.com/getnextui",
