@@ -44,7 +44,7 @@ export const EventScheduleActivityConfigForm = ({
       return activity.toGenericObject()[key];
     }
     return (
-      <div className="flex flex-row gap-2">
+      <div className="space-x-2">
         <Button
           size="sm"
           color="primary"
