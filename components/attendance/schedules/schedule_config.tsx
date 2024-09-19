@@ -74,13 +74,13 @@ const WeeklyScheduleConfigForm = ({
   errors: FieldErrors<IEventConfigValue>;
 }) => {
   const weekdays = [
+    "Sunday",
     "Monday",
     "Tuesday",
     "Wednesday",
     "Thursday",
     "Friday",
     "Saturday",
-    "Sunday",
   ];
   return (
     <Card>
@@ -96,8 +96,8 @@ const WeeklyScheduleConfigForm = ({
         >
           {weekdays.map((day, index) => (
             <Checkbox
-              key={index + 1 + ""}
-              value={index + 1 + ""}
+              key={index + ""}
+              value={index + ""}
               {...register("schedule.days")}
             >
               {day}

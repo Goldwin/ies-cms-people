@@ -129,7 +129,21 @@ export default function EventPage() {
             )}
           </Tab>
           <Tab key="report" title="Report">
-            <EventReportList classNames="mx-4 my-4 w-full" event={selectedChurchEvent}/>
+            {isLoaded && churchEventList.length > 0 && (
+              <EventReportList
+                classNames="mx-4 my-4 w-full"
+                event={selectedChurchEvent}
+              />
+            )}
+            {isLoaded && churchEventList.length === 0 && (
+              <EventGetStarted
+                schedule={eventSchedule}
+                onConfigureScheduleSelected={() => {
+                  setSelectedTab("date");
+                }}
+                onCreateEventSelected={onCreateNextEvent}
+              />
+            )}
           </Tab>
           <Tab
             key="configuration-title"

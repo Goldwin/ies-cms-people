@@ -1,9 +1,8 @@
-import { DownloadIcon } from "@/components/icons";
 import { ChurchEvent } from "@/entities/attendance/events";
-import { Button } from "@nextui-org/button";
-import { Card, CardBody, CardHeader } from "@nextui-org/card";
+import { Card, CardBody, CardHeader } from "@nextui-org/react";
 import { Divider } from "@nextui-org/divider";
 import { DownloadPdfButton } from "./pdf/report_pdf";
+import { DownloadCsvButton } from "./csv/report_csv";
 
 interface ReportType {
   id: string;
@@ -38,10 +37,7 @@ const EventReportItem = ({
       >
         <h1 className="text-md font-bold">{reportType.name} Report</h1>
         <div className="flex flex-row gap-2">
-          <Button size="sm">
-            <DownloadIcon size={12} /> CSV
-          </Button>
-
+          <DownloadCsvButton event={event} config={reportType} />
           <DownloadPdfButton event={event} config={reportType} />
         </div>
       </CardBody>

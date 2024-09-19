@@ -13,8 +13,8 @@ import {
 } from "@nextui-org/react";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { PersonHeader } from "./header";
-import { PersonMenu } from "./menu";
+import { PersonHeader } from "../../../../components/people/person/header";
+import { PersonMenu } from "../../../../components/people/person/menu";
 import { PersonModal } from "@/components/people/person/personmodal";
 import { UpdateHouseholdModal } from "@/components/people/household/updatehouseholdmodal";
 import {
