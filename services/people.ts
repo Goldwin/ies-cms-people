@@ -22,21 +22,6 @@ const camelizeKeys: any = (obj: any) => {
   return obj;
 };
 
-const snakeCaseKeys: any = (obj: any) => {
-  if (Array.isArray(obj)) {
-    return obj.map((v) => snakeCaseKeys(v));
-  } else if (obj != null && obj.constructor === Object) {
-    return Object.keys(obj).reduce(
-      (result, key) => ({
-        ...result,
-        [snakeCase(key)]: snakeCaseKeys(obj[key]),
-      }),
-      {}
-    );
-  }
-  return obj;
-};
-
 interface SearchQuery {
   limit: number;
   lastID: string;
@@ -65,8 +50,8 @@ class PeopleService {
         url,
         {
           limit: searchQuery.limit,
-          last_id: searchQuery.lastID,
-          name_prefix: searchQuery.namePrefix ?? "",
+          lastId: searchQuery.lastID,
+          namePrefix: searchQuery.namePrefix ?? "",
         },
         { headers: { Authorization: `Bearer ${token}` } }
       )
@@ -84,7 +69,7 @@ class PeopleService {
     const url = API_URL + "/person";
     const token = getToken();
 
-    const payload = snakeCaseKeys(person);
+    const payload = person;
 
     return axios
       .post(url, payload, { headers: { Authorization: `Bearer ${token}` } })
@@ -94,6 +79,20 @@ class PeopleService {
       })
       .catch((error) => {
         output.onError(error);
+      });
+  }
+
+  async addPerson(person: Person): Promise<Person> {
+    const url = API_URL + "/person";
+    const token = getToken();
+
+    const payload = person;
+
+    return axios
+      .post(url, payload, { headers: { Authorization: `Bearer ${token}` } })
+      .then((response) => {
+        const result: Person = new Person(JSON.stringify(response.data.data));
+        return result;
       });
   }
 
@@ -146,7 +145,7 @@ class PeopleService {
     request: HouseholdCreationRequest
   ): Promise<Household | null | undefined> {
     const url = API_URL + "/household";
-    const payload = snakeCaseKeys(request);
+    const payload = request;
     return axios
       .post(url, payload, {
         headers: { Authorization: `Bearer ${getToken()}` },
@@ -161,7 +160,7 @@ class PeopleService {
 
   async updateHousehold(request: HouseholdUpdateRequest): Promise<Household> {
     const url = API_URL + "/household/" + request.id;
-    const payload = snakeCaseKeys(request);
+    const payload = request;
     return axios
       .put(url, payload, {
         headers: { Authorization: `Bearer ${getToken()}` },
@@ -186,7 +185,7 @@ class PeopleService {
   async update(personId: string, person: Person, output: Output<Person>) {
     const url = API_URL + "/person/" + personId;
     const token = getToken();
-    const payload = snakeCaseKeys(person);
+    const payload = person;
     return axios
       .put(url, payload, { headers: { Authorization: `Bearer ${token}` } })
       .then((response) => {

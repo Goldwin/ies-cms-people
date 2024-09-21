@@ -11,7 +11,7 @@ import { UserMenu } from "@/components/userMenu";
 const appName = "People Management";
 export const Navbar = () => {
   return (
-    <NextUINavbar maxWidth="full" position="sticky" className="bg-default-50">
+    <NextUINavbar maxWidth="full" position="static" className="bg-default-50">
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
         <NavbarBrand as="li" className="gap-3 max-w-fit">
           <AppMenu title={appName} />

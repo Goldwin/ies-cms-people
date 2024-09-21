@@ -3,9 +3,11 @@ import { Metadata, Viewport } from "next";
 import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
 import { Providers } from "@/components/providers";
-import { Navbar } from "@/components/people/navbar";
+import { Navbar } from "@/components/attendance/navbar";
 import { Link } from "@nextui-org/link";
 import clsx from "clsx";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export const metadata: Metadata = {
   title: {
@@ -41,11 +43,12 @@ export default function RootLayout({
           fontSans.variable
         )}
       >
+        <ToastContainer theme="dark" />
         <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
+          <Navbar title="Attendance" />
           <div className="relative flex flex-col h-screen">
-            <Navbar />
             <main className="mx-0 flex-grow">{children}</main>
-            <footer className="w-full flex items-center justify-center py-3">
+            <footer className="w-full flex items-center justify-center py-3 border-t border-default-100 border-solid">
               <Link
                 isExternal
                 className="flex items-center gap-1 text-current"

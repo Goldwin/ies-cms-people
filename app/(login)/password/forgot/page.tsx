@@ -55,6 +55,7 @@ export default function ForgotPasswordPage() {
             label="Email"
             placeholder="Enter your email"
             errorMessage={errors.email?.message}
+            isInvalid={!!errors.email}
             {...register("email", {
               required: "Email is Required",
               pattern: {

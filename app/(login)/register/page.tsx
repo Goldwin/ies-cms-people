@@ -29,7 +29,6 @@ const EmailConfirmationStage = (
 ): any => {
   const onSubmit: SubmitHandler<IRegistrationInput> = (data) => {
     appService.requestRegistrationOTP(data.email).then(() => {
-      console.log(data);
       nextStage();
     });
   };
@@ -66,7 +65,6 @@ const OTPConfirmationStage = (
   errors: any
 ): any => {
   const onSubmit: SubmitHandler<IRegistrationInput> = (data) => {
-    console.log(data);
     nextStage();
   };
   return (
@@ -98,7 +96,6 @@ const RegistrationStage = (
   register: UseFormRegister<IRegistrationInput>,
   errors: any
 ): any => {
-  console.log("registering");
   const onSubmit: SubmitHandler<IRegistrationInput> = (data) => {
     appService
       .register({

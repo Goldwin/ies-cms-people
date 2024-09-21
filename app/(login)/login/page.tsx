@@ -12,6 +12,7 @@ import {
 } from "@nextui-org/react";
 import { login } from "@/lib/commands/login";
 import { redirect } from "next/navigation";
+import { Bounce, toast } from "react-toastify";
 
 interface ILoginInput {
   email: string;
@@ -19,13 +20,26 @@ interface ILoginInput {
 }
 
 const onSubmit: SubmitHandler<ILoginInput> = (data) =>
-  login(data.email, data.password).then((data) => {
-    try {
-      redirect("/");
-    } catch (error) {
-      window.location.href = "/";
-    }
-  });
+  login(data.email, data.password)
+    .then((data) => {
+      try {
+        redirect("/");
+      } catch (error) {
+        window.location.href = "/";
+      }
+    })
+    .catch((error) => {
+      toast(error.response.data.error.message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        transition: Bounce,
+      });
+    });
 
 export default function LoginPage() {
   const {
@@ -52,6 +66,7 @@ export default function LoginPage() {
             label="Email"
             placeholder="Enter your email"
             errorMessage={errors.email && "Email is Required"}
+            isInvalid={!!errors.email}
             {...register("email", { required: true })}
           />
           <Input
@@ -59,6 +74,7 @@ export default function LoginPage() {
             label="Password"
             placeholder="Enter your password"
             errorMessage={errors.password && "Password is Required"}
+            isInvalid={!!errors.password}
             {...register("password", { required: true })}
           />
           <div className="flex-row flex gap-4 justify-between">

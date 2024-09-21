@@ -69,15 +69,16 @@ const PersonCombo = ({
       }}
       onKeyDown={(e: any) => e.continuePropagation()}
       scrollRef={{ current: null }}
+      onSelectionChange={(id) => {
+        const person = personList.find((p) => p.id === id);
+        if (person) {
+          onPersonSelected?.(person);
+        }
+      }}
       isLoading={isLoading}
     >
       {personList.map((person) => (
-        <AutocompleteItem
-          key={person.id}
-          onClick={() => {
-            onPersonSelected?.(person);
-          }}
-        >
+        <AutocompleteItem key={person.id}>
           {person.getFullName()}
         </AutocompleteItem>
       ))}
@@ -191,17 +192,15 @@ export const UpdateHouseholdModal = ({
   }, [personList, unregister, primaryPersonId]);
 
   const updateHousehold = (request: HouseholdUpdateRequest) => {
-    let members = request.memberPersonIds ? request.memberPersonIds : [];
-    console.log(members);
-    members = members.filter((id) => id !== request.headPersonId);
-    console.log(members);
+    let members = personList.map((p) => p.id);
+    members = members.filter((id) => id !== primaryPersonId);
 
     peopleService
       .updateHousehold({
         id: request.id,
         name: request.name,
         memberPersonIds: members,
-        headPersonId: request.headPersonId,
+        headPersonId: primaryPersonId,
       })
       .then((updatedHousehold) => {
         if (updatedHousehold) onSuccess(updatedHousehold);
@@ -210,6 +209,9 @@ export const UpdateHouseholdModal = ({
       .catch((error) => {
         console.log(error);
       });
+  };
+  const removePersonFromList = (person: Person) => {
+    setPersonList(personList.filter((p) => p.id !== person.id));
   };
 
   return (
@@ -246,17 +248,9 @@ export const UpdateHouseholdModal = ({
                     <CardHeader className="flex flex-row justify-between w-full">
                       <User name={person.getFullName()} />
                       {primaryPersonId == person.id && (
-                        <>
-                          <input
-                            type="hidden"
-                            defaultValue={person.id}
-                            key={person.id}
-                            {...register("headPersonId")}
-                          />
-                          <Chip color="success" className="text-white">
-                            Primary
-                          </Chip>
-                        </>
+                        <Chip color="success" className="text-white">
+                          Primary
+                        </Chip>
                       )}
 
                       <input
@@ -286,9 +280,7 @@ export const UpdateHouseholdModal = ({
                         color="danger"
                         size="sm"
                         onClick={() => {
-                          setPersonList(
-                            personList.filter((p) => p.id !== person.id)
-                          );
+                          removePersonFromList(person);
                         }}
                       >
                         Remove

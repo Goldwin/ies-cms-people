@@ -45,6 +45,7 @@ export default function ForgotPasswordPage() {
             placeholder="New Password"
             errorMessage={errors.password?.message}
             autoComplete="new-password"
+            isInvalid={!!errors.password}
             {...register("password", {
               required: "New Password is Required",
             })}
@@ -54,6 +55,7 @@ export default function ForgotPasswordPage() {
             label="Confirm Password"
             placeholder="Confirm Password"
             autoComplete="new-password"
+            isInvalid={!!errors.confirmPassword}
             errorMessage={errors.confirmPassword?.message}
             {...register("confirmPassword", {
               required: "Confirm Password is Required",
