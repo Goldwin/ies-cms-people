@@ -169,7 +169,7 @@ export const EventCheckInList = ({
             variant="solid"
             target="_blank"
           >
-            Open Check-in Station
+            Open Check-in Page
           </Button>
         </div>
         <AttendanceFilterBar
