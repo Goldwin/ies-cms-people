@@ -8,8 +8,10 @@ import {
   CardHeader,
   Input,
 } from "@nextui-org/react";
-import { useEffect, useState } from "react";
+import { useTheme } from "next-themes";
+import { useState } from "react";
 import { SubmitHandler, useForm, UseFormRegister } from "react-hook-form";
+import { toast } from "react-toastify";
 
 interface IRegistrationInput {
   email: string;
@@ -27,10 +29,25 @@ const EmailConfirmationStage = (
   register: any,
   errors: any
 ): any => {
+  const { theme } = useTheme();
   const onSubmit: SubmitHandler<IRegistrationInput> = (data) => {
-    appService.requestRegistrationOTP(data.email).then(() => {
-      nextStage();
-    });
+    appService
+      .requestRegistrationOTP(data.email)
+      .then(() => {
+        nextStage();
+      })
+      .catch((error) => {
+        toast.error(error.message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: theme === "light" ? "light" : "dark",
+        });
+      });
   };
 
   return (
@@ -77,6 +94,7 @@ const OTPConfirmationStage = (
         label="OTP"
         placeholder="Enter OTP sent to your email"
         errorMessage={errors.otp?.message}
+        defaultValue=""
         {...register("otp", {
           required: "Otp is Required",
         })}
@@ -96,6 +114,7 @@ const RegistrationStage = (
   register: UseFormRegister<IRegistrationInput>,
   errors: any
 ): any => {
+  const { theme } = useTheme();
   const onSubmit: SubmitHandler<IRegistrationInput> = (data) => {
     appService
       .register({
@@ -108,6 +127,18 @@ const RegistrationStage = (
       })
       .then(() => {
         nextStage();
+      })
+      .catch((error) => {
+        toast.error(error.response.data.error.message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: theme === "light" ? "light" : "dark",
+        });
       });
   };
   return (
@@ -183,12 +214,9 @@ const CompletionStage = (
   register: any,
   errors: any
 ) => {
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      window.location.href = "/login";
-    }, 5000);
-    return () => clearTimeout(timeoutId);
-  }, []);
+  setTimeout(() => {
+    window.location.href = "/login";
+  }, 5000);
   return (
     <div>
       <p>Registration Successful</p>

@@ -29,7 +29,7 @@ const onSubmit: SubmitHandler<ILoginInput> = (data) =>
       }
     })
     .catch((error) => {
-      toast(error.response.data.error.message, {
+      toast.error(error.response.data.error.message, {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
