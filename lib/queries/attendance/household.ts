@@ -1,5 +1,6 @@
 import { HouseholdInfo, PersonInfo } from "@/entities/attendance/person";
 import { attendanceService } from "@/services/attendance";
+import peopleService from "@/services/people";
 
 export interface HouseholdFilter {
   name: string;
@@ -10,75 +11,53 @@ export interface HouseholdQuery {
   listHouseholds(filter: HouseholdFilter): Promise<HouseholdInfo[]>;
 }
 
-class MockHouseholdQuery implements HouseholdQuery {
-  private readonly _householdList: HouseholdInfo[];
+interface HouseholdDTO {
+  id: string;
+  name: string;
+  pictureUrl: string;
+  householdHead: PersonDTO;
+  members: PersonDTO[];
+}
 
-  constructor() {
-    this._householdList = [
-      new HouseholdInfo({
-        id: "1111",
-        name: "Doe",
-        pictureUrl: "",
-        householdHead: new PersonInfo({
-          id: "111",
-          firstName: "John",
-          lastName: "Doe",
-          profilePictureUrl: "",
-          age: 30,
-        }),
-        members: [
-          new PersonInfo({
-            id: "222",
-            firstName: "Jane",
-            lastName: "Doe",
-            profilePictureUrl: "",
-            age: 25,
-          }),
-          new PersonInfo({
-            id: "333",
-            firstName: "Jack",
-            lastName: "Doe",
-            profilePictureUrl: "",
-            age: 25,
-          }),
-        ],
-      }),
-      new HouseholdInfo({
-        id: "2222",
-        name: "Smith",
-        pictureUrl: "",
-        householdHead: new PersonInfo({
-          id: "444",
-          firstName: "John",
-          lastName: "Smith",
-          profilePictureUrl: "",
-          age: 30,
-        }),
-        members: [
-          new PersonInfo({
-            id: "555",
-            firstName: "Jane",
-            lastName: "Smith",
-            profilePictureUrl: "",
-            age: 25,
-          }),
-        ],
-      }),
-    ];
-  }
-  listHouseholds(filter: HouseholdFilter): Promise<HouseholdInfo[]> {
-    return Promise.resolve(
-      this._householdList.filter((h) => h.name.includes(filter.name))
-    );
-  }
+interface PersonDTO {
+  id: string;
+  personId: string;
+  firstName: string;
+  lastName: string;
+  profilePictureUrl: string;
+  age: number;
+}
+
+function toPersonInfo(person: PersonDTO): PersonInfo {
+  return new PersonInfo({
+    id: person.id,
+    firstName: person.firstName,
+    lastName: person.lastName,
+    profilePictureUrl: person.profilePictureUrl,
+    age: person.age,
+  });
+}
+
+function toHouseholdInfo(household: HouseholdDTO): HouseholdInfo {
+  return new HouseholdInfo({
+    id: household.id,
+    name: household.name,
+    pictureUrl: household.pictureUrl,
+    householdHead: toPersonInfo(household.householdHead),
+    members: household.members.map((member) => toPersonInfo(member)),
+  });
 }
 
 class APIHouseholdQuery implements HouseholdQuery {
   async listHouseholds(filter: HouseholdFilter): Promise<HouseholdInfo[]> {
-    return attendanceService.searchHousehold({
-      name: filter.name,
-      limit: filter.limit,
-    });
+    return peopleService
+      .searchHousehold({
+        name: filter.name,
+        limit: filter.limit,
+      })
+      .then((households) => {
+        return households.map((h) => toHouseholdInfo(h));
+      });
   }
 }
 

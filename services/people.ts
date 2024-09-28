@@ -41,6 +41,32 @@ interface HouseholdUpdateRequest {
   headPersonId: string;
 }
 
+interface HouseholdDTO {
+  id: string;
+  name: string;
+  pictureUrl: string;
+  householdHead: PersonDTO;
+  members: PersonDTO[];
+}
+
+interface PersonDTO {
+  id: string;
+  personId: string;
+  firstName: string;
+  lastName: string;
+  profilePictureUrl: string;
+  age: number;
+}
+
+interface PersonDTO {
+  id: string;
+  personId: string;
+  firstName: string;
+  lastName: string;
+  profilePictureUrl: string;
+  age: number;
+}
+
 class PeopleService {
   async searchPerson(searchQuery: SearchQuery): Promise<Person[]> {
     const url = API_URL + "/search";
@@ -65,8 +91,36 @@ class PeopleService {
       });
   }
 
+  public async searchHousehold({
+    name,
+    limit = 200,
+  }: {
+    name: string;
+    limit: number;
+  }): Promise<HouseholdDTO[]> {
+    const url = `${API_URL}/households/search`;
+    return axios
+      .post(
+        url,
+        {
+          namePrefix: name,
+          limit: limit,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${getToken()}`,
+          },
+        }
+      )
+      .then((response) => {
+        const data: HouseholdDTO[] = response.data.data as HouseholdDTO[];
+
+        return data
+      });
+  }
+
   async add(person: Person, output: Output<Person>) {
-    const url = API_URL + "/person";
+    const url = API_URL + "/persons";
     const token = getToken();
 
     const payload = person;
@@ -83,7 +137,7 @@ class PeopleService {
   }
 
   async addPerson(person: Person): Promise<Person> {
-    const url = API_URL + "/person";
+    const url = API_URL + "/persons";
     const token = getToken();
 
     const payload = person;
@@ -97,7 +151,7 @@ class PeopleService {
   }
 
   async get(personId: string, output: Output<Person>) {
-    const url = API_URL + "/person/" + personId;
+    const url = API_URL + "/persons/" + personId;
     const token = getToken();
 
     return axios
@@ -112,7 +166,7 @@ class PeopleService {
   }
 
   async getHousehold(personId: string): Promise<Household | null | undefined> {
-    const url = API_URL + "/person/" + personId + "/household";
+    const url = API_URL + "/persons/" + personId + "/household";
     return axios
       .get(url, { headers: { Authorization: `Bearer ${getToken()}` } })
       .then((response) => {
@@ -130,7 +184,7 @@ class PeopleService {
   }
 
   async delete(personId: string): Promise<boolean> {
-    const url = API_URL + "/person/" + personId;
+    const url = API_URL + "/persons/" + personId;
     return axios
       .delete(url, { headers: { Authorization: `Bearer ${getToken()}` } })
       .then((response) => {
@@ -159,7 +213,7 @@ class PeopleService {
   }
 
   async updateHousehold(request: HouseholdUpdateRequest): Promise<Household> {
-    const url = API_URL + "/household/" + request.id;
+    const url = API_URL + "/households/" + request.id;
     const payload = request;
     return axios
       .put(url, payload, {
@@ -174,7 +228,7 @@ class PeopleService {
   }
 
   async deleteHousehold(householdId: string): Promise<boolean> {
-    const url = API_URL + "/household/" + householdId;
+    const url = API_URL + "/households/" + householdId;
     return axios
       .delete(url, { headers: { Authorization: `Bearer ${getToken()}` } })
       .then((response) => {
@@ -183,7 +237,7 @@ class PeopleService {
   }
 
   async update(personId: string, person: Person, output: Output<Person>) {
-    const url = API_URL + "/person/" + personId;
+    const url = API_URL + "/persons/" + personId;
     const token = getToken();
     const payload = person;
     return axios

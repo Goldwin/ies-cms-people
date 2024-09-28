@@ -107,16 +107,6 @@ function toPersonInfo(person: PersonDTO): PersonInfo {
   });
 }
 
-function toHouseholdInfo(household: HouseholdDTO): HouseholdInfo {
-  return new HouseholdInfo({
-    id: household.id,
-    name: household.name,
-    pictureUrl: household.pictureUrl,
-    householdHead: toPersonInfo(household.householdHead),
-    members: household.members.map((member) => toPersonInfo(member)),
-  });
-}
-
 function toChurchEvent(data: EventDTO): ChurchEvent {
   return new ChurchEvent({
     id: data.id,
@@ -447,36 +437,6 @@ export class AttendanceService {
             return toChurchActivityAttendance(attendance);
           }
         );
-      });
-  }
-
-  public async searchHousehold({
-    name,
-    limit = 200,
-  }: {
-    name: string;
-    limit: number;
-  }): Promise<HouseholdInfo[]> {
-    const url = `${API_URL}/households/search`;
-    return axios
-      .post(
-        url,
-        {
-          namePrefix: name,
-          limit: limit,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${getToken()}`,
-          },
-        }
-      )
-      .then((response) => {
-        const data: HouseholdDTO[] = response.data.data as HouseholdDTO[];
-
-        return data.map((household: HouseholdDTO): HouseholdInfo => {
-          return toHouseholdInfo(household);
-        });
       });
   }
 
