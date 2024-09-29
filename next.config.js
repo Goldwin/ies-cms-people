@@ -7,12 +7,7 @@ const nextConfig = {
     config.plugins.push(new webpack.EnvironmentPlugin(myEnv));
     return config;
   },
-  images: { unoptimized: true },
-  output: "export",
-  distDir: "_static",
-  experimental: {
-    missingSuspenseWithCSRBailout: false,
-  },
+  output: "standalone",
 };
 
 module.exports = nextConfig;
