@@ -58,6 +58,7 @@ export function HouseholdPicker(prop: Readonly<HouseholdPickerProp>) {
         onInputChange(value);
       }}
       onSelectionChange={(value) => {
+        if (!value) return;
         if (householdMap?.[value]) {
           prop.onHouseholdSelected?.(householdMap[value]);
         } else {

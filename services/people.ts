@@ -2,7 +2,7 @@
 import { getToken } from "@/lib/commands/login";
 import { Person } from "@/entities/people/person";
 import axios from "axios";
-import { camelCase, snakeCase } from "lodash";
+import { camelCase } from "lodash";
 import { Household } from "@/entities/people/household";
 
 const API_URL = process.env.PEOPLE_URL ?? "";
@@ -115,7 +115,7 @@ class PeopleService {
       .then((response) => {
         const data: HouseholdDTO[] = response.data.data as HouseholdDTO[];
 
-        return data
+        return data;
       });
   }
 
@@ -198,7 +198,7 @@ class PeopleService {
   async createHousehold(
     request: HouseholdCreationRequest
   ): Promise<Household | null | undefined> {
-    const url = API_URL + "/household";
+    const url = API_URL + "/households";
     const payload = request;
     return axios
       .post(url, payload, {

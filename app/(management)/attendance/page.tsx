@@ -24,7 +24,7 @@ const ChurchEventAction = ({ churchEvent }: { churchEvent: EventSchedule }) => {
   return (
     <Link
       size="sm"
-      href={"/attendance/events/" + churchEvent.id}
+      href={"/attendance/events?schedule=" + churchEvent.id}
       className="hover:text-secondary"
     >
       <PencilIcon />
