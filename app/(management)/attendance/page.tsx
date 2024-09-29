@@ -18,7 +18,9 @@ import { Skeleton, Tab, Tabs, useDisclosure } from "@nextui-org/react";
 import _ from "lodash";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
-import Chart from "react-apexcharts";
+import dynamic from "next/dynamic";
+
+const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 const ChurchEventAction = ({ churchEvent }: { churchEvent: EventSchedule }) => {
   return (
