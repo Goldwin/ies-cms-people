@@ -27,7 +27,7 @@ interface CsvReportData {
 }
 
 function generateCsvBlob(data: CsvReportData): Blob {
-  const csvConfig = mkConfig({ useKeysAsHeaders: true, fieldSeparator:";" });
+  const csvConfig = mkConfig({ useKeysAsHeaders: true, fieldSeparator: ";" });
   const generate = generateCsv(csvConfig);
   const output = generate(
     data.attendances.map((attendance) => ({
