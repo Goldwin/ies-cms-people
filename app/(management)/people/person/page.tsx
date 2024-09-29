@@ -11,7 +11,7 @@ import {
   User,
   useDisclosure,
 } from "@nextui-org/react";
-import { useParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { PersonHeader } from "../../../../components/people/person/header";
 import { PersonMenu } from "../../../../components/people/person/menu";
@@ -130,7 +130,7 @@ const NoHouseholdCard = ({
 );
 
 export default function PersonPage() {
-  const param = useParams();
+  const searchParams = useSearchParams();
   const [person, setPerson] = useState<Person | undefined>();
   const [household, setHousehold] = useState<Household | undefined>();
   const [isHouseholdLoading, setIsHouseholdLoading] = useState<boolean>(true);
@@ -152,14 +152,15 @@ export default function PersonPage() {
   } = useDisclosure();
 
   useEffect(() => {
-    peopleService.get(param.person as string, {
+    const id = searchParams.get("id") as string;
+    peopleService.get(searchParams.get("id") as string, {
       onSuccess: (person) => {
         setPerson(person);
       },
       onError: (error) => {},
     });
     peopleService
-      .getHousehold(param.person as string)
+      .getHousehold(id)
       .then((household) => {
         if (household) setHousehold(household);
         setIsHouseholdLoading(false);
@@ -167,7 +168,7 @@ export default function PersonPage() {
       .catch((error) => {
         console.log("error when getting household", error);
       });
-  }, [param.person]);
+  }, [searchParams]);
   return (
     <div className="h-full flex flex-col">
       <PersonModal
@@ -204,7 +205,7 @@ export default function PersonPage() {
       <PersonHeader person={person} />
       <div className="grid grid-cols-6 items-center justify-start divide-x divide-default-100 h-full">
         <section className="col-start-1 col-end-2 items-start justify-start gap-4 py-4 md:py-10 px-4 h-full">
-          <PersonMenu id={param.person as string} focus="Profile" />
+          <PersonMenu id={searchParams.get("id") as string} focus="Profile" />
         </section>
 
         <section className="col-start-2 col-end-7 items-start justify-start gap-4 py-8 md:py-10 px-4 h-full w-full flex flex-row">

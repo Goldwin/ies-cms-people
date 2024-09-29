@@ -18,7 +18,7 @@ export const PersonMenu = ({ id, focus }: { id: string; focus?: string }) => {
       {menuList.map((menu) => (
         <Link
           key={menu.name}
-          href={`/people/${id}${menu.link}`}
+          href={`/people/person?id=${id}&menu=${menu.link}`}
           color="foreground"
           underline={menu.name === focus ? "always" : "none"}
         >

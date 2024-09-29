@@ -7,7 +7,6 @@ import { EventSchedule } from "@/entities/attendance/schedules";
 import { eventQuery } from "@/lib/queries/attendance/event";
 import { eventSchedulesQuery } from "@/lib/queries/attendance/event_schedules";
 import { Tab, Tabs } from "@nextui-org/react";
-import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { EventScheduleConfigForm } from "@/components/attendance/schedules/schedule_config";
 import { Bounce, toast } from "react-toastify";
@@ -15,9 +14,10 @@ import { EventGetStarted } from "@/components/attendance/schedules/event_getting
 import { churchEventCommands } from "@/lib/commands/attendance/events";
 import { EventOverview } from "@/components/attendance/schedules/event_overview";
 import { EventReportList } from "@/components/attendance/reports/report";
+import { useSearchParams } from "next/navigation";
 
 export default function EventPage() {
-  const param = useParams();
+  const searchParams = useSearchParams();
   const [eventSchedule, setEventSchedule] = useState<EventSchedule>();
   const [churchEventList, setChurchEventList] = useState<ChurchEvent[]>([]);
   const [selectedChurchEvent, setSelectedChurchEvent] = useState<ChurchEvent>();
@@ -26,9 +26,9 @@ export default function EventPage() {
 
   useEffect(() => {
     eventSchedulesQuery
-      .getEventSchedule(param.schedule as string)
+      .getEventSchedule(searchParams.get("schedule") as string)
       .then(setEventSchedule);
-  }, [param]);
+  }, [searchParams]);
 
   useEffect(() => {
     if (eventSchedule) {
