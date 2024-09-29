@@ -9,6 +9,7 @@ const nextConfig = {
   },
   images: { unoptimized: true },
   output: "export",
+  distDir: "_static",
   experimental: {
     missingSuspenseWithCSRBailout: false,
   },
