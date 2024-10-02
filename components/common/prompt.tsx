@@ -7,7 +7,7 @@ import {
   ModalHeader,
   useDisclosure,
 } from "@nextui-org/react";
-import { ReactNode } from "react";
+import React, { ReactNode } from "react";
 
 export const ButtonWithPrompt = ({
   color,

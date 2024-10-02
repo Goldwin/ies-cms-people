@@ -3,6 +3,7 @@ import { Card, CardBody, CardHeader } from "@nextui-org/react";
 import { Divider } from "@nextui-org/divider";
 import { DownloadPdfButton } from "./pdf/report_pdf";
 import { DownloadCsvButton } from "./csv/report_csv";
+import React from "react";
 
 interface ReportType {
   id: string;
