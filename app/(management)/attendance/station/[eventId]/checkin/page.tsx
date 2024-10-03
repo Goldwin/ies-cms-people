@@ -5,7 +5,7 @@ import { HouseholdPicker } from "@/components/attendance/station/station_househo
 import { ChurchEvent } from "@/entities/attendance/events";
 import { HouseholdInfo } from "@/entities/attendance/person";
 import { eventQuery } from "@/lib/queries/attendance/event";
-import { useSearchParams } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Bounce, toast } from "react-toastify";
 import { AddPersonModalForm } from "@/components/attendance/station/station_addperson";
@@ -88,7 +88,7 @@ function StationClosedEventPage({ event }: Readonly<{ event: ChurchEvent }>) {
 }
 
 export default function StationEventPage() {
-  const searchParams = useSearchParams();
+  const {eventId} = useParams();
   const [churchEvent, setChurchEvent] = useState<ChurchEvent>();
   const [selectedHousehold, setSelectedHousehold] = useState<
     HouseholdInfo | undefined
@@ -97,10 +97,10 @@ export default function StationEventPage() {
   const { isOpen, onOpenChange } = useDisclosure();
 
   useEffect(() => {
-    const eventId = searchParams.get("event") as string;
-    const scheduleId = eventId.split(".")[0];
+    const id = eventId as string;
+    const scheduleId = id.split(".")[0];
     eventQuery
-      .getEvent(scheduleId, eventId)
+      .getEvent(scheduleId, id)
       .then(setChurchEvent)
       .catch((err) => {
         toast.error(err.response.data.message, {
@@ -114,7 +114,7 @@ export default function StationEventPage() {
           transition: Bounce,
         });
       });
-  }, [searchParams]);
+  }, [eventId]);
 
   const onHouseholdSelected = (household: HouseholdInfo) => {
     setSelectedHousehold(household);
