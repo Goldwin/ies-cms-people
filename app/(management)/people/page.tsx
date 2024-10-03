@@ -23,9 +23,9 @@ import {
   Button,
 } from "@nextui-org/react";
 import { useInfiniteScroll } from "@nextui-org/use-infinite-scroll";
-import { useRef, useState } from "react";
 import { Key } from "react-stately";
 import { PersonModal } from "@/components/people/person/personmodal";
+import React, { useRef, useState } from "react";
 
 const columns = [
   // { key: "profilePictureUrl", label: "Profile Picture", searchable:false },
@@ -148,6 +148,7 @@ export default function PeoplePage() {
 
   const [loaderRef, scrollerRef] = useInfiniteScroll({
     hasMore,
+
     onLoadMore: () => {
       setIsLoading(true);
       search();

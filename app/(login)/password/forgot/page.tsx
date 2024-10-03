@@ -3,6 +3,8 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { Button, Card, CardBody, CardHeader, Input } from "@nextui-org/react";
 import { forgotPassword } from "@/lib/commands/login";
 import { useState } from "react";
+import { toast } from "react-toastify";
+import { useTheme } from "next-themes";
 
 interface IForgotPasswordInput {
   email: string;
@@ -10,6 +12,8 @@ interface IForgotPasswordInput {
 
 export default function ForgotPasswordPage() {
   const [resetPasswordStage, setResetPasswordStage] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+  const {theme} = useTheme();
 
   const {
     register,
@@ -23,7 +27,26 @@ export default function ForgotPasswordPage() {
   });
 
   const onSubmit: SubmitHandler<IForgotPasswordInput> = (data) => {
-    forgotPassword(data.email).then(() => setResetPasswordStage(1));
+    setIsLoading(true);
+    forgotPassword(data.email)
+      .then(() => setResetPasswordStage(1))
+      .catch((err) => {
+        if (err.response.data.error.code === 20402) {
+          toast.error("Account Not Found", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: theme === "light" ? "light" : "dark",
+          });
+        } else {
+          toast.error(err.response.data.error.message, {});
+        }
+      })
+      .finally(() => setIsLoading(false));
   };
   if (resetPasswordStage > 0) {
     return (
@@ -65,7 +88,12 @@ export default function ForgotPasswordPage() {
             })}
           />
           <div className="flex-row flex gap-4 justify-between">
-            <Button className="w-full" type="submit" color="primary">
+            <Button
+              className="w-full"
+              type="submit"
+              color="primary"
+              isLoading={isLoading}
+            >
               Reset
             </Button>
           </div>
