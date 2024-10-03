@@ -75,7 +75,7 @@ const columnMapping: ColumnMapping = {
 const getMapping = (person: Person, columnKey: Key) => {
   if (columnKey.toString() == "name") {
     return (
-      <Link href={`/people/person?id=${person.id}`} color="foreground">
+      <Link href={`/people/${person.id}`} color="foreground">
         <User
           description={<p className="text-primary">{person.emailAddress}</p>}
           name={person.getFullName()}

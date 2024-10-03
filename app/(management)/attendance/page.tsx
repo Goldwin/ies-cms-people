@@ -26,7 +26,7 @@ const ChurchEventAction = ({ churchEvent }: { churchEvent: EventSchedule }) => {
   return (
     <Link
       size="sm"
-      href={"/attendance/events?schedule=" + churchEvent.id}
+      href={`/attendance/events/${churchEvent.id}`}
       className="hover:text-secondary"
     >
       <PencilIcon />
@@ -111,7 +111,7 @@ export default function AttendancePage() {
               key={churchEvent.id}
               title={
                 <div className="flex flex-row justify-between w-full">
-                  <p className="flex">{churchEvent.name}</p>{" "}
+                  <p className="flex">{churchEvent.name}</p>
                   <ChurchEventAction churchEvent={churchEvent} />
                 </div>
               }

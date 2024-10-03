@@ -14,10 +14,10 @@ import { EventGetStarted } from "@/components/attendance/schedules/event_getting
 import { churchEventCommands } from "@/lib/commands/attendance/events";
 import { EventOverview } from "@/components/attendance/schedules/event_overview";
 import { EventReportList } from "@/components/attendance/reports/report";
-import { useSearchParams } from "next/navigation";
+import { useParams } from "next/navigation";
 
 export default function EventPage() {
-  const searchParams = useSearchParams();
+  const { scheduleId } = useParams();
   const [eventSchedule, setEventSchedule] = useState<EventSchedule>();
   const [churchEventList, setChurchEventList] = useState<ChurchEvent[]>([]);
   const [selectedChurchEvent, setSelectedChurchEvent] = useState<ChurchEvent>();
@@ -26,9 +26,9 @@ export default function EventPage() {
 
   useEffect(() => {
     eventSchedulesQuery
-      .getEventSchedule(searchParams.get("schedule") as string)
+      .getEventSchedule(scheduleId as string)
       .then(setEventSchedule);
-  }, [searchParams]);
+  }, [scheduleId]);
 
   useEffect(() => {
     if (eventSchedule) {

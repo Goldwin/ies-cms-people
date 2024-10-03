@@ -11,10 +11,10 @@ import {
   User,
   useDisclosure,
 } from "@nextui-org/react";
-import { useSearchParams } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { PersonHeader } from "../../../../components/people/person/header";
-import { PersonMenu } from "../../../../components/people/person/menu";
+import { PersonHeader } from "@/components/people/person/header";
+import { PersonMenu } from "@/components/people/person/menu";
 import { PersonModal } from "@/components/people/person/personmodal";
 import { UpdateHouseholdModal } from "@/components/people/household/updatehouseholdmodal";
 import {
@@ -130,7 +130,7 @@ const NoHouseholdCard = ({
 );
 
 export default function PersonPage() {
-  const searchParams = useSearchParams();
+  const { personId } = useParams();
   const [person, setPerson] = useState<Person | undefined>();
   const [household, setHousehold] = useState<Household | undefined>();
   const [isHouseholdLoading, setIsHouseholdLoading] = useState<boolean>(true);
@@ -152,8 +152,8 @@ export default function PersonPage() {
   } = useDisclosure();
 
   useEffect(() => {
-    const id = searchParams.get("id") as string;
-    peopleService.get(searchParams.get("id") as string, {
+    const id = personId as string;
+    peopleService.get(id, {
       onSuccess: (person) => {
         setPerson(person);
       },
@@ -168,7 +168,7 @@ export default function PersonPage() {
       .catch((error) => {
         console.log("error when getting household", error);
       });
-  }, [searchParams]);
+  }, [personId]);
   return (
     <div className="h-full flex flex-col">
       <PersonModal
@@ -205,7 +205,7 @@ export default function PersonPage() {
       <PersonHeader person={person} />
       <div className="grid grid-cols-6 items-center justify-start divide-x divide-default-100 h-full">
         <section className="col-start-1 col-end-2 items-start justify-start gap-4 py-4 md:py-10 px-4 h-full">
-          <PersonMenu id={searchParams.get("id") as string} focus="Profile" />
+          <PersonMenu id={personId as string} focus="Profile" />
         </section>
 
         <section className="col-start-2 col-end-7 items-start justify-start gap-4 py-8 md:py-10 px-4 h-full w-full flex flex-row">
