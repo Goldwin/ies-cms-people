@@ -1,5 +1,4 @@
 import { HouseholdInfo, PersonInfo } from "@/entities/attendance/person";
-import { attendanceService } from "@/services/attendance";
 import peopleService from "@/services/people";
 
 export interface HouseholdFilter {
@@ -25,7 +24,7 @@ interface PersonDTO {
   firstName: string;
   lastName: string;
   profilePictureUrl: string;
-  age: number;
+  birthday: string;
 }
 
 function toPersonInfo(person: PersonDTO): PersonInfo {
@@ -34,7 +33,7 @@ function toPersonInfo(person: PersonDTO): PersonInfo {
     firstName: person.firstName,
     lastName: person.lastName,
     profilePictureUrl: person.profilePictureUrl,
-    age: person.age,
+    birthday: person.birthday,
   });
 }
 

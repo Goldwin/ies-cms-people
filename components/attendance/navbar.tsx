@@ -34,7 +34,6 @@ function getModule(pathName: string): Module {
 
 export const Navbar = ({ title }: { title: string }) => {
   const pathName = usePathname();
-  console.log(pathName);
   return (
     <NextUINavbar maxWidth="full" position="static" className="bg-default-50">
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
