@@ -163,10 +163,14 @@ export default function PersonPage() {
       .getHousehold(id)
       .then((household) => {
         if (household) setHousehold(household);
-        setIsHouseholdLoading(false);
       })
       .catch((error) => {
-        console.log("error when getting household", error);
+        if (error.response?.status === 404) {
+          setHousehold(undefined);          
+          //TODO toast
+        }
+      }).finally(() => {
+        setIsHouseholdLoading(false);
       });
   }, [personId]);
   return (

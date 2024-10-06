@@ -27,7 +27,7 @@ export const UserMenu = () => {
                 }
               },
               onError: function (err: any): void {
-                console.log("Failed to logout");
+                //TODO Toast
               },
             })
           }

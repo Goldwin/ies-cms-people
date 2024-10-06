@@ -8,7 +8,7 @@ import {
   ChurchActivityAttendance,
 } from "@/entities/attendance/attendance";
 import { ChurchEvent } from "@/entities/attendance/events";
-import { PersonInfo, HouseholdInfo } from "@/entities/attendance/person";
+import { PersonInfo } from "@/entities/attendance/person";
 import {
   DailyEventSchedule,
   EventSchedule,
@@ -94,7 +94,7 @@ interface PersonDTO {
   firstName: string;
   lastName: string;
   profilePictureUrl: string;
-  age: number;
+  birthday: string;
 }
 
 function toPersonInfo(person: PersonDTO): PersonInfo {
@@ -103,7 +103,7 @@ function toPersonInfo(person: PersonDTO): PersonInfo {
     firstName: person.firstName,
     lastName: person.lastName,
     profilePictureUrl: person.profilePictureUrl,
-    age: person.age,
+    birthday: person.birthday,
   });
 }
 

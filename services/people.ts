@@ -55,16 +55,7 @@ interface PersonDTO {
   firstName: string;
   lastName: string;
   profilePictureUrl: string;
-  age: number;
-}
-
-interface PersonDTO {
-  id: string;
-  personId: string;
-  firstName: string;
-  lastName: string;
-  profilePictureUrl: string;
-  age: number;
+  birthday: string;
 }
 
 class PeopleService {

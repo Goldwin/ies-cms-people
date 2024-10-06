@@ -52,8 +52,7 @@ const PersonCombo = ({
           setPersonList(persons);
           setIsLoading(false);
         })
-        .catch((error) => {
-          console.log(error);
+        .finally(() => {
           setIsLoading(false);
         });
     }
@@ -207,7 +206,7 @@ export const UpdateHouseholdModal = ({
         onOpenChange();
       })
       .catch((error) => {
-        console.log(error);
+        //TODO toast
       });
   };
   const removePersonFromList = (person: Person) => {

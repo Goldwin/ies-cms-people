@@ -20,9 +20,13 @@ export class PersonInfo {
     return this._profilePictureUrl;
   }
 
-  private readonly _age: number;
   public get age(): number {
-    return this._age;
+    return new Date().getFullYear() - this._birthday.getFullYear();
+  }
+
+  private readonly _birthday: Date;
+  public get birthday(): Date {
+    return this._birthday;
   }
 
   constructor({
@@ -31,21 +35,22 @@ export class PersonInfo {
     middleName,
     lastName,
     profilePictureUrl,
-    age,
+    birthday,
   }: {
     id: string;
     firstName: string;
     middleName?: string;
     lastName: string;
     profilePictureUrl?: string;
-    age: number;
+    birthday: string;
   }) {
     this._id = id;
     this._firstName = firstName;
     this._middleName = middleName;
     this._lastName = lastName;
     this._profilePictureUrl = profilePictureUrl;
-    this._age = age;
+
+    this._birthday = new Date(birthday);
   }
 
   public get fullName(): string {
@@ -53,7 +58,16 @@ export class PersonInfo {
   }
 
   public get isAdult(): boolean {
-    return this._age >= 18;
+    console.log(this._id, this.age);
+    return this.age >= 18;
+  }
+
+  public relativeAge(date: Date): number {
+    return date.getFullYear() - this._birthday.getFullYear();
+  }
+
+  public isRelativelyAdult(date: Date): boolean {
+    return this.relativeAge(date) >= 18;
   }
 }
 
