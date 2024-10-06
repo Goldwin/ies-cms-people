@@ -61,7 +61,7 @@ class APIPersonCommands implements PersonCommands {
               firstName: result.firstName,
               lastName: result.lastName,
               profilePictureUrl: result.profilePictureUrl,
-              age: 0,
+              birthday: result.birthday,
             });
           });
       }
@@ -85,7 +85,7 @@ class APIPersonCommands implements PersonCommands {
             firstName: result.firstName,
             lastName: result.lastName,
             profilePictureUrl: result.profilePictureUrl,
-            age: 0,
+            birthday: result.birthday,
           });
         });
     });
