@@ -3,7 +3,7 @@ import app from "@/services/cms";
 
 const TOKEN_COOKIE_NAME = "user-token"
 const TOKEN_PROFILE_NAME = "user-profile"
-export function login(email: string, password: string): Promise<void> {
+export async function login(email: string, password: string): Promise<void> {
     return app.login(email, password).then((data) => {
         setCookie(TOKEN_COOKIE_NAME, data.token)
         setCookie(TOKEN_PROFILE_NAME, JSON.stringify(data.profile))
