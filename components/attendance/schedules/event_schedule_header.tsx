@@ -27,7 +27,13 @@ export const ChurchEventHeader = ({
 
   useEffect(() => {
     setAvailableDates(
-      eventList?.map((event) => event.startDate.toString().split("T")[0]) || []
+      eventList?.map(
+        (event) =>
+          event.startDate
+            .add({ hours: eventSchedule?.timezoneOffset })
+            .toString()
+            .split("T")[0]
+      ) || []
     );
 
     if (eventList) {
@@ -44,7 +50,7 @@ export const ChurchEventHeader = ({
       }
       setFocusedEventIndex(pos);
     }
-  }, [eventList]);
+  }, [eventList, eventSchedule]);
 
   useEffect(() => {
     if (eventList) {

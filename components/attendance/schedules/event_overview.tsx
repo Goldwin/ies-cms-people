@@ -16,7 +16,7 @@ interface EventOverviewProps {
 }
 
 export const EventOverview = ({ event }: EventOverviewProps) => {
-  const [summary, setSummary] = useState<EventAttendanceSummary>();
+  const [summary, setSummary] = useState<EventAttendanceSummary>(new EventAttendanceSummary({}));
 
   useEffect(() => {
     if (event) {

@@ -40,23 +40,23 @@ export class EventAttendanceSummary {
   private readonly _date: Date;
   private readonly _id: string;
   constructor({
-    totalCheckedIn,
-    totalCheckedOut,
-    totalFirstTimer,
-    total,
-    totalByType,
-    activitiesSummary,
-    date,
-    id,
+    totalCheckedIn = 0,
+    totalCheckedOut = 0,
+    totalFirstTimer = 0,
+    total = 0,
+    totalByType = {},
+    activitiesSummary = [],
+    date = new Date(),
+    id = '',
   }: {
-    totalCheckedIn: number;
-    totalCheckedOut: number;
-    totalFirstTimer: number;
-    total: number;
-    totalByType: Record<string, number>;
-    activitiesSummary: ActivityAttendanceSummary[];
-    date: Date;
-    id: string;
+    totalCheckedIn?: number;
+    totalCheckedOut?: number;
+    totalFirstTimer?: number;
+    total?: number;
+    totalByType?: Record<string, number>;
+    activitiesSummary?: ActivityAttendanceSummary[];
+    date?: Date;
+    id?: string;
   }) {
     this._totalCheckedIn = totalCheckedIn;
     this._totalCheckedOut = totalCheckedOut;
