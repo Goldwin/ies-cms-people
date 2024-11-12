@@ -58,6 +58,15 @@ export const ChurchEventHeader = ({
     }
   }, [eventList, focusedEventIndex]);
 
+  useEffect(() => {
+    if (focusedEvent) {
+      onEventSelectionChange(focusedEvent);
+      setDateValue(
+        focusedEvent.startDate.add({ hours: eventSchedule?.timezoneOffset })
+      );
+    }
+  }, [focusedEvent, onEventSelectionChange, eventSchedule]);
+
   const selectNextEvent = () => {
     setFocusedEventIndex((i) => Math.max(i - 1, 0));
   };
@@ -66,12 +75,18 @@ export const ChurchEventHeader = ({
     setFocusedEventIndex((i) => Math.min(i + 1, eventList?.length ?? 0));
   };
 
-  useEffect(() => {
-    if (focusedEvent) {
-      onEventSelectionChange(focusedEvent);
-      setDateValue(focusedEvent.startDate);
+  const selectEventByDate = (date: DateValue) => {
+    const selectedEventIndex = eventList?.findIndex(
+      (event) =>
+        event.startDate
+          .add({ hours: eventSchedule?.timezoneOffset })
+          .toString()
+          .split("T")[0] === date.toString().split("T")[0]
+    );
+    if (selectedEventIndex !== undefined) {
+      setFocusedEventIndex(selectedEventIndex);
     }
-  }, [focusedEvent, onEventSelectionChange]);
+  };
 
   const isDateUnavailable = (date: DateValue): boolean => {
     return !availableDates.includes(date.toString().split("T")[0]);
@@ -107,7 +122,7 @@ export const ChurchEventHeader = ({
                     aria-label="Session Date"
                     granularity="day"
                     value={dateValue}
-                    onChange={setDateValue}
+                    onChange={selectEventByDate}
                     isDateUnavailable={isDateUnavailable}
                   />
                 </div>
