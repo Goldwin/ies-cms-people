@@ -54,10 +54,6 @@ export const ChurchEventHeader = ({
 
   useEffect(() => {
     if (eventList) {
-      const availableDateString = eventList.map(
-        (event) => event.startDate.toAbsoluteString().split("T")[0]
-      );
-      setAvailableDates(availableDateString);
       setFocusedEvent(eventList?.[focusedEventIndex]);
     }
   }, [eventList, focusedEventIndex]);
