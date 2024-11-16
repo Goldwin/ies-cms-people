@@ -5,10 +5,12 @@ import { useDisclosure } from "@nextui-org/modal";
 import { Table, TableCell, TableColumn, TableRow } from "@nextui-org/table";
 import { TableBody, TableHeader } from "react-stately";
 import { ScheduleActivityModal } from "./schedule_activity_modal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ButtonWithPrompt } from "../../common/prompt";
 import { eventScheduleActivityCommands } from "@/lib/commands/attendance/activities";
 import { Bounce, toast } from "react-toastify";
+import { labelQueries } from "@/lib/queries/attendance/labels";
+import { Label } from "@/entities/attendance/label";
 
 export const EventScheduleActivityConfigForm = ({
   eventSchedule,
@@ -23,6 +25,27 @@ export const EventScheduleActivityConfigForm = ({
   const [selectedActivity, setSelectedActivity] = useState<
     Activity | undefined
   >(undefined);
+  const [labels, setLabels] = useState<Label[]>([]);
+
+  useEffect(() => {
+    labelQueries
+      .ListLabels({ lastId: "", limit: 100 })
+      .then((labels) => {
+        setLabels(labels);
+      })
+      .catch((e) => {
+        toast.error("Failed to fetch labels information", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          transition: Bounce,
+        });
+      });
+  }, []);
 
   const columns: { label: string; key: string }[] = [
     {
@@ -115,6 +138,7 @@ export const EventScheduleActivityConfigForm = ({
         </Button>
         <ScheduleActivityModal
           isOpen={isOpen}
+          availableLabels={labels}
           onScheduleChange={onScheduleChange}
           onOpenChange={onOpenChange}
           schedule={eventSchedule}
