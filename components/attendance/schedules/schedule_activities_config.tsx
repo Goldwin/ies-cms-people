@@ -57,12 +57,19 @@ export const EventScheduleActivityConfigForm = ({
       label: "Start Time",
     },
     {
+      key: "labels",
+      label: "Labels",
+    },
+    {
       key: "actions",
       label: "Actions",
     },
   ];
 
   const cellMapping = (key: string, activity: Activity) => {
+    if(key === "labels") {
+      return activity.labels.map((label) => label.labelName).join(", ");
+    }
     if (key !== "actions") {
       return activity.toGenericObject()[key];
     }
