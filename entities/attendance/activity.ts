@@ -1,3 +1,5 @@
+import { AttendanceType } from "./attendance";
+
 export class Activity {
   private readonly _id: string;
   private readonly _name: string;
@@ -5,11 +7,13 @@ export class Activity {
   private readonly _timeHour: number;
   private readonly _timeMinute: number;
   private readonly _timezoneOffset: number;
+  private readonly _labels: ActivityLabel[];
 
   constructor({
     id,
     name,
     scheduleId,
+    labels,
     timeHour,
     timeMinute,
     timezoneOffset,
@@ -17,6 +21,7 @@ export class Activity {
     id: string;
     name: string;
     scheduleId: string;
+    labels: ActivityLabel[];
     timeHour: number;
     timeMinute: number;
     timezoneOffset: number;
@@ -27,6 +32,11 @@ export class Activity {
     this._timeHour = timeHour;
     this._timeMinute = timeMinute;
     this._timezoneOffset = timezoneOffset;
+    this._labels = labels;
+  }
+
+  public get labels(): ActivityLabel[] {
+    return this._labels;
   }
 
   get id(): string {
@@ -75,5 +85,55 @@ export class EventActivity {
     this.id = id;
     this.name = name;
     this.time = time;
+  }
+}
+
+export class ActivityLabel {
+  private readonly _labelId: string;
+  private readonly _labelName: string;
+  private readonly _type: string;
+  private readonly _attendanceTypes: AttendanceType[];
+  private readonly _quantity: number;
+
+  get labelId(): string {
+    return this._labelId;
+  }
+
+  get labelName(): string {
+    return this._labelName;
+  }
+
+  get type(): string {
+    return this._type;
+  }
+
+  get attendanceTypes(): AttendanceType[] {
+    return this._attendanceTypes;
+  }
+
+  get quantity(): number {
+    return this._quantity;
+  }
+
+  constructor({
+    labelId,
+    labelName,
+    type,
+    attendanceTypes,
+    quantity,
+  }: {
+    labelId: string;
+    labelName: string;
+    type: string;
+    attendanceTypes: string[];
+    quantity: number;
+  }) {
+    this._labelId = labelId;
+    this._labelName = labelName;
+    this._type = type;
+    this._attendanceTypes = attendanceTypes.map(
+      (type) => type as AttendanceType
+    );
+    this._quantity = quantity;
   }
 }

@@ -2,7 +2,12 @@
  * @fileoverview
  * This file provides a client side interface to communicate with attendance services
  */
-import { Activity, EventActivity } from "@/entities/attendance/activity";
+import {
+  Activity,
+  ActivityLabel,
+  EventActivity,
+} from "@/entities/attendance/activity";
+import { Label } from "@/entities/attendance/label";
 import {
   AttendanceType,
   ChurchActivityAttendance,
@@ -31,10 +36,33 @@ import axios from "axios";
 
 const API_URL = process.env.ATTENDANCE_URL ?? "";
 
+interface ActivityLabelDTO {
+  labelId: string;
+  labelName: string;
+  type: string;
+  attendanceTypes: string[];
+  quantity: number;
+}
+
+function toActivityLabel(label: ActivityLabelDTO): ActivityLabel {
+  return new ActivityLabel(label);
+}
+
+function toActivityLabelDTO(label: ActivityLabel): ActivityLabelDTO {
+  return {
+    labelId: label.labelId,
+    labelName: label.labelName,
+    type: label.type,
+    attendanceTypes: label.attendanceTypes,
+    quantity: label.quantity,
+  };
+}
+
 interface ActivityDTO {
   id: string;
   name: string;
   scheduleId: string;
+  labels: ActivityLabelDTO[];
   hour: number;
   minute: number;
   timezoneOffset: number;
@@ -45,6 +73,7 @@ function toActivityDTO(activity: Activity): ActivityDTO {
     id: activity.id,
     name: activity.name,
     scheduleId: activity.scheduleId,
+    labels: activity.labels.map((label) => toActivityLabelDTO(label)),
     hour: activity.hour,
     minute: activity.minute,
     timezoneOffset: activity.timezoneOffset,
@@ -139,6 +168,7 @@ function toEventScheduleDTO(eventSchedule: EventSchedule): EventScheduleDTO {
         id: activity.id,
         name: activity.name,
         scheduleId: activity.scheduleId,
+        labels: activity.labels.map((label) => toActivityLabel(label)),
         hour: activity.hour,
         minute: activity.minute,
         timezoneOffset: activity.timezoneOffset,
@@ -175,6 +205,7 @@ function toEventSchedule(dto: EventScheduleDTO): EventSchedule {
           id: activity.id,
           name: activity.name,
           scheduleId: dto.id,
+          labels: activity.labels?.map((label) => toActivityLabel(label)) ?? [],
           timeHour: activity.hour,
           timeMinute: activity.minute,
           timezoneOffset: activity.timezoneOffset,
@@ -193,6 +224,7 @@ function toEventSchedule(dto: EventScheduleDTO): EventSchedule {
           id: activity.id,
           name: activity.name,
           scheduleId: dto.id,
+          labels: activity.labels?.map((label) => toActivityLabel(label)) ?? [],
           timeHour: activity.hour,
           timeMinute: activity.minute,
           timezoneOffset: activity.timezoneOffset,
@@ -210,6 +242,7 @@ function toEventSchedule(dto: EventScheduleDTO): EventSchedule {
           id: activity.id,
           name: activity.name,
           scheduleId: dto.id,
+          labels: activity.labels?.map((label) => toActivityLabel(label)) ?? [],
           timeHour: activity.hour,
           timeMinute: activity.minute,
           timezoneOffset: activity.timezoneOffset,
@@ -228,6 +261,7 @@ function toEventSchedule(dto: EventScheduleDTO): EventSchedule {
         id: activity.id,
         name: activity.name,
         scheduleId: dto.id,
+        labels: activity.labels?.map((label) => toActivityLabel(label)) ?? [],
         timeHour: activity.hour,
         timeMinute: activity.minute,
         timezoneOffset: activity.timezoneOffset,
@@ -346,6 +380,20 @@ function toEventScheduleStats(dto: EventScheduleStatsDTO): EventScheduleStats {
   });
 }
 
+interface LabelDTO {
+  id: string;
+  name: string;
+  orientation: string;
+  type: string;
+  paperSize: number[];
+  margin: number[];
+  objects: any[];
+}
+
+function toLabel(dto: LabelDTO): Label {
+  return new Label(dto);
+}
+
 export class AttendanceService {
   public async getEventScheduleStats({
     scheduleId,
@@ -365,6 +413,47 @@ export class AttendanceService {
         return toEventScheduleStats(data);
       });
   }
+
+  public async listLabels({
+    lastId,
+    limit,
+  }: {
+    lastId: string;
+    limit: number;
+  }): Promise<Label[]> {
+    const url = `${API_URL}/labels`;
+    return axios
+      .get(url, {
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+        params: {
+          lastId,
+          limit,
+        },
+      })
+      .then((response) => {
+        const data: LabelDTO[] = response.data.data as LabelDTO[];
+        return data.map((label: LabelDTO) => {
+          return toLabel(label);
+        });
+      });
+  }
+
+  public async getLabel(id: string): Promise<Label> {
+    const url = `${API_URL}/labels/${id}`;
+    return axios
+      .get(url, {
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+      })
+      .then((response) => {
+        const data: LabelDTO = response.data.data as LabelDTO;
+        return toLabel(data);
+      });
+  }
+
   public async getEventAttendanceSummary({
     eventId,
   }: {
