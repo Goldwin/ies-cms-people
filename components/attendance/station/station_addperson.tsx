@@ -221,7 +221,7 @@ const AddPersonForm = ({ ...props }: StageProp) => {
           type="date"
           errorMessage={errors.birthday?.message}
           placeholder="mm/dd/yyyy"
-          {...register("birthday")}
+          {...register("birthday", { required: "Birthday is required" })}
           isInvalid={!!errors.birthday}
         />
         <Input

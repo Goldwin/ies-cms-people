@@ -80,10 +80,10 @@ export const siteConfig = {
       label: "Events",
       href: "/attendance",
     },
-    {
-      label: "Labels",
-      href: "/attendance/labels",
-    }
+    // {
+    //   label: "Labels",
+    //   href: "/attendance/labels",
+    // }
   ],
   links: {
     github: "https://github.com/Goldwin/ies-cms-people",

@@ -177,7 +177,9 @@ export const PersonModal = ({
                   label="Birthday"
                   type="date"
                   placeholder="mm/dd/yyyy"
-                  {...register("birthday")}
+                  {...register("birthday", {
+                    required: "Birthday is required",
+                  })}
                 />
                 <Input
                   label="Anniversary"
